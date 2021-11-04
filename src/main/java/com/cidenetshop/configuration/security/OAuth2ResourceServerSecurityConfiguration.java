@@ -21,7 +21,7 @@ public class OAuth2ResourceServerSecurityConfiguration extends ResourceServerCon
 
 		http.csrf().disable();
 
-		http.authorizeRequests().antMatchers("/unauthenticated/**").permitAll().anyRequest().permitAll();
+		http.authorizeRequests().antMatchers("/public/**").permitAll().anyRequest().permitAll();
 	}
 
 }
