@@ -1,9 +1,9 @@
-package com.cidenetshop.dao;
+package com.cidenetshop.repository;
 
 import org.springframework.data.repository.CrudRepository;
 
-import com.cidenetshop.model.Producto;
+import com.cidenetshop.model.Product;
 
-public interface ProductoDaoAPI extends CrudRepository<Producto,Long>{
+public interface ProductRepository extends CrudRepository<Product,Long>{
 
 }

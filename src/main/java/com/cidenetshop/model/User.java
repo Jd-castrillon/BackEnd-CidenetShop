@@ -2,95 +2,99 @@ package com.cidenetshop.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="usuario")
-public class Usuario {
+@Table(name = "users")
+public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long idusuario;
-	
-	@Column(name="nombre")
-	private String nombre;
-	
-	@Column(name="correo")
-	private String correo;
-	
-	@Column(name ="contraseña")
-	private String contraseña;
-	
-	@Column(name="idtipo_documento")
-	private Long tipoDocumento;
-	
-	@Column(name="idrol")
-	private Long rol;
+	@Column(name = "id_user")
+	private Long idUser;
 
-	public Long getIdusuario() {
-		return idusuario;
+	@Column(name = "name")
+	private String name;
+
+	@Column(name = "email")
+	private String email;
+
+	@Column(name = "password")
+	private String password;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id_document_type")
+	private DocumentType documentType;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id_rol")
+	private Role role;
+
+	public Long getIdUser() {
+		return idUser;
 	}
 
-	public void setIdusuario(Long idusuario) {
-		this.idusuario = idusuario;
+	public void setIdUser(Long idUser) {
+		this.idUser = idUser;
 	}
 
-	public String getNombre() {
-		return nombre;
+	public String getName() {
+		return name;
 	}
 
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public String getCorreo() {
-		return correo;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setCorreo(String correo) {
-		this.correo = correo;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
-	public String getContraseña() {
-		return contraseña;
+	public String getPassword() {
+		return password;
 	}
 
-	public void setContraseña(String contraseña) {
-		this.contraseña = contraseña;
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
-	public Long getTipoDocumento() {
-		return tipoDocumento;
+	public DocumentType getDocumentType() {
+		return documentType;
 	}
 
-	public void setTipoDocumento(Long tipoDocumento) {
-		this.tipoDocumento = tipoDocumento;
+	public void setDocumentType(DocumentType documentType) {
+		this.documentType = documentType;
 	}
 
-	public Long getRol() {
-		return rol;
+	public Role getRole() {
+		return role;
 	}
 
-	public void setRol(Long rol) {
-		this.rol = rol;
+	public void setRole(Role role) {
+		this.role = role;
 	}
 
-	public Usuario(Long idusuario, String nombre, String correo, String contraseña, Long tipoDocumento, Long rol) {
+	public User(Long idUser, String name, String email, String password, DocumentType documentType, Role role) {
 		super();
-		this.idusuario = idusuario;
-		this.nombre = nombre;
-		this.correo = correo;
-		this.contraseña = contraseña;
-		this.tipoDocumento = tipoDocumento;
-		this.rol = rol;
+		this.idUser = idUser;
+		this.name = name;
+		this.email = email;
+		this.password = password;
+		this.documentType = documentType;
+		this.role = role;
 	}
 
-	public Usuario() {
+	public User() {
 		super();
 	}
-	
-	
-	
+
 }

@@ -1,74 +1,88 @@
 package com.cidenetshop.model;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="pedido")
-public class Pedido {
-	
+@Table(name = "orders")
+public class Order {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long idpedido;
+	@Column(name = "id")
+	private Long id;
+
+	@Column(name = "order_address")
+	private String orderAddress;
+
+	@Column(name = "order_date")
+	private LocalDate orderDate;
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "id_user")
+	private User user;
 	
-	@Column(name="direccion_pedido")
-	private String direccionPedido;
-	
-	@Column(name="fecha_pedido")
-	private LocalDate fechaPedido;
-	
-	@Column(name="idusuario")
-	private Long idUsuario;
+	@ManyToMany
+	@JoinTable(name="order_details",
+			joinColumns = @JoinColumn(name="id_order"),
+			inverseJoinColumns = @JoinColumn(name="id_product"))
+	private List<Product> product;
+		
 
-	public Long getIdpedido() {
-		return idpedido;
+	public Long getId() {
+		return id;
 	}
 
-	public void setIdpedido(Long idpedido) {
-		this.idpedido = idpedido;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
-	public String getDireccionPedido() {
-		return direccionPedido;
+	public String getOrderAddress() {
+		return orderAddress;
 	}
 
-	public void setDireccionPedido(String direccionPedido) {
-		this.direccionPedido = direccionPedido;
+	public void setOrderAddress(String orderAddress) {
+		this.orderAddress = orderAddress;
 	}
 
-	public LocalDate getFechaPedido() {
-		return fechaPedido;
+	public LocalDate getOrderDate() {
+		return orderDate;
 	}
 
-	public void setFechaPedido(LocalDate fechaPedido) {
-		this.fechaPedido = fechaPedido;
+	public void setOrderDate(LocalDate orderDate) {
+		this.orderDate = orderDate;
 	}
 
-	public Long getIdUsuario() {
-		return idUsuario;
+	public User getUser() {
+		return user;
 	}
 
-	public void setIdUsuario(Long idUsuario) {
-		this.idUsuario = idUsuario;
+	public void setUser(User user) {
+		this.user = user;
 	}
 
-	public Pedido(Long idpedido, String direccionPedido, LocalDate fechaPedido, Long idUsuario) {
+	public Order(Long id, String orderAddress, LocalDate orderDate, User user) {
 		super();
-		this.idpedido = idpedido;
-		this.direccionPedido = direccionPedido;
-		this.fechaPedido = fechaPedido;
-		this.idUsuario = idUsuario;
+		this.id = id;
+		this.orderAddress = orderAddress;
+		this.orderDate = orderDate;
+		this.user = user;
 	}
 
-	public Pedido() {
+	public Order() {
 		super();
 	}
-	
-	
+
 }

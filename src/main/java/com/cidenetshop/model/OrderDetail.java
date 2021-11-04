@@ -5,106 +5,82 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="detalles_pedido")
-public class Detalles_pedido {
-	
+@Table(name = "order_details")
+public class OrderDetail {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
 	private Integer idrol;
-	
-	@Column(name ="cantidad")
-	private Integer cantidad;
-	
-	@Column(name="precio_unidad")
-	private Double precioUnidad;
-	
-	@Column(name="idproducto")
-	private Long idProducto;
-	
-	@Column(name="idpedido")
-	private Long idPedido;
-	
-	
-	
+
+	@Column(name = "quantity")
+	private Integer quantity;
+
+	@Column(name = "sale_price")
+	private Double salePrice;
+
+	@Column(name = "id_product")
+	private Long product;
+
+	@Column(name = "id_order")
+	private Long order;
+
 	public Integer getIdrol() {
 		return idrol;
 	}
-
-
 
 	public void setIdrol(Integer idrol) {
 		this.idrol = idrol;
 	}
 
-
-
-	public Integer getCantidad() {
-		return cantidad;
+	public Integer getQuantity() {
+		return quantity;
 	}
 
-
-
-	public void setCantidad(Integer cantidad) {
-		this.cantidad = cantidad;
+	public void setQuantity(Integer quantity) {
+		this.quantity = quantity;
 	}
 
-
-
-	public Double getPrecioUnidad() {
-		return precioUnidad;
+	public Double getSalePrice() {
+		return salePrice;
 	}
 
-
-
-	public void setPrecioUnidad(Double precioUnidad) {
-		this.precioUnidad = precioUnidad;
+	public void setSalePrice(Double salePrice) {
+		this.salePrice = salePrice;
 	}
 
-
-
-	public Long getIdProducto() {
-		return idProducto;
+	public Long getProduct() {
+		return product;
 	}
 
-
-
-	public void setIdProducto(Long idProducto) {
-		this.idProducto = idProducto;
+	public void setProduct(Long product) {
+		this.product = product;
 	}
 
-
-
-	public Long getIdPedido() {
-		return idPedido;
+	public Long getOrder() {
+		return order;
 	}
 
-
-
-	public void setIdPedido(Long idPedido) {
-		this.idPedido = idPedido;
+	public void setOrder(Long order) {
+		this.order = order;
 	}
 
-
-
-	public Detalles_pedido(Integer idrol, Integer cantidad, Double precioUnidad, Long idProducto, Long idPedido) {
+	public OrderDetail(Integer idrol, Integer quantity, Double salePrice, Long product, Long order) {
 		super();
 		this.idrol = idrol;
-		this.cantidad = cantidad;
-		this.precioUnidad = precioUnidad;
-		this.idProducto = idProducto;
-		this.idPedido = idPedido;
+		this.quantity = quantity;
+		this.salePrice = salePrice;
+		this.product = product;
+		this.order = order;
 	}
 
-
-
-	public Detalles_pedido() {
+	public OrderDetail() {
 		super();
 	}
-	
-	
-	
-	
+
 }

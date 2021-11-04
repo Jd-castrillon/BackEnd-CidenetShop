@@ -1,17 +1,19 @@
 package com.cidenetshop.service.api;
 
+import java.util.List;
 
+import com.cidenetshop.model.Product;
 
+public interface ProductServiceAPI {
 
-import com.cidenetshop.commons.GenericServiceAPI;
+	Product saveProduct(Product product) throws Exception;
 
-import com.cidenetshop.model.Producto;
+	Product findProductById(Long productId) throws Exception;
 
+	Boolean deleteProductById(Long productId) throws Exception;
 
-public interface ProductoServiceAPI extends GenericServiceAPI<Producto,Long>{
-		
+	List<Product> getAllProducts() throws Exception;
 	
 	
-	
-	
+
 }

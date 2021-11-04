@@ -2,112 +2,125 @@ package com.cidenetshop.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="producto")
-public class Producto {
-	
+@Table(name = "products")
+public class Product {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long idproducto;
-	
-	@Column(name="nombre")
-	private String nombre;
-	
-	@Column(name="descripcion")
-	private String descripcion;
-	
-	@Column(name="color")
+	@Column(name = "id")
+	private Long id;
+
+	@Column(name = "name")
+	private String name;
+
+	@Column(name = "description")
+	private String description;
+
+	@Column(name = "color")
 	private String color;
-	
-	@Column(name="precio")
-	private Double precio;
-	
-	@Column(name="cantidad_existente")
-	private Integer cantidadExistente;
-	
-	@Column(name="tipo_producto")
-	private String tipoProducto;
-	
-	@Column(name="idtalla")
-	private Integer idTalla;
 
-	public Long getIdproducto() {
-		return idproducto;
+	@Column(name = "price")
+	private Double price;
+
+	@Column(name = "existing_quantity")
+	private Integer existingQuantity;
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "id_product_type")
+	private ProductType productType;
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "id_size")
+	private Size size;
+
+	public Long getId() {
+		return id;
 	}
 
-	public void setIdproducto(Long idproducto) {
-		this.idproducto = idproducto;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
-	public String getNombre() {
-		return nombre;
+	public String getName() {
+		return name;
 	}
 
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public String getDescripcion() {
-		return descripcion;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
-	}
-
-	public Double getPrecio() {
-		return precio;
-	}
-
-	public void setPrecio(Double precio) {
-		this.precio = precio;
-	}
-
-	public Integer getCantidadExistente() {
-		return cantidadExistente;
-	}
-
-	public void setCantidadExistente(Integer cantidadExistente) {
-		this.cantidadExistente = cantidadExistente;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public String getColor() {
 		return color;
 	}
 
-	public void setIdColor(String color) {
+	public void setColor(String color) {
 		this.color = color;
 	}
 
-	public Integer getIdTalla() {
-		return idTalla;
+	public Double getPrice() {
+		return price;
 	}
 
-	public void setIdTalla(Integer idTalla) {
-		this.idTalla = idTalla;
+	public void setPrice(Double price) {
+		this.price = price;
 	}
 
-	public Producto(Long idproducto, String nombre, String descripcion, Double precio, Integer cantidadExistente,
-			String color, Integer idTalla) {
+	public Integer getExistingQuantity() {
+		return existingQuantity;
+	}
+
+	public void setExistingQuantity(Integer existingQuantity) {
+		this.existingQuantity = existingQuantity;
+	}
+
+	public ProductType getProductType() {
+		return productType;
+	}
+
+	public void setProductType(ProductType productType) {
+		this.productType = productType;
+	}
+
+	public Size getSize() {
+		return size;
+	}
+
+	public void setSize(Size size) {
+		this.size = size;
+	}
+
+	public Product(Long id, String name, String description, String color, Double price, Integer existingQuantity,
+			ProductType productType, Size size) {
 		super();
-		this.idproducto = idproducto;
-		this.nombre = nombre;
-		this.descripcion = descripcion;
-		this.precio = precio;
-		this.cantidadExistente = cantidadExistente;
+		this.id = id;
+		this.name = name;
+		this.description = description;
 		this.color = color;
-		this.idTalla = idTalla;
+		this.price = price;
+		this.existingQuantity = existingQuantity;
+		this.productType = productType;
+		this.size = size;
 	}
 
-	public Producto() {
+	public Product() {
 		super();
 	}
-	
-	
-	
+
 }

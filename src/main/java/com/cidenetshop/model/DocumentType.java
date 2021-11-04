@@ -8,42 +8,40 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="tipo_documento")
-public class Tipo_documento {
-	
+@Table(name = "document_types")
+public class DocumentType {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer idtipo_documento;
-	
-	@Column(name ="tipo_documento")
-	private String tipoDocumento;
+	private Integer id;
 
-	public Integer getIdtipo_documento() {
-		return idtipo_documento;
+	@Column(name = "document_type")
+	private String DocumentType;
+
+	public Integer getId() {
+		return id;
 	}
 
-	public void setIdtipo_documento(Integer idtipo_documento) {
-		this.idtipo_documento = idtipo_documento;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
-	public String getTipoDocumento() {
-		return tipoDocumento;
+	public String getDocumentType() {
+		return DocumentType;
 	}
 
-	public void setTipoDocumento(String tipoDocumento) {
-		this.tipoDocumento = tipoDocumento;
+	public void setDocumentType(String documentType) {
+		DocumentType = documentType;
 	}
 
-	public Tipo_documento(Integer idtipo_documento, String tipoDocumento) {
+	public DocumentType(Integer id, String documentType) {
 		super();
-		this.idtipo_documento = idtipo_documento;
-		this.tipoDocumento = tipoDocumento;
+		this.id = id;
+		DocumentType = documentType;
 	}
 
-	public Tipo_documento() {
+	public DocumentType() {
 		super();
 	}
-	
-	
 
 }
