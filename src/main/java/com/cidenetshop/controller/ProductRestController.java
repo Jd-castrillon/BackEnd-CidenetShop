@@ -2,8 +2,6 @@ package com.cidenetshop.controller;
 
 import java.util.List;
 
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,17 +36,9 @@ public class ProductRestController {
 	}
 
 	@GetMapping(value = "/{productId}")
-	@Transactional
 	public ResponseEntity<GetProductDTO> getProductById(@PathVariable("productId") Long productId) {
 		try {
-			final Product product = this.productServiceAPI.findProductById(productId);
-
-			final GetProductDTO dto = new GetProductDTO();
-			dto.setName(product.getName());
-			dto.setSize(product.getSize().getShortText());
-
-			return new ResponseEntity(dto, HttpStatus.OK);
-
+			return new ResponseEntity(this.productServiceAPI.findProductById(productId), HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -85,7 +75,7 @@ public class ProductRestController {
 		} catch (Exception e) {
 			return new ResponseEntity(e.getMessage(), HttpStatus.NOT_ACCEPTABLE);
 		}
-		
+
 		return  new ResponseEntity( HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
