@@ -3,8 +3,7 @@ services:
   mysql:
     image: 'mysql:latest'
     restart: always
-    volumes:
-      - './mysql_data:/var/lib/mysql'
+
     environment:
       MYSQL_ROOT_PASSWORD: jdshop
       MYSQL_DATABASE: jdshop
@@ -12,3 +11,5 @@ services:
       MYSQL_PASSWORD: jdshop
     ports:
       - '3306:3306'
+    volumes:
+      - './mysql_data:/var/lib/mysql'

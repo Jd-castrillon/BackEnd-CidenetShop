@@ -30,6 +30,9 @@ public class Product {
 
 	@Column(name = "price")
 	private Double price;
+	
+	@Column(name = "image")
+	private String image;
 
 	@Column(name = "existing_quantity")
 	private Integer existingQuantity;

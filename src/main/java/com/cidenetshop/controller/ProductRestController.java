@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.annotation.RequestScope;
 
 import com.cidenetshop.model.Product;
 import com.cidenetshop.service.api.ProductServiceAPI;
@@ -32,7 +34,8 @@ public class ProductRestController {
 
 	@GetMapping
 	public List<Product> getAllProducts() {
-		return null;
+		List<Product> products = this.productServiceAPI.getAllProducts();
+		return products;
 	}
 
 	@GetMapping(value = "/{productId}")
@@ -41,18 +44,18 @@ public class ProductRestController {
 			return new ResponseEntity(this.productServiceAPI.findProductById(productId), HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
+			return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	@PostMapping
-	public ResponseEntity<Product> saveProduct(@ModelAttribute Product product) {
+	public ResponseEntity<Product> saveProduct(@RequestBody Product product) {
 
 		try {
 			Product obj = productServiceAPI.saveProduct(product);
-			return new ResponseEntity<Product>(obj, HttpStatus.OK);
+
+			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			return new ResponseEntity(e.getMessage(), HttpStatus.NOT_ACCEPTABLE);
 		}
 
@@ -76,7 +79,7 @@ public class ProductRestController {
 			return new ResponseEntity(e.getMessage(), HttpStatus.NOT_ACCEPTABLE);
 		}
 
-		return  new ResponseEntity( HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 }
