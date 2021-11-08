@@ -30,7 +30,7 @@ public class Product {
 
 	@Column(name = "price")
 	private Double price;
-	
+
 	@Column(name = "image")
 	private String image;
 
@@ -85,6 +85,14 @@ public class Product {
 		this.price = price;
 	}
 
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
+
 	public Integer getExistingQuantity() {
 		return existingQuantity;
 	}
@@ -109,14 +117,15 @@ public class Product {
 		this.size = size;
 	}
 
-	public Product(Long id, String name, String description, String color, Double price, Integer existingQuantity,
-			ProductType productType, Size size) {
+	public Product(Long id, String name, String description, String color, Double price, String image,
+			Integer existingQuantity, ProductType productType, Size size) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.description = description;
 		this.color = color;
 		this.price = price;
+		this.image = image;
 		this.existingQuantity = existingQuantity;
 		this.productType = productType;
 		this.size = size;
