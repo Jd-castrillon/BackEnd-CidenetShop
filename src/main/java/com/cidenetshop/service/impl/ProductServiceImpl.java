@@ -54,7 +54,7 @@ public class ProductServiceImpl implements ProductServiceAPI {
 
 		final GetProductDTO dto = new GetProductDTO();
 		dto.setName(productFound.getName());
-		dto.setSize(productFound.getSize().getShortText());
+	
 
 		return dto;
 	}

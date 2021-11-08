@@ -1,5 +1,7 @@
 package com.cidenetshop.model;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -8,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -34,16 +37,14 @@ public class Product {
 	@Column(name = "image")
 	private String image;
 
-	@Column(name = "existing_quantity")
-	private Integer existingQuantity;
-
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_product_type")
 	private ProductType productType;
 
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "id_size")
-	private Size size;
+	@OneToMany(mappedBy = "product")
+	private List<ExistingQuantity> existingQuantity;
+
+	@OneToMany(mappedBy = "order")
 
 	public Long getId() {
 		return id;
@@ -93,14 +94,6 @@ public class Product {
 		this.image = image;
 	}
 
-	public Integer getExistingQuantity() {
-		return existingQuantity;
-	}
-
-	public void setExistingQuantity(Integer existingQuantity) {
-		this.existingQuantity = existingQuantity;
-	}
-
 	public ProductType getProductType() {
 		return productType;
 	}
@@ -109,16 +102,16 @@ public class Product {
 		this.productType = productType;
 	}
 
-	public Size getSize() {
-		return size;
+	public List<ExistingQuantity> getExistingQuantity() {
+		return existingQuantity;
 	}
 
-	public void setSize(Size size) {
-		this.size = size;
+	public void setExistingQuantity(List<ExistingQuantity> existingQuantity) {
+		this.existingQuantity = existingQuantity;
 	}
 
 	public Product(Long id, String name, String description, String color, Double price, String image,
-			Integer existingQuantity, ProductType productType, Size size) {
+			ProductType productType, List<ExistingQuantity> existingQuantity) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -126,9 +119,8 @@ public class Product {
 		this.color = color;
 		this.price = price;
 		this.image = image;
-		this.existingQuantity = existingQuantity;
 		this.productType = productType;
-		this.size = size;
+		this.existingQuantity = existingQuantity;
 	}
 
 	public Product() {

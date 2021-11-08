@@ -10,9 +10,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -34,13 +33,9 @@ public class Order {
 	@JoinColumn(name = "id_user")
 	private User user;
 
-	@ManyToMany
-	@JoinTable(name="order_details",
-			joinColumns = @JoinColumn(name="id_order"),
-			inverseJoinColumns = @JoinColumn(name="id_product"))
-	private List<Product> product;
-
-
+	@OneToMany(mappedBy="order")
+	private List<OrderDetail> orderDetails;
+	
 	public Long getId() {
 		return id;
 	}

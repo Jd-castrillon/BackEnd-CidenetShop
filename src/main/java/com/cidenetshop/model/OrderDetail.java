@@ -1,41 +1,58 @@
 package com.cidenetshop.model;
 
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
 import javax.persistence.Table;
+
+import com.cidenetshop.model.embeddable.OrderDetailKey;
 
 @Entity
 @Table(name = "order_details")
 public class OrderDetail {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	private Integer idrol;
+	@EmbeddedId
+	private OrderDetailKey id;
 
-	@Column(name = "quantity")
+	@ManyToOne
+	@MapsId("idProduct")
+	@JoinColumn(name = "id_product")
+	private Product product;
+
+	@ManyToOne
+	@MapsId("IdOrder")
+	@JoinColumn(name = "id_order")
+	private Order order;
+
 	private Integer quantity;
 
-	@Column(name = "sale_price")
 	private Double salePrice;
 
-	@Column(name = "id_product")
-	private Long product;
-
-	@Column(name = "id_order")
-	private Long order;
-
-	public Integer getIdrol() {
-		return idrol;
+	public OrderDetailKey getId() {
+		return id;
 	}
 
-	public void setIdrol(Integer idrol) {
-		this.idrol = idrol;
+	public void setId(OrderDetailKey id) {
+		this.id = id;
+	}
+
+	public Product getProduct() {
+		return product;
+	}
+
+	public void setProduct(Product product) {
+		this.product = product;
+	}
+
+	public Order getOrder() {
+		return order;
+	}
+
+	public void setOrder(Order order) {
+		this.order = order;
 	}
 
 	public Integer getQuantity() {
@@ -54,29 +71,13 @@ public class OrderDetail {
 		this.salePrice = salePrice;
 	}
 
-	public Long getProduct() {
-		return product;
-	}
-
-	public void setProduct(Long product) {
-		this.product = product;
-	}
-
-	public Long getOrder() {
-		return order;
-	}
-
-	public void setOrder(Long order) {
-		this.order = order;
-	}
-
-	public OrderDetail(Integer idrol, Integer quantity, Double salePrice, Long product, Long order) {
+	public OrderDetail(OrderDetailKey id, Product product, Order order, Integer quantity, Double salePrice) {
 		super();
-		this.idrol = idrol;
+		this.id = id;
+		this.product = product;
+		this.order = order;
 		this.quantity = quantity;
 		this.salePrice = salePrice;
-		this.product = product;
-		this.order = order;
 	}
 
 	public OrderDetail() {
