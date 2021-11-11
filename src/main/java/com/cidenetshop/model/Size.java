@@ -1,5 +1,7 @@
 package com.cidenetshop.model;
 
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,8 +21,8 @@ public class Size {
 
 	@Column(name = "shortText")
 	private String shortText;
+
 	
-	@OneToMany(mappedBy="size")
 
 	public Integer getId() {
 		return id;
@@ -42,6 +44,7 @@ public class Size {
 		super();
 		this.id = id;
 		this.shortText = shortText;
+
 	}
 
 	public Size() {

@@ -33,9 +33,9 @@ public class Order {
 	@JoinColumn(name = "id_user")
 	private User user;
 
-	@OneToMany(mappedBy="order")
+	@OneToMany(mappedBy = "order")
 	private List<OrderDetail> orderDetails;
-	
+
 	public Long getId() {
 		return id;
 	}
@@ -68,12 +68,21 @@ public class Order {
 		this.user = user;
 	}
 
-	public Order(Long id, String orderAddress, LocalDate orderDate, User user) {
+	public List<OrderDetail> getOrderDetails() {
+		return orderDetails;
+	}
+
+	public void setOrderDetails(List<OrderDetail> orderDetails) {
+		this.orderDetails = orderDetails;
+	}
+
+	public Order(Long id, String orderAddress, LocalDate orderDate, User user, List<OrderDetail> orderDetails) {
 		super();
 		this.id = id;
 		this.orderAddress = orderAddress;
 		this.orderDate = orderDate;
 		this.user = user;
+		this.orderDetails = orderDetails;
 	}
 
 	public Order() {

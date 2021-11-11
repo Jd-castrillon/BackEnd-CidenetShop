@@ -1,10 +1,9 @@
 package com.cidenetshop.model;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -34,17 +33,12 @@ public class Product {
 	@Column(name = "price")
 	private Double price;
 
-	@Column(name = "image")
-	private String image;
-
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne
 	@JoinColumn(name = "id_product_type")
 	private ProductType productType;
 
 	@OneToMany(mappedBy = "product")
-	private List<ExistingQuantity> existingQuantity;
-
-	@OneToMany(mappedBy = "order")
+	private Set<ExistingQuantity> existingQuantity;
 
 	public Long getId() {
 		return id;
@@ -86,14 +80,6 @@ public class Product {
 		this.price = price;
 	}
 
-	public String getImage() {
-		return image;
-	}
-
-	public void setImage(String image) {
-		this.image = image;
-	}
-
 	public ProductType getProductType() {
 		return productType;
 	}
@@ -102,23 +88,22 @@ public class Product {
 		this.productType = productType;
 	}
 
-	public List<ExistingQuantity> getExistingQuantity() {
+	public Set<ExistingQuantity> getExistingQuantity() {
 		return existingQuantity;
 	}
 
-	public void setExistingQuantity(List<ExistingQuantity> existingQuantity) {
+	public void setExistingQuantity(Set<ExistingQuantity> existingQuantity) {
 		this.existingQuantity = existingQuantity;
 	}
 
-	public Product(Long id, String name, String description, String color, Double price, String image,
-			ProductType productType, List<ExistingQuantity> existingQuantity) {
+	public Product(Long id, String name, String description, String color, Double price, ProductType productType,
+			Set<ExistingQuantity> existingQuantity) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.description = description;
 		this.color = color;
 		this.price = price;
-		this.image = image;
 		this.productType = productType;
 		this.existingQuantity = existingQuantity;
 	}

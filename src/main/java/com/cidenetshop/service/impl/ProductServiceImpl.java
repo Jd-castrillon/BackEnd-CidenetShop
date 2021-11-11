@@ -12,6 +12,7 @@ import com.cidenetshop.repository.ProductRepository;
 import com.cidenetshop.service.api.ProductServiceAPI;
 
 import dto.GetProductDTO;
+import dto.pepe;
 
 @Service
 public class ProductServiceImpl implements ProductServiceAPI {
@@ -24,13 +25,13 @@ public class ProductServiceImpl implements ProductServiceAPI {
 	}
 
 	@Override
-	
+
 	public Product saveProduct(Product product) throws Exception {
 
-		if(product.getPrice() == null) {
+		if (product.getPrice() == null) {
 
 			throw new Exception("El valor de producto tiene que ser diferente de nulo");
-		} else if  (product.getPrice() <= 0) {
+		} else if (product.getPrice() <= 0) {
 			throw new Exception("El valor del producto tiene que ser mayor que Cero");
 		}
 
@@ -44,6 +45,7 @@ public class ProductServiceImpl implements ProductServiceAPI {
 
 	@Override
 	public GetProductDTO findProductById(Long productId) throws Exception {
+
 		final Optional<Product> repoResponse = this.productRepository.findById(productId);
 
 		if (repoResponse.isEmpty()) {
@@ -53,8 +55,16 @@ public class ProductServiceImpl implements ProductServiceAPI {
 		final Product productFound = repoResponse.get();
 
 		final GetProductDTO dto = new GetProductDTO();
+		dto.setId(productFound.getId());
 		dto.setName(productFound.getName());
-	
+		dto.setDescription(productFound.getDescription());
+		dto.setPrice(productFound.getPrice());
+		dto.setProductType(productFound.getProductType().getProductType());
+		final List<pepe> listpepe = new ArrayList<>();
+		productFound.getExistingQuantity().forEach((eq) -> {
+			listpepe.add(new pepe(eq.getSize().getId(), eq.getSize().getShortText(), eq.getExistingQuantity()));
+		});
+		dto.setPepe(listpepe);
 
 		return dto;
 	}
@@ -75,10 +85,12 @@ public class ProductServiceImpl implements ProductServiceAPI {
 	}
 
 	@Override
-	public List<Product> getAllProducts()  {
+	public List<Product> getAllProducts() {
 		List<Product> products = new ArrayList<>();
 		this.productRepository.findAll().forEach(obj -> products.add(obj));
-		
+
+		List<GetProductDTO> listProductGetDTo = new ArrayList<>();
+
 		return products;
 	}
 
