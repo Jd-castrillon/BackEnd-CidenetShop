@@ -32,6 +32,9 @@ public class Product {
 
 	@Column(name = "price")
 	private Double price;
+	
+	@Column(name = "brand")
+	private String brand;
 
 	@ManyToOne
 	@JoinColumn(name = "id_product_type")
@@ -95,15 +98,27 @@ public class Product {
 	public void setExistingQuantity(Set<ExistingQuantity> existingQuantity) {
 		this.existingQuantity = existingQuantity;
 	}
+	
+	
+	public String getBrand() {
+		return brand;
+	}
 
-	public Product(Long id, String name, String description, String color, Double price, ProductType productType,
-			Set<ExistingQuantity> existingQuantity) {
+	public void setBrand(String brand) {
+		this.brand = brand;
+	}
+	
+	
+
+	public Product(Long id, String name, String description, String color, Double price, String brand,
+			ProductType productType, Set<ExistingQuantity> existingQuantity) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.description = description;
 		this.color = color;
 		this.price = price;
+		this.brand = brand;
 		this.productType = productType;
 		this.existingQuantity = existingQuantity;
 	}

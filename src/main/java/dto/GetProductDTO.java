@@ -16,7 +16,7 @@ public class GetProductDTO {
 
 	private String productType;
 
-	private List<pepe> pepe;
+	private List<GetExistingQuantityDTO> existingQuantity;
 
 	public Long getId() {
 		return id;
@@ -66,16 +66,16 @@ public class GetProductDTO {
 		this.productType = productType;
 	}
 
-	public List<pepe> getPepe() {
-		return pepe;
+	public List<GetExistingQuantityDTO> getExistingQuantity() {
+		return existingQuantity;
 	}
 
-	public void setPepe(List<pepe> pepe) {
-		this.pepe = pepe;
+	public void setExistingQuantity(List<GetExistingQuantityDTO> existingQuantity) {
+		this.existingQuantity = existingQuantity;
 	}
 
 	public GetProductDTO(Long id, String name, String description, String color, Double price, String productType,
-			List<dto.pepe> pepe) {
+			List<GetExistingQuantityDTO> existingQuantity) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -83,13 +83,11 @@ public class GetProductDTO {
 		this.color = color;
 		this.price = price;
 		this.productType = productType;
-		this.pepe = pepe;
+		this.existingQuantity = existingQuantity;
 	}
 
 	public GetProductDTO() {
 		super();
 	}
-	
-	
 
 }

@@ -10,7 +10,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="pictures")
+@Table(name = "pictures")
 public class Picture {
 
 	@Id
@@ -23,7 +23,40 @@ public class Picture {
 
 	@Lob
 	private byte[] picture;
-	
-	
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Product getProduct() {
+		return product;
+	}
+
+	public void setProduct(Product product) {
+		this.product = product;
+	}
+
+	public byte[] getPicture() {
+		return picture;
+	}
+
+	public void setPicture(byte[] picture) {
+		this.picture = picture;
+	}
+
+	public Picture(Long id, Product product, byte[] picture) {
+		super();
+		this.id = id;
+		this.product = product;
+		this.picture = picture;
+	}
+
+	public Picture() {
+		super();
+	}
 
 }

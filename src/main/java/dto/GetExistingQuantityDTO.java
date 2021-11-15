@@ -1,44 +1,46 @@
 package dto;
 
-public class pepe {
+public class GetExistingQuantityDTO {
 
-	private Integer id;
+	private Integer idSize;
 
-	private String size;
+	private String sizeShortText;
 
-	private Integer stock;
+	private Integer existingQuantity;
 
-	public Integer getId() {
-		return id;
+	public Integer getIdSize() {
+		return idSize;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	public void setIdSize(Integer idSize) {
+		this.idSize = idSize;
 	}
 
-	public String getSize() {
-		return size;
+	public String getSizeShortText() {
+		return sizeShortText;
 	}
 
-	public void setSize(String size) {
-		this.size = size;
+	public void setSizeShortText(String sizeShortText) {
+		this.sizeShortText = sizeShortText;
 	}
 
-	public Integer getStock() {
-		return stock;
+	public Integer getExistingQuantity() {
+		return existingQuantity;
 	}
 
-	public void setStock(Integer stock) {
-		this.stock = stock;
+	public void setExistingQuantity(Integer existingQuantity) {
+		this.existingQuantity = existingQuantity;
 	}
 
-	public pepe(Integer id, String size, Integer stock) {
+	public GetExistingQuantityDTO(Integer idSize, String sizeShortText, Integer existingQuantity) {
 		super();
-		this.id = id;
-		this.size = size;
-		this.stock = stock;
+		this.idSize = idSize;
+		this.sizeShortText = sizeShortText;
+		this.existingQuantity = existingQuantity;
 	}
-	
-	
+
+	public GetExistingQuantityDTO() {
+		super();
+	}
 
 }

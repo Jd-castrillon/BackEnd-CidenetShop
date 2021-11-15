@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +13,7 @@ import com.cidenetshop.repository.ProductRepository;
 import com.cidenetshop.service.api.ProductServiceAPI;
 
 import dto.GetProductDTO;
-import dto.pepe;
+import dto.GetExistingQuantityDTO;
 
 @Service
 public class ProductServiceImpl implements ProductServiceAPI {
@@ -54,19 +55,11 @@ public class ProductServiceImpl implements ProductServiceAPI {
 
 		final Product productFound = repoResponse.get();
 
-		final GetProductDTO dto = new GetProductDTO();
-		dto.setId(productFound.getId());
-		dto.setName(productFound.getName());
-		dto.setDescription(productFound.getDescription());
-		dto.setPrice(productFound.getPrice());
-		dto.setProductType(productFound.getProductType().getProductType());
-		final List<pepe> listpepe = new ArrayList<>();
-		productFound.getExistingQuantity().forEach((eq) -> {
-			listpepe.add(new pepe(eq.getSize().getId(), eq.getSize().getShortText(), eq.getExistingQuantity()));
-		});
-		dto.setPepe(listpepe);
+		ModelMapper modelMapper = new ModelMapper();
+		
+		GetProductDTO getProductDTO = modelMapper.map(productFound, GetProductDTO.class);
 
-		return dto;
+		return getProductDTO;
 	}
 
 	@Override

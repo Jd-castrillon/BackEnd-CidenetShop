@@ -18,7 +18,7 @@ import dto.GetOrderDTO;
 @Service
 public class OrderServiceImpl implements OrderServiceAPI {
 	
-	private static final int Order = 0;
+	
 	private final OrderRepository orderRepository;
 	
 	@Autowired
