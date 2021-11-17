@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cidenetshop.model.Product;
+import com.cidenetshop.repository.PictureRepository;
 import com.cidenetshop.repository.ProductRepository;
+import com.cidenetshop.service.api.PictureServiceAPI;
 import com.cidenetshop.service.api.ProductServiceAPI;
 
 import dto.GetProductDTO;
@@ -19,10 +21,14 @@ import dto.GetExistingQuantityDTO;
 public class ProductServiceImpl implements ProductServiceAPI {
 
 	private final ProductRepository productRepository;
+	
+	private final PictureServiceAPI pictureServiceAPI;
 
 	@Autowired
-	public ProductServiceImpl(ProductRepository productRepository) {
+	public ProductServiceImpl(ProductRepository productRepository, PictureServiceAPI pictureServiceAPI) {
 		this.productRepository = productRepository;
+		this.pictureServiceAPI = pictureServiceAPI;
+		;
 	}
 
 	@Override
@@ -55,11 +61,8 @@ public class ProductServiceImpl implements ProductServiceAPI {
 
 		final Product productFound = repoResponse.get();
 
-		ModelMapper modelMapper = new ModelMapper();
 		
-		GetProductDTO getProductDTO = modelMapper.map(productFound, GetProductDTO.class);
-
-		return getProductDTO;
+		return convertProductToDTO(productFound);
 	}
 
 	@Override
@@ -78,13 +81,31 @@ public class ProductServiceImpl implements ProductServiceAPI {
 	}
 
 	@Override
-	public List<Product> getAllProducts() {
-		List<Product> products = new ArrayList<>();
-		this.productRepository.findAll().forEach(obj -> products.add(obj));
+	public List<GetProductDTO> getAllProducts() {
+		
+		List<GetProductDTO> productsDTO = new ArrayList<>();
+		this.productRepository.findAll().forEach(obj -> {
+			try {
+				productsDTO.add(convertProductToDTO(obj));
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		});
 
-		List<GetProductDTO> listProductGetDTo = new ArrayList<>();
 
-		return products;
+		return productsDTO;
+	}
+
+	private GetProductDTO convertProductToDTO(Product product) throws Exception {
+		
+		ModelMapper modelMapper = new ModelMapper();
+
+		GetProductDTO getProductDTO = modelMapper.map(product, GetProductDTO.class);
+		
+		getProductDTO.setPicture(pictureServiceAPI.findPictureById(product.getId()));
+
+		return getProductDTO;
 	}
 
 }

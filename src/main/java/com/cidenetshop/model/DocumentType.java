@@ -16,7 +16,7 @@ public class DocumentType {
 	private Integer id;
 
 	@Column(name = "document_type")
-	private String DocumentType;
+	private String documentType;
 
 	public Integer getId() {
 		return id;
@@ -27,17 +27,17 @@ public class DocumentType {
 	}
 
 	public String getDocumentType() {
-		return DocumentType;
+		return documentType;
 	}
 
 	public void setDocumentType(String documentType) {
-		DocumentType = documentType;
+		this.documentType = documentType;
 	}
 
 	public DocumentType(Integer id, String documentType) {
 		super();
 		this.id = id;
-		DocumentType = documentType;
+		this.documentType = documentType;
 	}
 
 	public DocumentType() {

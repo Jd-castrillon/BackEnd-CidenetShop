@@ -18,6 +18,8 @@ public class GetProductDTO {
 
 	private List<GetExistingQuantityDTO> existingQuantity;
 
+	private GetPictureDTO picture;
+
 	public Long getId() {
 		return id;
 	}
@@ -74,8 +76,16 @@ public class GetProductDTO {
 		this.existingQuantity = existingQuantity;
 	}
 
+	public GetPictureDTO getPicture() {
+		return picture;
+	}
+
+	public void setPicture(GetPictureDTO picture) {
+		this.picture = picture;
+	}
+
 	public GetProductDTO(Long id, String name, String description, String color, Double price, String productType,
-			List<GetExistingQuantityDTO> existingQuantity) {
+			List<GetExistingQuantityDTO> existingQuantity, GetPictureDTO picture) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -84,6 +94,7 @@ public class GetProductDTO {
 		this.price = price;
 		this.productType = productType;
 		this.existingQuantity = existingQuantity;
+		this.picture = picture;
 	}
 
 	public GetProductDTO() {

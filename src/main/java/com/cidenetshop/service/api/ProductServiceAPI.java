@@ -13,7 +13,7 @@ public interface ProductServiceAPI {
 
 	Boolean deleteProductById(Long productId) throws Exception;
 
-	List<Product> getAllProducts();
+	List<GetProductDTO> getAllProducts();
 
 
 

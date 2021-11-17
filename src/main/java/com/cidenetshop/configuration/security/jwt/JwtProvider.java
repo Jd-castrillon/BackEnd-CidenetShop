@@ -52,7 +52,8 @@ public class JwtProvider {
 		}catch (IllegalArgumentException e) {
 			logger.error("Token vacio");
 		}catch (SignatureException e) {
-			logger.error("fallo con la firma");
+			e.printStackTrace();
+			//logger.error("fallo con la firma");
 		}
 		return false;
 	}

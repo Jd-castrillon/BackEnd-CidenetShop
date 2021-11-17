@@ -11,7 +11,11 @@ import com.cidenetshop.model.DocumentType;
 
 public class NewUserDTO {
 	
+	
+	@NotBlank
+	private String documentType;
 
+	
 	@NotBlank
 	private String documentNumber;
 	
@@ -27,9 +31,7 @@ public class NewUserDTO {
 	@Min(value = 5, message = "La contraseña debe tener mas de 5 caracteres")
 	private String password;
 
-	@NotBlank
-	private DocumentType documentType;
-
+	
 	
 	private Set<String> roles = new HashSet<>();
 
@@ -57,11 +59,13 @@ public class NewUserDTO {
 		this.email = email;
 	}
 
-	public DocumentType getDocumentType() {
+	
+	
+	public String getDocumentType() {
 		return documentType;
 	}
 
-	public void setDocumentType(DocumentType documentType) {
+	public void setDocumentType(String documentType) {
 		this.documentType = documentType;
 	}
 
