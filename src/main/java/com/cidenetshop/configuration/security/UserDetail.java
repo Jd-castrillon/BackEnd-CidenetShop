@@ -10,6 +10,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.cidenetshop.model.User;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 public class UserDetail implements UserDetails {
 
@@ -26,12 +28,12 @@ public class UserDetail implements UserDetails {
 		// TODO Auto-generated method stub
 		return authorities;
 	}
-	
+
 	public static UserDetail build(User user) {
-		List<SimpleGrantedAuthority> authorities = 
+		List<SimpleGrantedAuthority> authorities =
 				user.getRoles().stream().
 				map(role -> new SimpleGrantedAuthority(role.getRole())).collect(Collectors.toList());
-	
+
 		return new UserDetail(user.getName(),user.getEmail(),user.getPassword(),authorities);
 	}
 
@@ -83,8 +85,8 @@ public class UserDetail implements UserDetails {
 		this.authorities = authorities;
 	}
 
-	
-	
-	
+
+
+
 
 }

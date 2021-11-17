@@ -33,9 +33,9 @@ public class ProductRestController {
 	}
 
 	@GetMapping
-	public List<Product> getAllProducts() {
-		List<Product> products = this.productServiceAPI.getAllProducts();
-		return products;
+	public String getAllProducts() {
+		//List<Product> products = this.productServiceAPI.getAllProducts();
+		return "hola mundo";
 	}
 
 	@GetMapping(value = "/{productId}")

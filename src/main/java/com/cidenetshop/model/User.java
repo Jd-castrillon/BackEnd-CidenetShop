@@ -46,7 +46,7 @@ public class User {
 	@JoinColumn(name = "id_document_type")
 	private DocumentType documentType;
 
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "id_user"), inverseJoinColumns = @JoinColumn(name = "id_role"))
 	private Set<Role> roles;
 
@@ -117,9 +117,9 @@ public class User {
 		this.documentType = documentType;
 		this.roles = roles;
 	}
-	
-	
-	
+
+
+
 	public User(String documentNumber, String name, String email, DocumentType documentType, String password) {
 		super();
 		this.documentNumber = documentNumber;
