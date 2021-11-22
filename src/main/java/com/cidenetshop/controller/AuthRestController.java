@@ -25,7 +25,6 @@ import dto.NewUserDTO;
 
 @RestController
 @RequestMapping(value = "/auth")
-@CrossOrigin
 public class AuthRestController {
 
 	@Autowired
