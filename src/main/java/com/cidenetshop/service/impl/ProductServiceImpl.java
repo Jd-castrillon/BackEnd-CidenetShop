@@ -28,7 +28,7 @@ public class ProductServiceImpl implements ProductServiceAPI {
 	public ProductServiceImpl(ProductRepository productRepository, PictureServiceAPI pictureServiceAPI) {
 		this.productRepository = productRepository;
 		this.pictureServiceAPI = pictureServiceAPI;
-		;
+		
 	}
 
 	@Override

@@ -2,7 +2,6 @@ package com.cidenetshop.configuration.security;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -10,8 +9,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.cidenetshop.model.User;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 public class UserDetail implements UserDetails {
 
@@ -30,11 +27,10 @@ public class UserDetail implements UserDetails {
 	}
 
 	public static UserDetail build(User user) {
-		List<SimpleGrantedAuthority> authorities =
-				user.getRoles().stream().
-				map(role -> new SimpleGrantedAuthority(role.getRole())).collect(Collectors.toList());
+		List<SimpleGrantedAuthority> authorities = user.getRoles().stream()
+				.map(role -> new SimpleGrantedAuthority(role.getRole())).collect(Collectors.toList());
 
-		return new UserDetail(user.getName(),user.getEmail(),user.getPassword(),authorities);
+		return new UserDetail(user.getName(), user.getEmail(), user.getPassword(), authorities);
 	}
 
 	@Override
@@ -84,9 +80,5 @@ public class UserDetail implements UserDetails {
 		this.password = password;
 		this.authorities = authorities;
 	}
-
-
-
-
 
 }
