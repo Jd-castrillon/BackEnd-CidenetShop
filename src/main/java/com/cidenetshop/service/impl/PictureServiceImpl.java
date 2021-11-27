@@ -59,4 +59,17 @@ public class PictureServiceImpl implements PictureServiceAPI {
 		return getPictureDTO;
 	}
 
+	public byte[] findPictureBlobById(Long id) throws Exception {
+		final Optional<Picture> repoResponse = this.pictureRepository.findById(id);
+
+		if (repoResponse.isEmpty() || id == null) {
+			new Exception("Imagen no encontrada para el id " + id);
+		}
+
+		final Picture pictureFound = repoResponse.get();
+		
+		return pictureFound.getPicture();
+		
+	}
+
 }

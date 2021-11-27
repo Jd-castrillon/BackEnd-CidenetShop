@@ -11,7 +11,6 @@ import com.cidenetshop.model.DocumentType;
 import com.cidenetshop.model.Role;
 import com.cidenetshop.model.User;
 import com.cidenetshop.repository.DocumentTypeRepository;
-import com.cidenetshop.repository.RoleRepository;
 import com.cidenetshop.repository.UserRepository;
 import com.cidenetshop.service.api.RoleServiceAPI;
 import com.cidenetshop.service.api.UserServiceAPI;

@@ -1,6 +1,5 @@
 package com.cidenetshop.service.impl;
 
-import com.cidenetshop.model.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -10,9 +9,6 @@ import org.springframework.stereotype.Service;
 import com.cidenetshop.configuration.security.UserDetail;
 import com.cidenetshop.model.User;
 import com.cidenetshop.repository.UserRepository;
-
-import java.util.HashSet;
-import java.util.Set;
 
 @Service
 public class UserDetailServiceImpl implements UserDetailsService {

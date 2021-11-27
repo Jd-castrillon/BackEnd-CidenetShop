@@ -20,7 +20,7 @@ public class GetProductDTO {
 
 	private List<GetExistingQuantityDTO> existingQuantity;
 
-	private GetPictureDTO picture;
+	private byte[] picture;
 
 	public Long getId() {
 		return id;
@@ -78,11 +78,11 @@ public class GetProductDTO {
 		this.existingQuantity = existingQuantity;
 	}
 
-	public GetPictureDTO getPicture() {
+	public byte[] getPicture() {
 		return picture;
 	}
 
-	public void setPicture(GetPictureDTO picture) {
+	public void setPicture(byte[] picture) {
 		this.picture = picture;
 	}
 
@@ -95,7 +95,7 @@ public class GetProductDTO {
 	}
 
 	public GetProductDTO(Long id, String name, String description, String color, Double price, String productType,
-			String brand, List<GetExistingQuantityDTO> existingQuantity, GetPictureDTO picture) {
+			String brand, List<GetExistingQuantityDTO> existingQuantity, byte[] picture) {
 		super();
 		this.id = id;
 		this.name = name;

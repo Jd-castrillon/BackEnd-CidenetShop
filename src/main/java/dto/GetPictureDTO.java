@@ -1,7 +1,5 @@
 package dto;
 
-import javax.persistence.Lob;
-
 public class GetPictureDTO {
 	
 	

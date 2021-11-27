@@ -9,13 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cidenetshop.model.Product;
-import com.cidenetshop.repository.PictureRepository;
 import com.cidenetshop.repository.ProductRepository;
 import com.cidenetshop.service.api.PictureServiceAPI;
 import com.cidenetshop.service.api.ProductServiceAPI;
 
 import dto.GetProductDTO;
-import dto.GetExistingQuantityDTO;
 
 @Service
 public class ProductServiceImpl implements ProductServiceAPI {
@@ -103,7 +101,7 @@ public class ProductServiceImpl implements ProductServiceAPI {
 
 		GetProductDTO getProductDTO = modelMapper.map(product, GetProductDTO.class);
 		
-		getProductDTO.setPicture(pictureServiceAPI.findPictureById(product.getId()));
+		getProductDTO.setPicture(pictureServiceAPI.findPictureBlobById(product.getId()));
 
 		return getProductDTO;
 	}

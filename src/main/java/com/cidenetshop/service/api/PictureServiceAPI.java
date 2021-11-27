@@ -10,5 +10,7 @@ public interface PictureServiceAPI {
 	
 	GetPictureDTO findPictureById(Long id) throws Exception;
 	
+	byte[] findPictureBlobById(Long id) throws Exception;
+	
 	
 }
