@@ -1,5 +1,6 @@
 package com.cidenetshop.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -22,6 +23,7 @@ public class Picture {
 	private Product product;
 
 	@Lob
+	@Column(name="picture")
 	private byte[] picture;
 
 	public Long getId() {

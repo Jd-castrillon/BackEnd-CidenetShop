@@ -16,6 +16,8 @@ public class GetProductDTO {
 
 	private String productType;
 
+	private String brand;
+
 	private List<GetExistingQuantityDTO> existingQuantity;
 
 	private GetPictureDTO picture;
@@ -84,8 +86,16 @@ public class GetProductDTO {
 		this.picture = picture;
 	}
 
+	public String getBrand() {
+		return brand;
+	}
+
+	public void setBrand(String brand) {
+		this.brand = brand;
+	}
+
 	public GetProductDTO(Long id, String name, String description, String color, Double price, String productType,
-			List<GetExistingQuantityDTO> existingQuantity, GetPictureDTO picture) {
+			String brand, List<GetExistingQuantityDTO> existingQuantity, GetPictureDTO picture) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -93,6 +103,7 @@ public class GetProductDTO {
 		this.color = color;
 		this.price = price;
 		this.productType = productType;
+		this.brand = brand;
 		this.existingQuantity = existingQuantity;
 		this.picture = picture;
 	}

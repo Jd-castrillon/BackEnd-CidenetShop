@@ -1,7 +1,10 @@
 package dto;
 
-public class GetPictureDTO {
+import javax.persistence.Lob;
 
+public class GetPictureDTO {
+	
+	
 	private byte[] picture;
 
 	public byte[] getPicture() {
