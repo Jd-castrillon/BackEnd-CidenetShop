@@ -25,7 +25,6 @@ import dto.NewUserDTO;
 
 @RestController
 @RequestMapping(value = "/auth")
-
 public class AuthRestController {
 
 	@Autowired
