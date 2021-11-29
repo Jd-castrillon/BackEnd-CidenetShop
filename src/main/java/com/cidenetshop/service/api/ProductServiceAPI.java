@@ -14,6 +14,8 @@ public interface ProductServiceAPI {
 	Boolean deleteProductById(Long productId) throws Exception;
 
 	List<GetProductDTO> getAllProducts();
+	
+	List<GetProductDTO> getProductByType(String productType);
 
 
 

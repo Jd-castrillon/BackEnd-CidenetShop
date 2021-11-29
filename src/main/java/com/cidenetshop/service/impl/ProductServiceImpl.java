@@ -19,14 +19,14 @@ import dto.GetProductDTO;
 public class ProductServiceImpl implements ProductServiceAPI {
 
 	private final ProductRepository productRepository;
-	
+
 	private final PictureServiceAPI pictureServiceAPI;
 
 	@Autowired
 	public ProductServiceImpl(ProductRepository productRepository, PictureServiceAPI pictureServiceAPI) {
 		this.productRepository = productRepository;
 		this.pictureServiceAPI = pictureServiceAPI;
-		
+
 	}
 
 	@Override
@@ -59,7 +59,6 @@ public class ProductServiceImpl implements ProductServiceAPI {
 
 		final Product productFound = repoResponse.get();
 
-		
 		return convertProductToDTO(productFound);
 	}
 
@@ -80,7 +79,7 @@ public class ProductServiceImpl implements ProductServiceAPI {
 
 	@Override
 	public List<GetProductDTO> getAllProducts() {
-		
+
 		List<GetProductDTO> productsDTO = new ArrayList<>();
 		this.productRepository.findAll().forEach(obj -> {
 			try {
@@ -91,19 +90,34 @@ public class ProductServiceImpl implements ProductServiceAPI {
 			}
 		});
 
-
 		return productsDTO;
 	}
 
 	private GetProductDTO convertProductToDTO(Product product) throws Exception {
-		
+
 		ModelMapper modelMapper = new ModelMapper();
 
 		GetProductDTO getProductDTO = modelMapper.map(product, GetProductDTO.class);
-		
+
 		getProductDTO.setPicture(pictureServiceAPI.findPictureBlobById(product.getId()));
 
 		return getProductDTO;
 	}
+
+	public List<GetProductDTO> getProductByType(String productType) {
+
+		List<GetProductDTO> productsDTO = new ArrayList<>();
+
+		this.productRepository.findAllByProductType(productType).forEach(obj -> {
+			try {
+				productsDTO.add(convertProductToDTO(obj));
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		});
+
+		return productsDTO;
+	};
 
 }

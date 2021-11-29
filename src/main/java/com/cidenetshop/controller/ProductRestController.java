@@ -36,7 +36,7 @@ public class ProductRestController {
 		return products;
 	}
 
-	@GetMapping(value = "/{productId}")
+	@GetMapping(value = "/id/{productId}")
 	public ResponseEntity<GetProductDTO> getProductById(@PathVariable("productId") Long productId) {
 		try {
 			return new ResponseEntity(this.productServiceAPI.findProductById(productId), HttpStatus.OK);
@@ -44,6 +44,12 @@ public class ProductRestController {
 			e.printStackTrace();
 			return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+	}
+	
+	@GetMapping(value = "/{productType}")
+	public List<GetProductDTO> getProductByProductType(@PathVariable("productType") String productType) {
+		List<GetProductDTO> products = this.productServiceAPI.getProductByType(productType);
+		return products;
 	}
 
 	@PostMapping
@@ -58,6 +64,9 @@ public class ProductRestController {
 		}
 
 	}
+	
+	
+	
 
 	@DeleteMapping
 	public List<Product> deleteAllProducts() {
