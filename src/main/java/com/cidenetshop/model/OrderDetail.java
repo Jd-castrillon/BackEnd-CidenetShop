@@ -26,6 +26,8 @@ public class OrderDetail {
 	@JoinColumn(name = "id_order")
 	private Order order;
 
+	private String size;
+
 	private Integer quantity;
 
 	private Double salePrice;
@@ -70,11 +72,21 @@ public class OrderDetail {
 		this.salePrice = salePrice;
 	}
 
-	public OrderDetail(OrderDetailKey id, Product productOrderDetail, Order order, Integer quantity, Double salePrice) {
+	public String getSize() {
+		return size;
+	}
+
+	public void setSize(String size) {
+		this.size = size;
+	}
+
+	public OrderDetail(OrderDetailKey id, Product productOrderDetail, Order order, String size, Integer quantity,
+			Double salePrice) {
 		super();
 		this.id = id;
 		this.productOrderDetail = productOrderDetail;
 		this.order = order;
+		this.size = size;
 		this.quantity = quantity;
 		this.salePrice = salePrice;
 	}

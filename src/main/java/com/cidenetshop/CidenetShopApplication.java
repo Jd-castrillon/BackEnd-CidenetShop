@@ -6,10 +6,12 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 
 @EnableWebSecurity
 @SpringBootApplication
+
 public class CidenetShopApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(CidenetShopApplication.class, args);
     }
-
+    
+   
 }
