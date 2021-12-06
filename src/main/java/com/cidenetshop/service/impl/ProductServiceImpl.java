@@ -29,6 +29,14 @@ public class ProductServiceImpl implements ProductServiceAPI {
 
 	}
 
+	public Product findById(Long productId) {
+		Optional<Product> product = productRepository.findById(productId);
+		if (product.isEmpty()) {
+			return null;
+		}
+		return product.get();
+	};
+
 	@Override
 
 	public Product saveProduct(Product product) throws Exception {

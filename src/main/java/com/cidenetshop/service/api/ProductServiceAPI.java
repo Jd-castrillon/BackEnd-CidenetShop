@@ -16,6 +16,9 @@ public interface ProductServiceAPI {
 	List<GetProductDTO> getAllProducts();
 	
 	List<GetProductDTO> getProductByType(String productType);
+	
+	Product findById(Long productId);
+	
 
 
 

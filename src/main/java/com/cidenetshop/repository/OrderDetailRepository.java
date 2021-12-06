@@ -4,8 +4,11 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import com.cidenetshop.model.OrderDetail;
+import com.cidenetshop.model.embeddable.OrderDetailKey;
 
 @Repository
-public interface OrderDetailRepository extends CrudRepository<OrderDetail, Long>{
+public interface OrderDetailRepository extends CrudRepository<OrderDetail, OrderDetailKey>{
+	
+	
 	
 }

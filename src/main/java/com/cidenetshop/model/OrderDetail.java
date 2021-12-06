@@ -1,5 +1,6 @@
 package com.cidenetshop.model;
 
+import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -19,17 +20,20 @@ public class OrderDetail {
 	@ManyToOne
 	@MapsId("idProduct")
 	@JoinColumn(name = "id_product")
-	private Product productOrderDetail;
+	private Product product;
 
 	@ManyToOne
 	@MapsId("IdOrder")
 	@JoinColumn(name = "id_order")
 	private Order order;
-
+	
+	@Column
 	private String size;
 
+	@Column
 	private Integer quantity;
 
+	@Column
 	private Double salePrice;
 
 	public OrderDetailKey getId() {
@@ -40,12 +44,12 @@ public class OrderDetail {
 		this.id = id;
 	}
 
-	public Product getProductOrderDetail() {
-		return productOrderDetail;
+	public Product getProduct() {
+		return product;
 	}
 
-	public void setProductOrderDetail(Product productOrderDetail) {
-		this.productOrderDetail = productOrderDetail;
+	public void setProduct(Product product) {
+		this.product = product;
 	}
 
 	public Order getOrder() {
@@ -80,11 +84,22 @@ public class OrderDetail {
 		this.size = size;
 	}
 
-	public OrderDetail(OrderDetailKey id, Product productOrderDetail, Order order, String size, Integer quantity,
+	public OrderDetail(OrderDetailKey id, Product product, Order order, String size, Integer quantity,
 			Double salePrice) {
 		super();
 		this.id = id;
-		this.productOrderDetail = productOrderDetail;
+		this.product = product;
+		this.order = order;
+		this.size = size;
+		this.quantity = quantity;
+		this.salePrice = salePrice;
+	}
+	
+	
+
+	public OrderDetail(Product product, Order order, String size, Integer quantity, Double salePrice) {
+		
+		this.product = product;
 		this.order = order;
 		this.size = size;
 		this.quantity = quantity;

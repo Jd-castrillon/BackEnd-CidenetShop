@@ -1,5 +1,6 @@
 package dto;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class GetOrderDTO {
@@ -9,6 +10,8 @@ public class GetOrderDTO {
 	private String orderAddress;
 
 	private String userName;
+
+	private LocalDate orderDate;
 
 	private List<GetOrderDetailsDTO> OrderDetails;
 
@@ -44,11 +47,21 @@ public class GetOrderDTO {
 		OrderDetails = orderDetails;
 	}
 
-	public GetOrderDTO(Long id, String orderAddress, String userName, List<GetOrderDetailsDTO> orderDetails) {
+	public LocalDate getOrderDate() {
+		return orderDate;
+	}
+
+	public void setOrderDate(LocalDate orderDate) {
+		this.orderDate = orderDate;
+	}
+
+	public GetOrderDTO(Long id, String orderAddress, String userName, LocalDate orderDate,
+			List<GetOrderDetailsDTO> orderDetails) {
 		super();
 		this.id = id;
 		this.orderAddress = orderAddress;
 		this.userName = userName;
+		this.orderDate = orderDate;
 		OrderDetails = orderDetails;
 	}
 

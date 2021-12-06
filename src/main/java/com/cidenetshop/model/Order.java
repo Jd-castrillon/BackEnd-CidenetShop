@@ -84,6 +84,16 @@ public class Order {
 		this.user = user;
 		this.orderDetails = orderDetails;
 	}
+	
+	
+
+	public Order(String orderAddress, LocalDate orderDate, User user, List<OrderDetail> orderDetails) {
+		super();
+		this.orderAddress = orderAddress;
+		this.orderDate = orderDate;
+		this.user = user;
+		this.orderDetails = orderDetails;
+	}
 
 	public Order() {
 		super();

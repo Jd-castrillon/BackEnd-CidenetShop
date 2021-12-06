@@ -1,6 +1,7 @@
 package com.cidenetshop.service.impl;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,17 @@ public class UserServiceImpl implements UserServiceAPI {
 	@Override
 	public boolean existByEmail(String email) {
 		return userRepository.existsByEmail(email);
+	}
+	
+	
+	 public User findByID(Long id) {
+		
+		Optional<User> user = userRepository.findById(id);
+		if (user.isEmpty()) {
+			return null;
+		}
+		return user.get();
+		
 	}
 
 	@Override
