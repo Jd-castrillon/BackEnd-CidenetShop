@@ -1,8 +1,8 @@
 package com.cidenetshop.service.api;
 
-import com.cidenetshop.model.Picture;
+import com.cidenetshop.model.entity.Picture;
 
-import dto.GetPictureDTO;
+import com.cidenetshop.model.dto.GetPictureDTO;
 
 public interface PictureServiceAPI {
 	

@@ -1,4 +1,4 @@
-package com.cidenetshop.model;
+package com.cidenetshop.model.entity;
 
 import java.util.Set;
 

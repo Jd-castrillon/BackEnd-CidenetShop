@@ -5,7 +5,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.cidenetshop.model.Role;
+import com.cidenetshop.model.entity.Role;
 import com.cidenetshop.repository.RoleRepository;
 import com.cidenetshop.service.api.RoleServiceAPI;
 

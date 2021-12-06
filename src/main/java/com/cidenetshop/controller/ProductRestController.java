@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cidenetshop.model.Product;
+import com.cidenetshop.model.entity.Product;
 import com.cidenetshop.service.api.ProductServiceAPI;
 
-import dto.GetProductDTO;
+import com.cidenetshop.model.dto.GetProductDTO;
 
 @RestController
 @RequestMapping(value = "/products")

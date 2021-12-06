@@ -8,15 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.cidenetshop.model.DocumentType;
-import com.cidenetshop.model.Role;
-import com.cidenetshop.model.User;
+import com.cidenetshop.model.entity.DocumentType;
+import com.cidenetshop.model.entity.Role;
+import com.cidenetshop.model.entity.User;
 import com.cidenetshop.repository.DocumentTypeRepository;
 import com.cidenetshop.repository.UserRepository;
 import com.cidenetshop.service.api.RoleServiceAPI;
 import com.cidenetshop.service.api.UserServiceAPI;
 
-import dto.NewUserDTO;
+import com.cidenetshop.model.dto.NewUserDTO;
 
 @Service
 public class UserServiceImpl implements UserServiceAPI {

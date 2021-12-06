@@ -1,4 +1,4 @@
-package dto;
+package com.cidenetshop.model.dto;
 
 import java.time.LocalDate;
 import java.util.List;

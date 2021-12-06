@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.cidenetshop.configuration.security.UserDetail;
-import com.cidenetshop.model.User;
+import com.cidenetshop.model.entity.User;
 import com.cidenetshop.repository.UserRepository;
 
 @Service

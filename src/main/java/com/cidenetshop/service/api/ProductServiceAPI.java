@@ -2,8 +2,8 @@ package com.cidenetshop.service.api;
 
 import java.util.List;
 
-import com.cidenetshop.model.Product;
-import dto.GetProductDTO;
+import com.cidenetshop.model.entity.Product;
+import com.cidenetshop.model.dto.GetProductDTO;
 
 public interface ProductServiceAPI {
 

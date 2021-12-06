@@ -6,11 +6,11 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.cidenetshop.model.Picture;
+import com.cidenetshop.model.entity.Picture;
 import com.cidenetshop.repository.PictureRepository;
 import com.cidenetshop.service.api.PictureServiceAPI;
 
-import dto.GetPictureDTO;
+import com.cidenetshop.model.dto.GetPictureDTO;
 
 @Service
 public class PictureServiceImpl implements PictureServiceAPI {

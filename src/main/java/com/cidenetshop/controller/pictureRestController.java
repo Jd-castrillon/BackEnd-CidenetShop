@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.cidenetshop.model.Picture;
+import com.cidenetshop.model.entity.Picture;
 import com.cidenetshop.service.api.PictureServiceAPI;
 
-import dto.GetPictureDTO;
+import com.cidenetshop.model.dto.GetPictureDTO;
 
 @RestController
 @RequestMapping(value ="/pictures")

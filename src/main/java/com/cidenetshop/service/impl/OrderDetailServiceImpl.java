@@ -5,15 +5,15 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.cidenetshop.model.Order;
-import com.cidenetshop.model.OrderDetail;
+import com.cidenetshop.model.entity.Order;
+import com.cidenetshop.model.entity.OrderDetail;
 import com.cidenetshop.model.embeddable.OrderDetailKey;
 import com.cidenetshop.repository.OrderDetailRepository;
 import com.cidenetshop.repository.OrderRepository;
 import com.cidenetshop.service.api.OrderDetailServiceAPI;
 import com.cidenetshop.service.api.ProductServiceAPI;
 
-import dto.GetOrderDetailDTO;
+import com.cidenetshop.model.dto.GetOrderDetailDTO;
 
 @Service
 public class OrderDetailServiceImpl implements OrderDetailServiceAPI {

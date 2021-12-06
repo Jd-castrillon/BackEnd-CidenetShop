@@ -1,8 +1,8 @@
 package com.cidenetshop.service.api;
 
-import com.cidenetshop.model.OrderDetail;
+import com.cidenetshop.model.entity.OrderDetail;
 
-import dto.GetOrderDetailDTO;
+import com.cidenetshop.model.dto.GetOrderDetailDTO;
 
 public interface OrderDetailServiceAPI {
 	void save (GetOrderDetailDTO newOrderDetail); 

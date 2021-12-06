@@ -17,10 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cidenetshop.configuration.security.jwt.JwtProvider;
 import com.cidenetshop.service.api.UserServiceAPI;
 
-import dto.JwtDTO;
-import dto.LoginUserDTO;
-import dto.MessageDTO;
-import dto.NewUserDTO;
+import com.cidenetshop.model.dto.JwtDTO;
+import com.cidenetshop.model.dto.LoginUserDTO;
+import com.cidenetshop.model.dto.MessageDTO;
+import com.cidenetshop.model.dto.NewUserDTO;
 
 @RestController
 @RequestMapping(value = "/auth")

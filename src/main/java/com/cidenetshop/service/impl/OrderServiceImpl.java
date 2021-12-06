@@ -1,66 +1,91 @@
 package com.cidenetshop.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import org.modelmapper.ModelMapper;
-import org.springframework.stereotype.Service;
-
-import com.cidenetshop.model.Order;
-import com.cidenetshop.model.OrderDetail;
+import com.cidenetshop.model.dto.GetOrderDTO;
+import com.cidenetshop.model.dto.NewOrderDTO;
+import com.cidenetshop.model.entity.Order;
+import com.cidenetshop.model.entity.OrderDetail;
+import com.cidenetshop.model.entity.Product;
+import com.cidenetshop.model.entity.User;
 import com.cidenetshop.repository.OrderRepository;
 import com.cidenetshop.service.api.OrderDetailServiceAPI;
 import com.cidenetshop.service.api.OrderServiceAPI;
 import com.cidenetshop.service.api.ProductServiceAPI;
 import com.cidenetshop.service.api.UserServiceAPI;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import dto.GetOrderDTO;
-import dto.GetOrderDetailDTO;
-import dto.NewOrderDTO;
+import java.time.Clock;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Optional;
 
 @Service
 public class OrderServiceImpl implements OrderServiceAPI {
 
-	private final UserServiceAPI userServiceAPI;
+    private final UserServiceAPI userServiceAPI;
 
-	private final OrderRepository orderRepository;
+    private final OrderRepository orderRepository;
 
-	private final ProductServiceAPI productServiceAPI;
+    private final ProductServiceAPI productServiceAPI;
 
-	private final OrderDetailServiceAPI orderDetailServiceAPI;
+    private final OrderDetailServiceAPI orderDetailServiceAPI;
 
-	
-
-	public OrderServiceImpl(UserServiceAPI userServiceAPI, OrderRepository orderRepository,
-			ProductServiceAPI productServiceAPI, OrderDetailServiceAPI orderDetailServiceAPI) {
-		super();
-		this.userServiceAPI = userServiceAPI;
-		this.orderRepository = orderRepository;
-		this.productServiceAPI = productServiceAPI;
-		this.orderDetailServiceAPI = orderDetailServiceAPI;
-	}
+    private final ModelMapper modelMapper;
 
 
+    @Autowired
+    public OrderServiceImpl(UserServiceAPI userServiceAPI, OrderRepository orderRepository,
+                            ProductServiceAPI productServiceAPI, OrderDetailServiceAPI orderDetailServiceAPI,
+                            ModelMapper modelMapper) {
+        super();
+        this.userServiceAPI = userServiceAPI;
+        this.orderRepository = orderRepository;
+        this.productServiceAPI = productServiceAPI;
+        this.orderDetailServiceAPI = orderDetailServiceAPI;
+        this.modelMapper = modelMapper;
+    }
 
 
-	public Order findById(Long id) {
-		Optional<Order> order = orderRepository.findById(id);
-		if (order.isEmpty()) {
-			return null;
-		}
-		return order.get();
-	};
+    @Override
+    public void saveOrder(Long idUser, NewOrderDTO newOrder) throws Exception {
 
-	
-	
-	
+        final User user = new User();
+        user.setIdUser(idUser);
+
+        final Order order = modelMapper.map(newOrder, Order.class);
+
+        order.setOrderDate(LocalDate.now(Clock.system(ZoneId.of("America/Bogota"))));
+        order.setUser(user);
+
+        for (OrderDetail orderDetail : order.getOrderDetails()) {
+            final Product product = productServiceAPI.findById(orderDetail.getProduct().getId());
+
+            orderDetail.setSalePrice(product.getPrice());
+            orderDetail.setOrder(order);
+        }
+
+        orderRepository.save(order);
+    }
+
+    public Order findById(Long id) {
+        Optional<Order> order = orderRepository.findById(id);
+        if (order.isEmpty()) {
+            return null;
+        }
+        return order.get();
+    }
+
+    ;
+
+
 //	public void saveOrder(NewOrderDTO newOrder) throws Exception {
 //
 //		List<OrderDetail> orderDetails = new ArrayList<>() ;
 //
 //		for (GetOrderDetailDTO i : newOrder.getOrderDetails()) {
-//			OrderDetail listOrderD = new OrderDetail(productServiceAPI.findById(i.getIdProduct()), findById(i.getIdOrder()),
+//			OrderDetail listOrderD = new OrderDetail(productServiceAPI.findById(i.getIdProduct()), findById(i
+//			.getIdOrder()),
 //					i.getSize(), i.getQuantity(), i.getSalePrice());
 //			
 //			orderDetails.add(listOrderD);
@@ -78,33 +103,21 @@ public class OrderServiceImpl implements OrderServiceAPI {
 //	}
 //	
 
-	
-	
-	@Override
-	public GetOrderDTO findOrderById(Long orderId) throws Exception {
 
-		final Optional<Order> repoResponse = this.orderRepository.findById(orderId);
+    @Override
+    public GetOrderDTO findOrderById(Long orderId) throws Exception {
 
-		if (repoResponse.isEmpty()) {
-			new Exception("Orden no encontrada para el id " + orderId);
-		}
+        final Optional<Order> repoResponse = this.orderRepository.findById(orderId);
 
-		final Order orderFound = repoResponse.get();
+        if (repoResponse.isEmpty()) {
+            new Exception("Orden no encontrada para el id " + orderId);
+        }
 
-		ModelMapper modelMapper = new ModelMapper();
+        final Order orderFound = repoResponse.get();
 
-		GetOrderDTO getOrderDTO = modelMapper.map(orderFound, GetOrderDTO.class);
+        GetOrderDTO getOrderDTO = modelMapper.map(orderFound, GetOrderDTO.class);
 
-		return getOrderDTO;
-	}
-
-
-
-
-@Override
-public void saveOrder(NewOrderDTO newOrder) throws Exception {
-	
-	
-}
+        return getOrderDTO;
+    }
 
 }

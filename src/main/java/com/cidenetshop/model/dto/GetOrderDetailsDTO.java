@@ -1,4 +1,4 @@
-package dto;
+package com.cidenetshop.model.dto;
 
 public class GetOrderDetailsDTO {
 

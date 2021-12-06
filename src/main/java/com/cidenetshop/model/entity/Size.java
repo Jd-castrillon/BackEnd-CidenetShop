@@ -1,4 +1,4 @@
-package com.cidenetshop.model;
+package com.cidenetshop.model.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,15 +8,18 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "document_types")
-public class DocumentType {
+@Table(name = "sizes")
+public class Size {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
 	private Integer id;
 
-	@Column(name = "document_type")
-	private String documentType;
+	@Column(name = "shortText")
+	private String shortText;
+
+	
 
 	public Integer getId() {
 		return id;
@@ -26,21 +29,22 @@ public class DocumentType {
 		this.id = id;
 	}
 
-	public String getDocumentType() {
-		return documentType;
+	public String getShortText() {
+		return shortText;
 	}
 
-	public void setDocumentType(String documentType) {
-		this.documentType = documentType;
+	public void setShortText(String shortText) {
+		this.shortText = shortText;
 	}
 
-	public DocumentType(Integer id, String documentType) {
+	public Size(Integer id, String shortText) {
 		super();
 		this.id = id;
-		this.documentType = documentType;
+		this.shortText = shortText;
+
 	}
 
-	public DocumentType() {
+	public Size() {
 		super();
 	}
 

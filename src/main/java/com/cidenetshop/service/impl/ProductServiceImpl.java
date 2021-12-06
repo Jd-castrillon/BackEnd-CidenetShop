@@ -8,12 +8,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.cidenetshop.model.Product;
+import com.cidenetshop.model.entity.Product;
 import com.cidenetshop.repository.ProductRepository;
 import com.cidenetshop.service.api.PictureServiceAPI;
 import com.cidenetshop.service.api.ProductServiceAPI;
 
-import dto.GetProductDTO;
+import com.cidenetshop.model.dto.GetProductDTO;
 
 @Service
 public class ProductServiceImpl implements ProductServiceAPI {

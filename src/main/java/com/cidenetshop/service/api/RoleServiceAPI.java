@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import com.cidenetshop.model.Role;
+import com.cidenetshop.model.entity.Role;
 
 @Service
 public interface RoleServiceAPI {

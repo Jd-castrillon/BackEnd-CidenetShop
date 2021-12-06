@@ -1,4 +1,4 @@
-package com.cidenetshop.model;
+package com.cidenetshop.model.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,18 +8,16 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "sizes")
-public class Size {
-
+@Table(name="Product_types")
+public class ProductType {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
+	@Column(name="id")
 	private Integer id;
-
-	@Column(name = "shortText")
-	private String shortText;
-
 	
+	@Column(name="product_type")
+	private String productType;
 
 	public Integer getId() {
 		return id;
@@ -29,23 +27,23 @@ public class Size {
 		this.id = id;
 	}
 
-	public String getShortText() {
-		return shortText;
+	public String getProductType() {
+		return productType;
 	}
 
-	public void setShortText(String shortText) {
-		this.shortText = shortText;
+	public void setProductType(String productType) {
+		this.productType = productType;
 	}
 
-	public Size(Integer id, String shortText) {
+	public ProductType(Integer id, String productType) {
 		super();
 		this.id = id;
-		this.shortText = shortText;
-
+		this.productType = productType;
 	}
 
-	public Size() {
+	public ProductType() {
 		super();
 	}
-
+	
+	
 }
