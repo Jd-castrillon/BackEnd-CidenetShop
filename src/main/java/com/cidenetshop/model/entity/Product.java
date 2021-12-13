@@ -32,7 +32,7 @@ public class Product {
 
 	@Column(name = "price")
 	private Double price;
-	
+
 	@Column(name = "brand")
 	private String brand;
 
@@ -91,15 +91,6 @@ public class Product {
 		this.productType = productType;
 	}
 
-	public Set<ExistingQuantity> getExistingQuantity() {
-		return existingQuantity;
-	}
-
-	public void setExistingQuantity(Set<ExistingQuantity> existingQuantity) {
-		this.existingQuantity = existingQuantity;
-	}
-	
-	
 	public String getBrand() {
 		return brand;
 	}
@@ -107,8 +98,14 @@ public class Product {
 	public void setBrand(String brand) {
 		this.brand = brand;
 	}
-	
-	
+
+	public Set<ExistingQuantity> getExistingQuantity() {
+		return existingQuantity;
+	}
+
+	public void setExistingQuantity(Set<ExistingQuantity> existingQuantity) {
+		this.existingQuantity = existingQuantity;
+	}
 
 	public Product(Long id, String name, String description, String color, Double price, String brand,
 			ProductType productType, Set<ExistingQuantity> existingQuantity) {

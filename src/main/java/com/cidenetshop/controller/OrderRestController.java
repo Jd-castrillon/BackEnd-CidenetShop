@@ -42,9 +42,8 @@ public class OrderRestController {
     }
 
     @PostMapping
-    public ResponseEntity<GetOrderDTO> saveNewOrder(@RequestBody NewOrderDTO newOrder, BindingResult bindingResult) {
-        if (bindingResult.hasErrors())
-            return new ResponseEntity(new MessageDTO("campos mal puestos o email inválido"), HttpStatus.BAD_REQUEST);
+    public ResponseEntity<GetOrderDTO> saveNewOrder(@RequestBody NewOrderDTO newOrder) {
+       
         try {
             final Long idUser =
                     ((UserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getIdUser();

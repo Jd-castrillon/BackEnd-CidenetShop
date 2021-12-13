@@ -16,7 +16,8 @@ public class OrderDetail {
 
 	@EmbeddedId
 	private OrderDetailKey id;
-
+	
+	
 	@ManyToOne
 	@MapsId("idProduct")
 	@JoinColumn(name = "id_product")

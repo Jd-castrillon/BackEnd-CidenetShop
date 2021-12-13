@@ -30,7 +30,6 @@ public class NewUserDTO {
 	private String password;
 
 	
-	
 	private Set<String> roles = new HashSet<>();
 
 	public String getName() {

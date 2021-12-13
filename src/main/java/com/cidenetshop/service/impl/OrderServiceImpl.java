@@ -2,10 +2,12 @@ package com.cidenetshop.service.impl;
 
 import com.cidenetshop.model.dto.GetOrderDTO;
 import com.cidenetshop.model.dto.NewOrderDTO;
+import com.cidenetshop.model.embeddable.OrderDetailKey;
 import com.cidenetshop.model.entity.Order;
 import com.cidenetshop.model.entity.OrderDetail;
 import com.cidenetshop.model.entity.Product;
 import com.cidenetshop.model.entity.User;
+import com.cidenetshop.repository.OrderDetailRepository;
 import com.cidenetshop.repository.OrderRepository;
 import com.cidenetshop.service.api.OrderDetailServiceAPI;
 import com.cidenetshop.service.api.OrderServiceAPI;
@@ -20,6 +22,8 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 @Service
 public class OrderServiceImpl implements OrderServiceAPI {
 
@@ -30,6 +34,8 @@ public class OrderServiceImpl implements OrderServiceAPI {
     private final ProductServiceAPI productServiceAPI;
 
     private final OrderDetailServiceAPI orderDetailServiceAPI;
+    
+    private final  OrderDetailRepository orderDetailRepository; 
 
     private final ModelMapper modelMapper;
 
@@ -37,16 +43,17 @@ public class OrderServiceImpl implements OrderServiceAPI {
     @Autowired
     public OrderServiceImpl(UserServiceAPI userServiceAPI, OrderRepository orderRepository,
                             ProductServiceAPI productServiceAPI, OrderDetailServiceAPI orderDetailServiceAPI,
-                            ModelMapper modelMapper) {
+                            ModelMapper modelMapper, OrderDetailRepository orderDetailRepository) {
         super();
         this.userServiceAPI = userServiceAPI;
         this.orderRepository = orderRepository;
         this.productServiceAPI = productServiceAPI;
         this.orderDetailServiceAPI = orderDetailServiceAPI;
+		this.orderDetailRepository = orderDetailRepository;
         this.modelMapper = modelMapper;
     }
 
-
+    @Transactional
     @Override
     public void saveOrder(Long idUser, NewOrderDTO newOrder) throws Exception {
 
@@ -63,9 +70,13 @@ public class OrderServiceImpl implements OrderServiceAPI {
 
             orderDetail.setSalePrice(product.getPrice());
             orderDetail.setOrder(order);
+            
         }
 
         orderRepository.save(order);
+        System.out.println(order);
+        
+        
     }
 
     public Order findById(Long id) {
