@@ -1,5 +1,7 @@
 package com.cidenetshop.model.entity;
 
+import com.cidenetshop.model.embeddable.OrderDetailKey;
+
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -8,107 +10,107 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.persistence.Table;
 
-import com.cidenetshop.model.embeddable.OrderDetailKey;
-
 @Entity
 @Table(name = "order_details")
 public class OrderDetail {
 
-	@EmbeddedId
-	private OrderDetailKey id;
-	
-	
-	@ManyToOne
-	@MapsId("idProduct")
-	@JoinColumn(name = "id_product")
-	private Product product;
+    @EmbeddedId
+    private OrderDetailKey id;
 
-	@ManyToOne
-	@MapsId("IdOrder")
-	@JoinColumn(name = "id_order")
-	private Order order;
-	
-	@Column
-	private String size;
+    @ManyToOne
+    @MapsId("idProduct")
+    @JoinColumn(name = "id_product")
+    private Product product;
 
-	@Column
-	private Integer quantity;
+    @ManyToOne
+    @MapsId("idOrder")
+    @JoinColumn(name = "id_order")
+    private Order order;
 
-	@Column
-	private Double salePrice;
+    @Column
+    private String size;
 
-	public OrderDetailKey getId() {
-		return id;
-	}
+    @Column
+    private Integer quantity;
 
-	public void setId(OrderDetailKey id) {
-		this.id = id;
-	}
+    @Column
+    private Double salePrice;
 
-	public Product getProduct() {
-		return product;
-	}
+    public OrderDetail() {
+        super();
+        id = new OrderDetailKey();
+    }
 
-	public void setProduct(Product product) {
-		this.product = product;
-	}
+    public OrderDetail(Product product, Order order, String size, Integer quantity, Double salePrice) {
+        super();
+        id = new OrderDetailKey();
+        this.product = product;
+        this.order = order;
+        this.size = size;
+        this.quantity = quantity;
+        this.salePrice = salePrice;
+    }
 
-	public Order getOrder() {
-		return order;
-	}
+    public OrderDetail(OrderDetailKey id, Product product, Order order, String size, Integer quantity,
+                       Double salePrice) {
+        super();
+        if (id == null) {
+            id = new OrderDetailKey();
+        }
+        this.id = id;
+        this.product = product;
+        this.order = order;
+        this.size = size;
+        this.quantity = quantity;
+        this.salePrice = salePrice;
+    }
 
-	public void setOrder(Order order) {
-		this.order = order;
-	}
+    public OrderDetailKey getId() {
+        return id;
+    }
 
-	public Integer getQuantity() {
-		return quantity;
-	}
+    public void setId(OrderDetailKey id) {
+        this.id = id;
+    }
 
-	public void setQuantity(Integer quantity) {
-		this.quantity = quantity;
-	}
+    public Product getProduct() {
+        return product;
+    }
 
-	public Double getSalePrice() {
-		return salePrice;
-	}
+    public void setProduct(Product product) {
+        this.product = product;
+    }
 
-	public void setSalePrice(Double salePrice) {
-		this.salePrice = salePrice;
-	}
+    public Order getOrder() {
+        return order;
+    }
 
-	public String getSize() {
-		return size;
-	}
+    public void setOrder(Order order) {
+        this.order = order;
+    }
 
-	public void setSize(String size) {
-		this.size = size;
-	}
+    public Integer getQuantity() {
+        return quantity;
+    }
 
-	public OrderDetail(OrderDetailKey id, Product product, Order order, String size, Integer quantity,
-			Double salePrice) {
-		super();
-		this.id = id;
-		this.product = product;
-		this.order = order;
-		this.size = size;
-		this.quantity = quantity;
-		this.salePrice = salePrice;
-	}
-	
-	
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
 
-	public OrderDetail(Product product, Order order, String size, Integer quantity, Double salePrice) {
-		
-		this.product = product;
-		this.order = order;
-		this.size = size;
-		this.quantity = quantity;
-		this.salePrice = salePrice;
-	}
+    public Double getSalePrice() {
+        return salePrice;
+    }
 
-	public OrderDetail() {
-		super();
-	}
+    public void setSalePrice(Double salePrice) {
+        this.salePrice = salePrice;
+    }
+
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
+    }
 
 }

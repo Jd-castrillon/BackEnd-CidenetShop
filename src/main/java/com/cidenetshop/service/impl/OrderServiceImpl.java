@@ -1,8 +1,8 @@
 package com.cidenetshop.service.impl;
 
 import com.cidenetshop.model.dto.GetOrderDTO;
+import com.cidenetshop.model.dto.GetOrderDetailDTO;
 import com.cidenetshop.model.dto.NewOrderDTO;
-import com.cidenetshop.model.embeddable.OrderDetailKey;
 import com.cidenetshop.model.entity.Order;
 import com.cidenetshop.model.entity.OrderDetail;
 import com.cidenetshop.model.entity.Product;
@@ -17,12 +17,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.Clock;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Optional;
-
-import javax.transaction.Transactional;
 
 @Service
 public class OrderServiceImpl implements OrderServiceAPI {
@@ -34,8 +34,8 @@ public class OrderServiceImpl implements OrderServiceAPI {
     private final ProductServiceAPI productServiceAPI;
 
     private final OrderDetailServiceAPI orderDetailServiceAPI;
-    
-    private final  OrderDetailRepository orderDetailRepository; 
+
+    private final OrderDetailRepository orderDetailRepository;
 
     private final ModelMapper modelMapper;
 
@@ -49,7 +49,7 @@ public class OrderServiceImpl implements OrderServiceAPI {
         this.orderRepository = orderRepository;
         this.productServiceAPI = productServiceAPI;
         this.orderDetailServiceAPI = orderDetailServiceAPI;
-		this.orderDetailRepository = orderDetailRepository;
+        this.orderDetailRepository = orderDetailRepository;
         this.modelMapper = modelMapper;
     }
 
@@ -60,23 +60,29 @@ public class OrderServiceImpl implements OrderServiceAPI {
         final User user = new User();
         user.setIdUser(idUser);
 
-        final Order order = modelMapper.map(newOrder, Order.class);
-
+        final Order order = new Order();
+        order.setOrderAddress(newOrder.getOrderAddress());
         order.setOrderDate(LocalDate.now(Clock.system(ZoneId.of("America/Bogota"))));
         order.setUser(user);
+        order.setOrderDetails(new ArrayList<>());
 
-        for (OrderDetail orderDetail : order.getOrderDetails()) {
-            final Product product = productServiceAPI.findById(orderDetail.getProduct().getId());
+        for (GetOrderDetailDTO orderDetailDTO : newOrder.getOrderDetails()) {
+            final Product product = productServiceAPI.findById(orderDetailDTO.getIdProduct());
 
-            orderDetail.setSalePrice(product.getPrice());
+            final OrderDetail orderDetail = new OrderDetail();
+            orderDetail.setProduct(product);
             orderDetail.setOrder(order);
-            
+            orderDetail.setSize(orderDetailDTO.getSize());
+            orderDetail.setQuantity(orderDetailDTO.getQuantity());
+            orderDetail.setSalePrice(product.getPrice());
+
+            order.getOrderDetails().add(orderDetail);
         }
 
         orderRepository.save(order);
-        System.out.println(order);
-        
-        
+
+        // find the existing quantity through a repo/service
+        // set new quantity
     }
 
     public Order findById(Long id) {

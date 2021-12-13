@@ -36,7 +36,7 @@ public class Order {
 	@JoinColumn(name = "id_user")
 	private User user;
 
-	@OneToMany(mappedBy = "order", cascade = { CascadeType.PERSIST}  )
+	@OneToMany(mappedBy = "order", cascade = { CascadeType.ALL}  )
 	private List<OrderDetail> orderDetails;
 
 	public Long getId() {
