@@ -37,10 +37,7 @@ public class ServerSecurityConfiguration extends WebSecurityConfigurerAdapter {
         this.jwtTokenFilter = jwtTokenFilter;
     }
 
-    //	@Bean
-//	public JwtTokenFilter jwtTokenFilter() {
-//		return new JwtTokenFilter();
-//	}
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -83,14 +80,6 @@ public class ServerSecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
-//	@Override
-//	public void configure(HttpSecurity http) throws Exception {
-//
-//		http.cors();
-//
-//		http.csrf().disable();
-//
-//		http.authorizeRequests().antMatchers("/public/**").permitAll().anyRequest().permitAll();
-//	}
+
 
 }

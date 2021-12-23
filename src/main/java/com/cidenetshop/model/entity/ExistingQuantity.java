@@ -25,7 +25,6 @@ public class ExistingQuantity {
 	@ManyToOne
 	@MapsId("idSize")
 	@JoinColumn(name = "id_size")
-	
 	private Size size;
 
 	private Integer existingQuantity;

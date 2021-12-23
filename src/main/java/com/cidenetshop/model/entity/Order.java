@@ -13,16 +13,19 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-
-import org.hibernate.annotations.Cascade;
 
 @Entity
 @Table(name = "orders")
 public class Order {
 
+	private static final String ID_SEQUENCE_GENERATOR_NAME = "orders_id_sequence_generator";
+	private static final String ID_SEQUENCE_NAME = "orders_id_sequence";
+
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQUENCE_GENERATOR_NAME)
+	@SequenceGenerator(name = ID_SEQUENCE_GENERATOR_NAME, sequenceName = ID_SEQUENCE_NAME, allocationSize = 1)
 	@Column(name = "id")
 	private Long id;
 
@@ -36,7 +39,7 @@ public class Order {
 	@JoinColumn(name = "id_user")
 	private User user;
 
-	@OneToMany(mappedBy = "order", cascade = { CascadeType.ALL}  )
+	@OneToMany(mappedBy = "order", cascade = { CascadeType.ALL })
 	private List<OrderDetail> orderDetails;
 
 	public Long getId() {

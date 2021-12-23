@@ -10,14 +10,19 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "products")
 public class Product {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private static final String ID_SEQUENCE_GENERATOR_NAME = "products_id_sequence_generator";
+    private static final String ID_SEQUENCE_NAME = "products_id_sequence";
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQUENCE_GENERATOR_NAME)
+    @SequenceGenerator(name = ID_SEQUENCE_GENERATOR_NAME, sequenceName = ID_SEQUENCE_NAME, allocationSize = 1)
 	@Column(name = "id")
 	private Long id;
 
@@ -38,7 +43,7 @@ public class Product {
 
 	@ManyToOne
 	@JoinColumn(name = "id_product_type")
-	private ProductType productType;
+	private Gender productType;
 
 	@OneToMany(mappedBy = "product")
 	private Set<ExistingQuantity> existingQuantity;
@@ -83,11 +88,11 @@ public class Product {
 		this.price = price;
 	}
 
-	public ProductType getProductType() {
+	public Gender getProductType() {
 		return productType;
 	}
 
-	public void setProductType(ProductType productType) {
+	public void setProductType(Gender productType) {
 		this.productType = productType;
 	}
 
@@ -108,7 +113,7 @@ public class Product {
 	}
 
 	public Product(Long id, String name, String description, String color, Double price, String brand,
-			ProductType productType, Set<ExistingQuantity> existingQuantity) {
+			Gender productType, Set<ExistingQuantity> existingQuantity) {
 		super();
 		this.id = id;
 		this.name = name;

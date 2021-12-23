@@ -12,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.springframework.lang.NonNull;
@@ -19,8 +20,12 @@ import org.springframework.lang.NonNull;
 @Entity
 @Table(name = "users")
 public class User {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private static final String ID_SEQUENCE_GENERATOR_NAME = "users_id_sequence_generator";
+    private static final String ID_SEQUENCE_NAME = "users_id_sequence";
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQUENCE_GENERATOR_NAME)
+    @SequenceGenerator(name = ID_SEQUENCE_GENERATOR_NAME, sequenceName = ID_SEQUENCE_NAME, allocationSize = 1)
 	@Column(name = "id")
 	private Long idUser;
 

@@ -1,100 +1,101 @@
 package com.cidenetshop.service.impl;
 
-import com.cidenetshop.model.dto.GetOrderDTO;
-import com.cidenetshop.model.dto.GetOrderDetailDTO;
-import com.cidenetshop.model.dto.NewOrderDTO;
-import com.cidenetshop.model.entity.Order;
-import com.cidenetshop.model.entity.OrderDetail;
-import com.cidenetshop.model.entity.Product;
-import com.cidenetshop.model.entity.User;
-import com.cidenetshop.repository.OrderDetailRepository;
-import com.cidenetshop.repository.OrderRepository;
-import com.cidenetshop.service.api.OrderDetailServiceAPI;
-import com.cidenetshop.service.api.OrderServiceAPI;
-import com.cidenetshop.service.api.ProductServiceAPI;
-import com.cidenetshop.service.api.UserServiceAPI;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
 import java.time.Clock;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.cidenetshop.model.dto.GetOrderDTO;
+import com.cidenetshop.model.dto.GetOrderDetailDTO;
+import com.cidenetshop.model.dto.NewOrderDTO;
+import com.cidenetshop.model.entity.ExistingQuantity;
+import com.cidenetshop.model.entity.Order;
+import com.cidenetshop.model.entity.OrderDetail;
+import com.cidenetshop.model.entity.Product;
+import com.cidenetshop.model.entity.User;
+import com.cidenetshop.repository.OrderRepository;
+import com.cidenetshop.service.api.ExistingQuantityServiceAPI;
+import com.cidenetshop.service.api.OrderServiceAPI;
+import com.cidenetshop.service.api.ProductServiceAPI;
+
 @Service
 public class OrderServiceImpl implements OrderServiceAPI {
 
-    private final UserServiceAPI userServiceAPI;
+	private final ExistingQuantityServiceAPI existingQuantityServiceAPI;
 
-    private final OrderRepository orderRepository;
+	private final OrderRepository orderRepository;
 
-    private final ProductServiceAPI productServiceAPI;
+	private final ProductServiceAPI productServiceAPI;
 
-    private final OrderDetailServiceAPI orderDetailServiceAPI;
+	private final ModelMapper modelMapper;
 
-    private final OrderDetailRepository orderDetailRepository;
+	@Autowired
+	public OrderServiceImpl(ExistingQuantityServiceAPI existingQuantityServiceAPI, OrderRepository orderRepository,
+			ProductServiceAPI productServiceAPI, ModelMapper modelMapper) {
+		super();
+		this.existingQuantityServiceAPI = existingQuantityServiceAPI;
+		this.orderRepository = orderRepository;
+		this.productServiceAPI = productServiceAPI;
+		this.modelMapper = modelMapper;
+	}
 
-    private final ModelMapper modelMapper;
+	@Transactional
+	@Override
+	public void saveOrder(Long idUser, NewOrderDTO newOrder) throws Exception {
 
+		final User user = new User();
+		user.setIdUser(idUser);
 
-    @Autowired
-    public OrderServiceImpl(UserServiceAPI userServiceAPI, OrderRepository orderRepository,
-                            ProductServiceAPI productServiceAPI, OrderDetailServiceAPI orderDetailServiceAPI,
-                            ModelMapper modelMapper, OrderDetailRepository orderDetailRepository) {
-        super();
-        this.userServiceAPI = userServiceAPI;
-        this.orderRepository = orderRepository;
-        this.productServiceAPI = productServiceAPI;
-        this.orderDetailServiceAPI = orderDetailServiceAPI;
-        this.orderDetailRepository = orderDetailRepository;
-        this.modelMapper = modelMapper;
-    }
+		final Order order = new Order();
+		order.setOrderAddress(newOrder.getOrderAddress());
+		order.setOrderDate(LocalDate.now(Clock.system(ZoneId.of("America/Bogota"))));
+		order.setUser(user);
+		order.setOrderDetails(new ArrayList<>());
 
-    @Transactional
-    @Override
-    public void saveOrder(Long idUser, NewOrderDTO newOrder) throws Exception {
+		for (GetOrderDetailDTO orderDetailDTO : newOrder.getOrderDetails()) {
+			final Product product = productServiceAPI.findById(orderDetailDTO.getIdProduct());
 
-        final User user = new User();
-        user.setIdUser(idUser);
+			final OrderDetail orderDetail = new OrderDetail();
+			orderDetail.setProduct(product);
+			orderDetail.setOrder(order);
+			orderDetail.setSize(orderDetailDTO.getSize());
+			orderDetail.setQuantity(orderDetailDTO.getQuantity());
+			orderDetail.setSalePrice(product.getPrice());
 
-        final Order order = new Order();
-        order.setOrderAddress(newOrder.getOrderAddress());
-        order.setOrderDate(LocalDate.now(Clock.system(ZoneId.of("America/Bogota"))));
-        order.setUser(user);
-        order.setOrderDetails(new ArrayList<>());
+			order.getOrderDetails().add(orderDetail);
+		}
 
-        for (GetOrderDetailDTO orderDetailDTO : newOrder.getOrderDetails()) {
-            final Product product = productServiceAPI.findById(orderDetailDTO.getIdProduct());
+		orderRepository.save(order);
 
-            final OrderDetail orderDetail = new OrderDetail();
-            orderDetail.setProduct(product);
-            orderDetail.setOrder(order);
-            orderDetail.setSize(orderDetailDTO.getSize());
-            orderDetail.setQuantity(orderDetailDTO.getQuantity());
-            orderDetail.setSalePrice(product.getPrice());
+		for (OrderDetail orderDetail : order.getOrderDetails()) {
 
-            order.getOrderDetails().add(orderDetail);
-        }
+			ExistingQuantity stock = existingQuantityServiceAPI
+					.findByProductIdAndShortText(orderDetail.getProduct().getId(), orderDetail.getSize());
 
-        orderRepository.save(order);
+			stock.setExistingQuantity(stock.getExistingQuantity() - orderDetail.getQuantity());
 
-        // find the existing quantity through a repo/service
-        // set new quantity
-    }
+		}
 
-    public Order findById(Long id) {
-        Optional<Order> order = orderRepository.findById(id);
-        if (order.isEmpty()) {
-            return null;
-        }
-        return order.get();
-    }
+		// find the existing quantity through a repo/service
+		// set new quantity
+	}
 
-    ;
+	public Order findById(Long id) {
+		Optional<Order> order = orderRepository.findById(id);
+		if (order.isEmpty()) {
+			return null;
+		}
+		return order.get();
+	}
 
+	;
 
 //	public void saveOrder(NewOrderDTO newOrder) throws Exception {
 //
@@ -120,21 +121,20 @@ public class OrderServiceImpl implements OrderServiceAPI {
 //	}
 //	
 
+	@Override
+	public GetOrderDTO findOrderById(Long orderId) throws Exception {
 
-    @Override
-    public GetOrderDTO findOrderById(Long orderId) throws Exception {
+		final Optional<Order> repoResponse = this.orderRepository.findById(orderId);
 
-        final Optional<Order> repoResponse = this.orderRepository.findById(orderId);
+		if (repoResponse.isEmpty()) {
+			new Exception("Orden no encontrada para el id " + orderId);
+		}
 
-        if (repoResponse.isEmpty()) {
-            new Exception("Orden no encontrada para el id " + orderId);
-        }
+		final Order orderFound = repoResponse.get();
 
-        final Order orderFound = repoResponse.get();
+		GetOrderDTO getOrderDTO = modelMapper.map(orderFound, GetOrderDTO.class);
 
-        GetOrderDTO getOrderDTO = modelMapper.map(orderFound, GetOrderDTO.class);
-
-        return getOrderDTO;
-    }
+		return getOrderDTO;
+	}
 
 }

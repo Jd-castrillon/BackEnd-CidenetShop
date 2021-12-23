@@ -1,5 +1,7 @@
 package com.cidenetshop.repository;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -17,10 +19,11 @@ public interface ExistingQuantityRepository extends CrudRepository<ExistingQuant
 	void updateAfterBuySQL(@Param("quantity") Integer quantity, @Param("idProduct") Long idProduct,
 			@Param("idSize") Integer idSize);
 
-	
 	@Modifying
 	@Query("update ExistingQuantity stock set stock.existingQuantity = :quantity where stock.product.id = :idProduct and stock.size.id = :idSize ")
 	void updateAfterBuyJPQL(@Param("quantity") Integer quantity, @Param("idProduct") Long idProduct,
 			@Param("idSize") Integer idSize);
+
+	Optional<ExistingQuantity> findByProductIdAndSizeId(Long idProduct, Integer idSize);
 
 }

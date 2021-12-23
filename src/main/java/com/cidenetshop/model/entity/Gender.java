@@ -9,11 +9,11 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "sizes")
-public class Size {
+@Table(name = "genders")
+public class Gender {
 
-	private static final String ID_SEQUENCE_GENERATOR_NAME = "sizes_id_sequence_generator";
-    private static final String ID_SEQUENCE_NAME = "sizes_id_sequence";
+	private static final String ID_SEQUENCE_GENERATOR_NAME = "genders_id_sequence_generator";
+    private static final String ID_SEQUENCE_NAME = "genders_id_sequence";
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQUENCE_GENERATOR_NAME)
@@ -21,10 +21,8 @@ public class Size {
 	@Column(name = "id")
 	private Integer id;
 
-	@Column(name = "shortText")
-	private String shortText;
-
-	
+	@Column(name = "gender")
+	private String gender;
 
 	public Integer getId() {
 		return id;
@@ -34,22 +32,21 @@ public class Size {
 		this.id = id;
 	}
 
-	public String getShortText() {
-		return shortText;
+	public String getGender() {
+		return gender;
 	}
 
-	public void setShortText(String shortText) {
-		this.shortText = shortText;
+	public void setGender(String gender) {
+		this.gender = gender;
 	}
 
-	public Size(Integer id, String shortText) {
+	public Gender(Integer id, String gender) {
 		super();
 		this.id = id;
-		this.shortText = shortText;
-
+		this.gender = gender;
 	}
 
-	public Size() {
+	public Gender() {
 		super();
 	}
 

@@ -25,15 +25,18 @@ import com.cidenetshop.model.dto.NewUserDTO;
 @RestController
 @RequestMapping(value = "/auth")
 public class AuthRestController {
+	
 
 	@Autowired
-	private UserServiceAPI userServiceAPI;
+	private  UserServiceAPI userServiceAPI;
 	
 	@Autowired
 	private AuthenticationManager authenticationManager;
 
 	@Autowired
 	private JwtProvider jwtProvider;
+	
+	
 	
 	
 	@PostMapping("/newuser")
@@ -45,7 +48,7 @@ public class AuthRestController {
 			return new ResponseEntity(new MessageDTO("usuario guardado"), HttpStatus.CREATED);
 			
 		} catch (Exception e) {
-			return new ResponseEntity(e.getMessage(),HttpStatus.BAD_REQUEST);
+			return new ResponseEntity(new MessageDTO("campos mal puestos o email inválido"),HttpStatus.BAD_REQUEST);
 		}
 		
 		
@@ -57,17 +60,23 @@ public class AuthRestController {
 
 		if (bindingResult.hasErrors())
 			return new ResponseEntity(new MessageDTO("Badly placed fields"), HttpStatus.BAD_REQUEST);
-
-		Authentication authentication = authenticationManager.authenticate(
-				new UsernamePasswordAuthenticationToken(loginUserDTO.getUserName(), loginUserDTO.getPassword()));
-		SecurityContextHolder.getContext().setAuthentication(authentication);
-
-		String jwt = jwtProvider.generateToken(authentication);
-
-		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-		JwtDTO jwtDTO = new JwtDTO(jwt, userDetails.getUsername(), userDetails.getAuthorities());
-
-		return new ResponseEntity(jwtDTO, HttpStatus.OK);
+		
+		try {
+			Authentication authentication = authenticationManager.authenticate(
+					new UsernamePasswordAuthenticationToken(loginUserDTO.getUserName(), loginUserDTO.getPassword()));
+			SecurityContextHolder.getContext().setAuthentication(authentication);
+			
+			String jwt = jwtProvider.generateToken(authentication);
+			
+			UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+			JwtDTO jwtDTO = new JwtDTO(jwt, userDetails.getUsername(), userDetails.getAuthorities());
+			
+			return new ResponseEntity(jwtDTO, HttpStatus.OK);
+			
+		} catch (Exception e) {
+			return new ResponseEntity(new MessageDTO("No se ha encontrado al usuario"), HttpStatus.BAD_REQUEST);	
+		}
+		
 
 	}
 }
