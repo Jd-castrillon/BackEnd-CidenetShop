@@ -35,6 +35,9 @@ public class Order {
 	@Column(name = "order_date")
 	private LocalDate orderDate;
 
+	@Column(name = "total_cost")
+	private Double totalCost;
+
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_user")
 	private User user;
@@ -66,6 +69,14 @@ public class Order {
 		this.orderDate = orderDate;
 	}
 
+	public Double getTotalCost() {
+		return totalCost;
+	}
+
+	public void setTotalCost(Double totalCost) {
+		this.totalCost = totalCost;
+	}
+
 	public User getUser() {
 		return user;
 	}
@@ -82,19 +93,26 @@ public class Order {
 		this.orderDetails = orderDetails;
 	}
 
-	public Order(Long id, String orderAddress, LocalDate orderDate, User user, List<OrderDetail> orderDetails) {
+
+	public Order(Long id, String orderAddress, LocalDate orderDate, Double totalCost, User user,
+			List<OrderDetail> orderDetails) {
 		super();
 		this.id = id;
 		this.orderAddress = orderAddress;
 		this.orderDate = orderDate;
+		this.totalCost = totalCost;
 		this.user = user;
 		this.orderDetails = orderDetails;
 	}
 
-	public Order(String orderAddress, LocalDate orderDate, User user, List<OrderDetail> orderDetails) {
+	
+
+	public Order(String orderAddress, LocalDate orderDate, Double totalCost, User user,
+			List<OrderDetail> orderDetails) {
 		super();
 		this.orderAddress = orderAddress;
 		this.orderDate = orderDate;
+		this.totalCost = totalCost;
 		this.user = user;
 		this.orderDetails = orderDetails;
 	}

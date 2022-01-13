@@ -263,7 +263,73 @@
 
 	</changeSet>
 
+	<changeSet id="1641944783112-1"
+		author="jdkastrillon@gmail.com">
+		<dropColumn tableName="users">
+			<column name="roles_id"></column>
+		</dropColumn>
+	</changeSet>
 
+	<changeSet author="jdkastrillon@gmail.com"
+		id="1641944783112-2">
+		<insert tableName="roles">
+			<column name="id" valueSequenceNext="roles_id_sequence" />
+			<column name="role" value="admin" />
+		</insert>
+		<insert tableName="roles">
+			<column name="id" valueSequenceNext="roles_id_sequence" />
+			<column name="role" value="client" />
+		</insert>
+	</changeSet>
+
+	<changeSet id="1641944783112-3"
+		author="jdkastrillon@gmail.com">
+		<insert tableName="document_types">
+			<column name="id"
+				valueSequenceNext="document_types_id_sequence"></column>
+			<column name="document_type" value="cedula de ciudadania"></column>
+		</insert>
+		<insert tableName="document_types">
+			<column name="id"
+				valueSequenceNext="document_types_id_sequence"></column>
+			<column name="document_type" value="tarjeta de identidad"></column>
+		</insert>
+	</changeSet>
+	<changeSet id="1641944783112-4"
+		author="jdkastrillon@gmail.com">
+		<insert tableName="sizes">
+			<column name="id" valueSequenceNext="sizes_id_sequence"></column>
+			<column name="size" value="XS"></column>
+		</insert>
+		<insert tableName="sizes">
+			<column name="id" valueSequenceNext="sizes_id_sequence"></column>
+			<column name="size" value="S"></column>
+		</insert>
+		<insert tableName="sizes">
+			<column name="id" valueSequenceNext="sizes_id_sequence"></column>
+			<column name="size" value="M"></column>
+		</insert>
+		<insert tableName="sizes">
+			<column name="id" valueSequenceNext="sizes_id_sequence"></column>
+			<column name="size" value="L"></column>
+		</insert>
+		<insert tableName="sizes">
+			<column name="id" valueSequenceNext="sizes_id_sequence"></column>
+			<column name="size" value="XL"></column>
+		</insert>
+
+		<insert tableName="genders">
+			<column name="id" valueSequenceNext="genders_id_sequence"></column>
+			<column name="gender" value="masculino"></column>
+		</insert>
+		<insert tableName="genders">
+			<column name="id" valueSequenceNext="genders_id_sequence"></column>
+			<column name="gender" value="femenino"></column>
+		</insert>
+
+	</changeSet>
+	
+	
 
 
 </databaseChangeLog>

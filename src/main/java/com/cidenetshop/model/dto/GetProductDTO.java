@@ -14,7 +14,7 @@ public class GetProductDTO {
 
 	private Double price;
 
-	private String productType;
+	private String gender;
 
 	private String brand;
 
@@ -62,12 +62,12 @@ public class GetProductDTO {
 		this.price = price;
 	}
 
-	public String getProductType() {
-		return productType;
+	public String getGender() {
+		return gender;
 	}
 
-	public void setProductType(String productType) {
-		this.productType = productType;
+	public void setGender(String gender) {
+		this.gender = gender;
 	}
 
 	public List<GetExistingQuantityDTO> getExistingQuantity() {
@@ -94,7 +94,7 @@ public class GetProductDTO {
 		this.brand = brand;
 	}
 
-	public GetProductDTO(Long id, String name, String description, String color, Double price, String productType,
+	public GetProductDTO(Long id, String name, String description, String color, Double price, String gender,
 			String brand, List<GetExistingQuantityDTO> existingQuantity, byte[] picture) {
 		super();
 		this.id = id;
@@ -102,7 +102,7 @@ public class GetProductDTO {
 		this.description = description;
 		this.color = color;
 		this.price = price;
-		this.productType = productType;
+		this.gender = gender;
 		this.brand = brand;
 		this.existingQuantity = existingQuantity;
 		this.picture = picture;

@@ -47,7 +47,7 @@ public class User {
 
 	@NonNull
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_document_type")
+	@JoinColumn(name = "document_type_id")
 	private DocumentType documentType;
 
 	@ManyToMany(fetch = FetchType.EAGER)

@@ -18,11 +18,11 @@ import javax.persistence.Table;
 public class Product {
 
 	private static final String ID_SEQUENCE_GENERATOR_NAME = "products_id_sequence_generator";
-    private static final String ID_SEQUENCE_NAME = "products_id_sequence";
+	private static final String ID_SEQUENCE_NAME = "products_id_sequence";
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQUENCE_GENERATOR_NAME)
-    @SequenceGenerator(name = ID_SEQUENCE_GENERATOR_NAME, sequenceName = ID_SEQUENCE_NAME, allocationSize = 1)
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQUENCE_GENERATOR_NAME)
+	@SequenceGenerator(name = ID_SEQUENCE_GENERATOR_NAME, sequenceName = ID_SEQUENCE_NAME, allocationSize = 1)
 	@Column(name = "id")
 	private Long id;
 
@@ -42,8 +42,8 @@ public class Product {
 	private String brand;
 
 	@ManyToOne
-	@JoinColumn(name = "id_product_type")
-	private Gender productType;
+	@JoinColumn(name = "id_gender")
+	private Gender gender;
 
 	@OneToMany(mappedBy = "product")
 	private Set<ExistingQuantity> existingQuantity;
@@ -88,12 +88,12 @@ public class Product {
 		this.price = price;
 	}
 
-	public Gender getProductType() {
-		return productType;
+	public Gender getGender() {
+		return gender;
 	}
 
-	public void setProductType(Gender productType) {
-		this.productType = productType;
+	public void setGender(Gender gender) {
+		this.gender = gender;
 	}
 
 	public String getBrand() {
@@ -112,8 +112,8 @@ public class Product {
 		this.existingQuantity = existingQuantity;
 	}
 
-	public Product(Long id, String name, String description, String color, Double price, String brand,
-			Gender productType, Set<ExistingQuantity> existingQuantity) {
+	public Product(Long id, String name, String description, String color, Double price, String brand, Gender gender,
+			Set<ExistingQuantity> existingQuantity) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -121,7 +121,7 @@ public class Product {
 		this.color = color;
 		this.price = price;
 		this.brand = brand;
-		this.productType = productType;
+		this.gender = gender;
 		this.existingQuantity = existingQuantity;
 	}
 

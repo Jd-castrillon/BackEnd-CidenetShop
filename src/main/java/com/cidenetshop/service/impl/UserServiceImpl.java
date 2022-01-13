@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserServiceAPI {
 
 			Set<Role> roles = new HashSet<>();
 
-			roles.add(roleServiceAPI.findByRole("cliente").get());
+			roles.add(roleServiceAPI.findByRole("client").get());
 
 //			if(newUserDTO.getRoles().contains("admin"))
 //				roles.add(roleServiceAPI.findByRole("admin").get());
