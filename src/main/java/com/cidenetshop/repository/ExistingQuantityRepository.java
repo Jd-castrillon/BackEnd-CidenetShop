@@ -24,6 +24,6 @@ public interface ExistingQuantityRepository extends CrudRepository<ExistingQuant
 	void updateAfterBuyJPQL(@Param("quantity") Integer quantity, @Param("idProduct") Long idProduct,
 			@Param("idSize") Integer idSize);
 
-	Optional<ExistingQuantity> findByProductIdAndSizeId(Long idProduct, Integer idSize);
+	Optional<ExistingQuantity> findByProductIdAndSizeId(Long idProduct, Long idSize);
 
 }

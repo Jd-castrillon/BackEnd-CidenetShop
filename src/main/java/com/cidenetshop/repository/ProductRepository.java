@@ -9,8 +9,8 @@ import com.cidenetshop.model.entity.Product;
 public interface ProductRepository extends CrudRepository<Product,Long>{
 	
 	
-	@Query(nativeQuery = true, value = "select * from products  left join product_types  on products.id_product_type  =  product_types.id WHERE product_types.product_type = :productType")
-	Iterable<Product> findAllByProductType(@Param("productType") String productType);
+	@Query(nativeQuery = true, value = "select * from products  left join genders  on products.id_gender  =  genders.id WHERE genders.gender = :gender")
+	Iterable<Product> findAllByGender(@Param("gender") String gender);
 	
 	
 }

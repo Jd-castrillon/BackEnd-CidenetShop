@@ -25,7 +25,7 @@ public class ExistingQuantityServiceImpl implements ExistingQuantityServiceAPI {
 	}
 
 	@Override
-	public ExistingQuantity findByProductIdAndSizeId(Long idProduct, Integer idSize) {
+	public ExistingQuantity findByProductIdAndSizeId(Long idProduct, Long idSize) {
 		Optional<ExistingQuantity> existingQuantity = existingQuantityRepository.findByProductIdAndSizeId(idProduct, idSize);
 		
 		if (existingQuantity.isPresent()) {

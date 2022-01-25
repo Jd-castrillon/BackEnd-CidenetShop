@@ -31,11 +31,17 @@ public class ProductRestController {
 		this.productServiceAPI = productServiceAPI;
 	}
 
-	@GetMapping
+	@GetMapping(value="/ranking")
 	public List<GetProductDTO> getAllProducts() {
+		List<GetProductDTO> products = this.productServiceAPI.RankingOfProducts();
+		return products;
+	}
+	@GetMapping
+	public List<GetProductDTO> getRankingProducts() {
 		List<GetProductDTO> products = this.productServiceAPI.getAllProducts();
 		return products;
 	}
+	
 
 	@GetMapping(value = "/id/{productId}")
 	public ResponseEntity<GetProductDTO> getProductById(@PathVariable("productId") Long productId) {
@@ -47,9 +53,9 @@ public class ProductRestController {
 		}
 	}
 	
-	@GetMapping(value = "/{productType}")
-	public List<GetProductDTO> getProductByProductType(@PathVariable("productType") String productType) {
-		List<GetProductDTO> products = this.productServiceAPI.getProductByType(productType);
+	@GetMapping(value = "/{gender}")
+	public List<GetProductDTO> getProductByGender(@PathVariable("gender") String gender) {
+		List<GetProductDTO> products = this.productServiceAPI.getProductByGender(gender);
 		return products;
 	}
 	

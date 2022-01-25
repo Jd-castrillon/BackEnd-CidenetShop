@@ -4,7 +4,7 @@ import com.cidenetshop.model.entity.ExistingQuantity;
 
 public interface ExistingQuantityServiceAPI {
 
-	ExistingQuantity findByProductIdAndSizeId(Long idProduct, Integer idSize);
+	ExistingQuantity findByProductIdAndSizeId(Long idProduct, Long idSize);
 	
 	ExistingQuantity findByProductIdAndShortText(Long idProduct , String shortText);
 }

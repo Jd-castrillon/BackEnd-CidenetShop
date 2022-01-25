@@ -1,8 +1,7 @@
 package com.cidenetshop.model.dto;
 
 public class GetPictureDTO {
-	
-	
+
 	private byte[] picture;
 
 	public byte[] getPicture() {
@@ -11,16 +10,6 @@ public class GetPictureDTO {
 
 	public void setPicture(byte[] picture) {
 		this.picture = picture;
-	}
-
-	public GetPictureDTO(byte[] picture) {
-		super();
-
-		this.picture = picture;
-	}
-
-	public GetPictureDTO() {
-		super();
 	}
 
 }

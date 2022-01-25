@@ -2,9 +2,8 @@ package com.cidenetshop.model.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
@@ -15,16 +14,27 @@ import javax.persistence.Table;
 public class Picture {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id_product")
 	private Long id;
 
 	@OneToOne
 	@MapsId
+	@JoinColumn(name = "id_product")
 	private Product product;
 
-	@Lob
-	@Column(name="picture")
+	@Column(name = "picture")
 	private byte[] picture;
+
+	public Picture() {
+		super();
+	}
+
+	public Picture(Long id, Product product, byte[] picture) {
+		super();
+		this.id = id;
+		this.product = product;
+		this.picture = picture;
+	}
 
 	public Long getId() {
 		return id;
@@ -48,17 +58,6 @@ public class Picture {
 
 	public void setPicture(byte[] picture) {
 		this.picture = picture;
-	}
-
-	public Picture(Long id, Product product, byte[] picture) {
-		super();
-		this.id = id;
-		this.product = product;
-		this.picture = picture;
-	}
-
-	public Picture() {
-		super();
 	}
 
 }

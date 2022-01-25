@@ -14,12 +14,11 @@ public interface ProductServiceAPI {
 	Boolean deleteProductById(Long productId) throws Exception;
 
 	List<GetProductDTO> getAllProducts();
-	
-	List<GetProductDTO> getProductByType(String productType);
-	
+
+	List<GetProductDTO> RankingOfProducts();
+
+	List<GetProductDTO> getProductByGender(String productType);
+
 	Product findById(Long productId);
-	
-
-
 
 }

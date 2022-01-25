@@ -1,19 +1,22 @@
 package com.cidenetshop.service.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+
+import javax.transaction.Transactional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.cidenetshop.model.dto.GetProductDTO;
 import com.cidenetshop.model.entity.Product;
 import com.cidenetshop.repository.ProductRepository;
 import com.cidenetshop.service.api.PictureServiceAPI;
 import com.cidenetshop.service.api.ProductServiceAPI;
-
-import com.cidenetshop.model.dto.GetProductDTO;
 
 @Service
 public class ProductServiceImpl implements ProductServiceAPI {
@@ -56,6 +59,7 @@ public class ProductServiceImpl implements ProductServiceAPI {
 		}
 	}
 
+	@Transactional
 	@Override
 	public GetProductDTO findProductById(Long productId) throws Exception {
 
@@ -66,6 +70,14 @@ public class ProductServiceImpl implements ProductServiceAPI {
 		}
 
 		final Product productFound = repoResponse.get();
+
+		Long first = (long) 1;
+
+		if (productFound.getSearches() != null) {
+			productFound.setSearches(productFound.getSearches() + 1);
+		} else {
+			productFound.setSearches(first);
+		}
 
 		return convertProductToDTO(productFound);
 	}
@@ -107,16 +119,14 @@ public class ProductServiceImpl implements ProductServiceAPI {
 
 		GetProductDTO getProductDTO = modelMapper.map(product, GetProductDTO.class);
 
-		getProductDTO.setPicture(pictureServiceAPI.findPictureBlobById(product.getId()));
-
 		return getProductDTO;
 	}
 
-	public List<GetProductDTO> getProductByType(String productType) {
+	public List<GetProductDTO> getProductByGender(String gender) {
 
 		List<GetProductDTO> productsDTO = new ArrayList<>();
 
-		this.productRepository.findAllByProductType(productType).forEach(obj -> {
+		this.productRepository.findAllByGender(gender).forEach(obj -> {
 			try {
 				productsDTO.add(convertProductToDTO(obj));
 			} catch (Exception e) {
@@ -126,6 +136,35 @@ public class ProductServiceImpl implements ProductServiceAPI {
 		});
 
 		return productsDTO;
+	}
+
+	public void sort(ArrayList<Product> list) {
+
+		list.sort((p1, p2) -> p1.getSearches().compareTo(p2.getSearches()));
+
+	}
+
+	@Override
+	public List<GetProductDTO> RankingOfProducts() {
+
+		List<Product> AllProducts = (List<Product>) productRepository.findAll();
+
+		AllProducts.sort((p1, p2) -> p1.getSearches().compareTo(p2.getSearches()));
+		
+		Collections.reverse(AllProducts);
+		
+		List<GetProductDTO> productsRankingDTO = new ArrayList<>();
+
+		AllProducts.forEach(obj -> {
+			try {
+				productsRankingDTO.add(convertProductToDTO(obj));
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		});
+
+		return productsRankingDTO.subList(0, 3);
 	};
 
 }

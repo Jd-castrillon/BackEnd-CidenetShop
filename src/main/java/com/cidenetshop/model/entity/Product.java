@@ -2,14 +2,18 @@ package com.cidenetshop.model.entity;
 
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -41,12 +45,19 @@ public class Product {
 	@Column(name = "brand")
 	private String brand;
 
+	@Column(name = "searches")
+	private Long searches;
+
 	@ManyToOne
 	@JoinColumn(name = "id_gender")
 	private Gender gender;
 
 	@OneToMany(mappedBy = "product")
 	private Set<ExistingQuantity> existingQuantity;
+
+	@OneToOne(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@PrimaryKeyJoinColumn
+	private Picture picture;
 
 	public Long getId() {
 		return id;
@@ -100,8 +111,32 @@ public class Product {
 		return brand;
 	}
 
+	public Picture getPicture() {
+		return picture;
+	}
+
+	public void setPicture(Picture picture) {
+		this.picture = picture;
+	}
+
 	public void setBrand(String brand) {
 		this.brand = brand;
+	}
+
+	public Long getSearches() {
+		return searches;
+	}
+
+	public void setSearches(Long searches) {
+		this.searches = searches;
+	}
+
+	public static String getIdSequenceGeneratorName() {
+		return ID_SEQUENCE_GENERATOR_NAME;
+	}
+
+	public static String getIdSequenceName() {
+		return ID_SEQUENCE_NAME;
 	}
 
 	public Set<ExistingQuantity> getExistingQuantity() {
@@ -112,8 +147,12 @@ public class Product {
 		this.existingQuantity = existingQuantity;
 	}
 
-	public Product(Long id, String name, String description, String color, Double price, String brand, Gender gender,
-			Set<ExistingQuantity> existingQuantity) {
+	// whitout searches
+	
+
+	// whit searchers
+	public Product(Long id, String name, String description, String color, Double price, String brand, Long searches,
+			Gender gender, Set<ExistingQuantity> existingQuantity, Picture picture) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -121,8 +160,10 @@ public class Product {
 		this.color = color;
 		this.price = price;
 		this.brand = brand;
+		this.searches = searches;
 		this.gender = gender;
 		this.existingQuantity = existingQuantity;
+		this.picture = picture;
 	}
 
 	public Product() {

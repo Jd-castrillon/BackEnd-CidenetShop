@@ -15,6 +15,9 @@ public class OrderDetailKey implements Serializable {
 	@Column(name = "id_product")
 	private Long idProduct;
 
+	@Column(name = "id_size")
+	private Long idSize;
+
 	public Long getIdOrder() {
 		return idOrder;
 	}
@@ -31,10 +34,19 @@ public class OrderDetailKey implements Serializable {
 		this.idProduct = idProduct;
 	}
 
-	public OrderDetailKey(Long idOrder, Long idProduct) {
+	public Long getIdSize() {
+		return idSize;
+	}
+
+	public void setIdSize(Long idSize) {
+		this.idSize = idSize;
+	}
+
+	public OrderDetailKey(Long idOrder, Long idProduct, Long idSize) {
 		super();
 		this.idOrder = idOrder;
 		this.idProduct = idProduct;
+		this.idSize = idSize;
 	}
 
 	public OrderDetailKey() {
@@ -43,7 +55,7 @@ public class OrderDetailKey implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(idOrder, idProduct);
+		return Objects.hash(idOrder, idProduct, idSize);
 	}
 
 	@Override
@@ -55,7 +67,8 @@ public class OrderDetailKey implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		OrderDetailKey other = (OrderDetailKey) obj;
-		return Objects.equals(idOrder, other.idOrder) && Objects.equals(idProduct, other.idProduct);
+		return Objects.equals(idOrder, other.idOrder) && Objects.equals(idProduct, other.idProduct)
+				&& Objects.equals(idSize, other.idSize);
 	}
 
 }

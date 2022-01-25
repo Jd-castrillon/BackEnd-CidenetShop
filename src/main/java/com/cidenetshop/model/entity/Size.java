@@ -19,16 +19,16 @@ public class Size {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQUENCE_GENERATOR_NAME)
 	@SequenceGenerator(name = ID_SEQUENCE_GENERATOR_NAME, sequenceName = ID_SEQUENCE_NAME, allocationSize = 1)
 	@Column(name = "id")
-	private Integer id;
+	private Long id;
 
-	@Column(name = "shortText")
+	@Column(name = "short_text")
 	private String shortText;
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -40,11 +40,10 @@ public class Size {
 		this.shortText = shortText;
 	}
 
-	public Size(Integer id, String shortText) {
+	public Size(Long id, String shortText) {
 		super();
 		this.id = id;
 		this.shortText = shortText;
-
 	}
 
 	public Size() {

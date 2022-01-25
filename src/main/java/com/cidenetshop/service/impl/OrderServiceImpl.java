@@ -19,11 +19,15 @@ import com.cidenetshop.model.entity.ExistingQuantity;
 import com.cidenetshop.model.entity.Order;
 import com.cidenetshop.model.entity.OrderDetail;
 import com.cidenetshop.model.entity.Product;
+import com.cidenetshop.model.entity.Size;
 import com.cidenetshop.model.entity.User;
 import com.cidenetshop.repository.OrderRepository;
+import com.cidenetshop.repository.UserRepository;
+import com.cidenetshop.service.api.EmailService;
 import com.cidenetshop.service.api.ExistingQuantityServiceAPI;
 import com.cidenetshop.service.api.OrderServiceAPI;
 import com.cidenetshop.service.api.ProductServiceAPI;
+import com.cidenetshop.service.api.SizeServiceAPI;
 
 @Service
 public class OrderServiceImpl implements OrderServiceAPI {
@@ -36,19 +40,31 @@ public class OrderServiceImpl implements OrderServiceAPI {
 
 	private final ModelMapper modelMapper;
 
+	private final EmailService emailService;
+
+	private final UserRepository userRepository;
+	
+	private final SizeServiceAPI sizeServiceAPI;
+
 	@Autowired
 	public OrderServiceImpl(ExistingQuantityServiceAPI existingQuantityServiceAPI, OrderRepository orderRepository,
-			ProductServiceAPI productServiceAPI, ModelMapper modelMapper) {
+			ProductServiceAPI productServiceAPI, ModelMapper modelMapper, EmailService emailService,
+			UserRepository userRepository, SizeServiceAPI sizeServiceAPI) {
 		super();
 		this.existingQuantityServiceAPI = existingQuantityServiceAPI;
 		this.orderRepository = orderRepository;
 		this.productServiceAPI = productServiceAPI;
 		this.modelMapper = modelMapper;
+		this.emailService = emailService;
+		this.userRepository = userRepository;
+		this.sizeServiceAPI = sizeServiceAPI;
 	}
-
+	
 	@Transactional
 	@Override
 	public void saveOrder(Long idUser, NewOrderDTO newOrder) throws Exception {
+
+		userRepository.findById(idUser).get().getEmail();
 
 		final User user = new User();
 		user.setIdUser(idUser);
@@ -61,14 +77,18 @@ public class OrderServiceImpl implements OrderServiceAPI {
 
 		for (GetOrderDetailDTO orderDetailDTO : newOrder.getOrderDetails()) {
 			final Product product = productServiceAPI.findById(orderDetailDTO.getIdProduct());
-
+			final Size size = sizeServiceAPI.findByShortText(orderDetailDTO.getSize());
 			final OrderDetail orderDetail = new OrderDetail();
 			orderDetail.setProduct(product);
 			orderDetail.setOrder(order);
-			orderDetail.setSize(orderDetailDTO.getSize());
+			orderDetail.setSize(size);
 			orderDetail.setQuantity(orderDetailDTO.getQuantity());
 			orderDetail.setSalePrice(product.getPrice());
-
+			if (order.getTotalCost() == null) {
+				order.setTotalCost(0.0);
+			} 
+			order.setTotalCost(order.getTotalCost() + (orderDetail.getSalePrice()  * orderDetail.getQuantity()));
+			
 			order.getOrderDetails().add(orderDetail);
 		}
 
@@ -77,15 +97,22 @@ public class OrderServiceImpl implements OrderServiceAPI {
 		for (OrderDetail orderDetail : order.getOrderDetails()) {
 
 			ExistingQuantity stock = existingQuantityServiceAPI
-					.findByProductIdAndShortText(orderDetail.getProduct().getId(), orderDetail.getSize());
+					.findByProductIdAndShortText(orderDetail.getProduct().getId(), orderDetail.getSize().getShortText());
 
 			stock.setExistingQuantity(stock.getExistingQuantity() - orderDetail.getQuantity());
 
 		}
 
+		
+
 		// find the existing quantity through a repo/service
 		// set new quantity
+		
+		emailService.SendEmailOrder(userRepository.findById(idUser).get().getEmail(), "Compra Cidenet",
+				order);
 	}
+
+	
 
 	public Order findById(Long id) {
 		Optional<Order> order = orderRepository.findById(id);
