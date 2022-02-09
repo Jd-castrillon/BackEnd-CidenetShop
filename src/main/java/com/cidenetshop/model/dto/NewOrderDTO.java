@@ -2,10 +2,14 @@ package com.cidenetshop.model.dto;
 
 import java.util.List;
 
+import javax.validation.constraints.NotBlank;
+
 public class NewOrderDTO {
-
+	
+	@NotBlank
 	private String orderAddress;
-
+	
+	@NotBlank
 	private List<GetOrderDetailDTO> orderDetails;
 
 	public String getOrderAddress() {

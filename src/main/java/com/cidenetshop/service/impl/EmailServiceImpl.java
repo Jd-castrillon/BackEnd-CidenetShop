@@ -32,7 +32,8 @@ public class EmailServiceImpl implements EmailService {
 		String body = "Hola te escribimos para decirte los detalles de tu compra.\n"
 				+ "La direccion del pedido es: " + order.getOrderAddress()+"\n"
 				+ contenido + "\n"
-				+ "El costo total es: " + order.getTotalCost();
+				+ "El costo total es: " + order.getTotalCost()+"\n"
+				+ "Recuerda que el pago es contra entrega, Gracias por tu compra! 😀"	;
 		
 		
 		SimpleMailMessage message = new SimpleMailMessage();

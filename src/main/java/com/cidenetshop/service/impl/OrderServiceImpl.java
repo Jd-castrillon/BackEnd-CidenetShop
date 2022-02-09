@@ -43,7 +43,7 @@ public class OrderServiceImpl implements OrderServiceAPI {
 	private final EmailService emailService;
 
 	private final UserRepository userRepository;
-	
+
 	private final SizeServiceAPI sizeServiceAPI;
 
 	@Autowired
@@ -59,60 +59,70 @@ public class OrderServiceImpl implements OrderServiceAPI {
 		this.userRepository = userRepository;
 		this.sizeServiceAPI = sizeServiceAPI;
 	}
-	
+
 	@Transactional
 	@Override
 	public void saveOrder(Long idUser, NewOrderDTO newOrder) throws Exception {
-
-		userRepository.findById(idUser).get().getEmail();
 
 		final User user = new User();
 		user.setIdUser(idUser);
 
 		final Order order = new Order();
+		
+		if(newOrder.getOrderAddress().equals(""))
+			throw new Exception("address needed");
+			
+		
 		order.setOrderAddress(newOrder.getOrderAddress());
 		order.setOrderDate(LocalDate.now(Clock.system(ZoneId.of("America/Bogota"))));
 		order.setUser(user);
 		order.setOrderDetails(new ArrayList<>());
 
 		for (GetOrderDetailDTO orderDetailDTO : newOrder.getOrderDetails()) {
+
 			final Product product = productServiceAPI.findById(orderDetailDTO.getIdProduct());
 			final Size size = sizeServiceAPI.findByShortText(orderDetailDTO.getSize());
+			final ExistingQuantity stock = existingQuantityServiceAPI.findByProductIdAndShortText(product.getId(),
+					orderDetailDTO.getSize());
+
+			if (stock.getExistingQuantity() <= 0)
+				throw new Exception("there aren't stock for product with id " + orderDetailDTO.getIdProduct()
+						+ " and size " + orderDetailDTO.getSize());
+
+			if (orderDetailDTO.getQuantity() > stock.getExistingQuantity())
+				throw new Exception("the requested quantity is greater than the stock in the product with id "
+						+ orderDetailDTO.getIdProduct() + "and size " + orderDetailDTO.getSize());
+
 			final OrderDetail orderDetail = new OrderDetail();
 			orderDetail.setProduct(product);
 			orderDetail.setOrder(order);
 			orderDetail.setSize(size);
 			orderDetail.setQuantity(orderDetailDTO.getQuantity());
 			orderDetail.setSalePrice(product.getPrice());
+
 			if (order.getTotalCost() == null) {
 				order.setTotalCost(0.0);
-			} 
-			order.setTotalCost(order.getTotalCost() + (orderDetail.getSalePrice()  * orderDetail.getQuantity()));
-			
+			}
+			order.setTotalCost(order.getTotalCost() + (orderDetail.getSalePrice() * orderDetail.getQuantity()));
+
 			order.getOrderDetails().add(orderDetail);
 		}
 
-		orderRepository.save(order);
-
 		for (OrderDetail orderDetail : order.getOrderDetails()) {
 
-			ExistingQuantity stock = existingQuantityServiceAPI
-					.findByProductIdAndShortText(orderDetail.getProduct().getId(), orderDetail.getSize().getShortText());
+			final ExistingQuantity stock = existingQuantityServiceAPI.findByProductIdAndShortText(
+					orderDetail.getProduct().getId(), orderDetail.getSize().getShortText());
 
 			stock.setExistingQuantity(stock.getExistingQuantity() - orderDetail.getQuantity());
 
 		}
 
-		
-
 		// find the existing quantity through a repo/service
 		// set new quantity
-		
-		emailService.SendEmailOrder(userRepository.findById(idUser).get().getEmail(), "Compra Cidenet",
-				order);
-	}
 
-	
+		orderRepository.save(order);
+		emailService.SendEmailOrder(userRepository.findById(idUser).get().getEmail(), "Compra Cidenet", order);
+	}
 
 	public Order findById(Long id) {
 		Optional<Order> order = orderRepository.findById(id);
@@ -121,32 +131,6 @@ public class OrderServiceImpl implements OrderServiceAPI {
 		}
 		return order.get();
 	}
-
-	;
-
-//	public void saveOrder(NewOrderDTO newOrder) throws Exception {
-//
-//		List<OrderDetail> orderDetails = new ArrayList<>() ;
-//
-//		for (GetOrderDetailDTO i : newOrder.getOrderDetails()) {
-//			OrderDetail listOrderD = new OrderDetail(productServiceAPI.findById(i.getIdProduct()), findById(i
-//			.getIdOrder()),
-//					i.getSize(), i.getQuantity(), i.getSalePrice());
-//			
-//			orderDetails.add(listOrderD);
-//			
-//		}
-//
-//		Order order2 = new Order(newOrder.getOrderAddress(), newOrder.getOrderDate(),
-//				userServiceAPI.findByID(newOrder.getIdUser()), orderDetails);
-//		
-//		orderRepository.save(order2);
-//		
-//		for(GetOrderDetailDTO i : newOrder.getOrderDetails()) {
-//			orderDetailServiceAPI.save(i);
-//		}
-//	}
-//	
 
 	@Override
 	public GetOrderDTO findOrderById(Long orderId) throws Exception {

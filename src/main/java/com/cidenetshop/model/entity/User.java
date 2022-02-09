@@ -21,11 +21,11 @@ import org.springframework.lang.NonNull;
 @Table(name = "users")
 public class User {
 	private static final String ID_SEQUENCE_GENERATOR_NAME = "users_id_sequence_generator";
-    private static final String ID_SEQUENCE_NAME = "users_id_sequence";
+	private static final String ID_SEQUENCE_NAME = "users_id_sequence";
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQUENCE_GENERATOR_NAME)
-    @SequenceGenerator(name = ID_SEQUENCE_GENERATOR_NAME, sequenceName = ID_SEQUENCE_NAME, allocationSize = 1)
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQUENCE_GENERATOR_NAME)
+	@SequenceGenerator(name = ID_SEQUENCE_GENERATOR_NAME, sequenceName = ID_SEQUENCE_NAME, allocationSize = 1)
 	@Column(name = "id")
 	private Long idUser;
 
@@ -121,8 +121,6 @@ public class User {
 		this.documentType = documentType;
 		this.roles = roles;
 	}
-
-
 
 	public User(String documentNumber, String name, String email, DocumentType documentType, String password) {
 		super();

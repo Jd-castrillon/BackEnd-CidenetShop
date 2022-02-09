@@ -13,7 +13,21 @@ public class GetOrderDTO {
 
 	private LocalDate orderDate;
 
-	private List<GetOrderDetailsDTO> OrderDetails;
+	private List<GetOrderDetailDTO> OrderDetails;
+
+	public GetOrderDTO(Long id, String orderAddress, String userName, LocalDate orderDate,
+			List<GetOrderDetailDTO> orderDetails) {
+		super();
+		this.id = id;
+		this.orderAddress = orderAddress;
+		this.userName = userName;
+		this.orderDate = orderDate;
+		OrderDetails = orderDetails;
+	}
+
+	public GetOrderDTO() {
+		super();
+	}
 
 	public Long getId() {
 		return id;
@@ -39,14 +53,6 @@ public class GetOrderDTO {
 		this.userName = userName;
 	}
 
-	public List<GetOrderDetailsDTO> getOrderDetails() {
-		return OrderDetails;
-	}
-
-	public void setOrderDetails(List<GetOrderDetailsDTO> orderDetails) {
-		OrderDetails = orderDetails;
-	}
-
 	public LocalDate getOrderDate() {
 		return orderDate;
 	}
@@ -55,18 +61,12 @@ public class GetOrderDTO {
 		this.orderDate = orderDate;
 	}
 
-	public GetOrderDTO(Long id, String orderAddress, String userName, LocalDate orderDate,
-			List<GetOrderDetailsDTO> orderDetails) {
-		super();
-		this.id = id;
-		this.orderAddress = orderAddress;
-		this.userName = userName;
-		this.orderDate = orderDate;
-		OrderDetails = orderDetails;
+	public List<GetOrderDetailDTO> getOrderDetails() {
+		return OrderDetails;
 	}
 
-	public GetOrderDTO() {
-		super();
+	public void setOrderDetails(List<GetOrderDetailDTO> orderDetails) {
+		OrderDetails = orderDetails;
 	}
 
 }

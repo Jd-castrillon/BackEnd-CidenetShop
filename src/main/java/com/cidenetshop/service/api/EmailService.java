@@ -6,6 +6,6 @@ import com.cidenetshop.model.entity.Order;
 
 @Service
 public interface EmailService {
-	
-	public void SendEmailOrder(String to, String subject, Order order);
+
+	void SendEmailOrder(String to, String subject, Order order);
 }

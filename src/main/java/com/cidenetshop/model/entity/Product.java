@@ -59,6 +59,25 @@ public class Product {
 	@PrimaryKeyJoinColumn
 	private Picture picture;
 
+	public Product(Long id, String name, String description, String color, Double price, String brand,
+			Gender gender, Set<ExistingQuantity> existingQuantity, Picture picture) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.description = description;
+		this.color = color;
+		this.price = price;
+		this.brand = brand;
+		this.searches = (long) 0;
+		this.gender = gender;
+		this.existingQuantity = existingQuantity;
+		this.picture = picture;
+	}
+
+	public Product() {
+		super();
+	}
+
 	public Long getId() {
 		return id;
 	}
@@ -145,29 +164,6 @@ public class Product {
 
 	public void setExistingQuantity(Set<ExistingQuantity> existingQuantity) {
 		this.existingQuantity = existingQuantity;
-	}
-
-	// whitout searches
-	
-
-	// whit searchers
-	public Product(Long id, String name, String description, String color, Double price, String brand, Long searches,
-			Gender gender, Set<ExistingQuantity> existingQuantity, Picture picture) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.description = description;
-		this.color = color;
-		this.price = price;
-		this.brand = brand;
-		this.searches = searches;
-		this.gender = gender;
-		this.existingQuantity = existingQuantity;
-		this.picture = picture;
-	}
-
-	public Product() {
-		super();
 	}
 
 }

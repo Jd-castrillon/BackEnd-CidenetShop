@@ -18,6 +18,7 @@ import com.cidenetshop.model.entity.Product;
 import com.cidenetshop.service.api.ProductServiceAPI;
 
 import com.cidenetshop.model.dto.GetProductDTO;
+import com.cidenetshop.model.dto.OutOfStockDTO;
 
 @RestController
 @RequestMapping(value = "/products")
@@ -31,17 +32,17 @@ public class ProductRestController {
 		this.productServiceAPI = productServiceAPI;
 	}
 
-	@GetMapping(value="/ranking")
+	@GetMapping(value = "/ranking")
 	public List<GetProductDTO> getAllProducts() {
 		List<GetProductDTO> products = this.productServiceAPI.RankingOfProducts();
 		return products;
 	}
+
 	@GetMapping
 	public List<GetProductDTO> getRankingProducts() {
 		List<GetProductDTO> products = this.productServiceAPI.getAllProducts();
 		return products;
 	}
-	
 
 	@GetMapping(value = "/id/{productId}")
 	public ResponseEntity<GetProductDTO> getProductById(@PathVariable("productId") Long productId) {
@@ -52,14 +53,13 @@ public class ProductRestController {
 			return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
+
 	@GetMapping(value = "/{gender}")
 	public List<GetProductDTO> getProductByGender(@PathVariable("gender") String gender) {
 		List<GetProductDTO> products = this.productServiceAPI.getProductByGender(gender);
 		return products;
 	}
-	
-	
+
 	@PreAuthorize("hasAuthority(admin)")
 	@PostMapping
 	public ResponseEntity<Product> saveProduct(@RequestBody Product product) {
@@ -72,14 +72,6 @@ public class ProductRestController {
 			return new ResponseEntity(e.getMessage(), HttpStatus.NOT_ACCEPTABLE);
 		}
 
-	}
-	
-	
-	
-
-	@DeleteMapping
-	public List<Product> deleteAllProducts() {
-		return null;
 	}
 
 	@DeleteMapping(value = "/{productId}")
@@ -97,5 +89,7 @@ public class ProductRestController {
 
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
+
+	
 
 }

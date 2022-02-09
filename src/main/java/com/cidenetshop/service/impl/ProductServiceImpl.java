@@ -2,7 +2,6 @@ package com.cidenetshop.service.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 import com.cidenetshop.model.dto.GetProductDTO;
 import com.cidenetshop.model.entity.Product;
 import com.cidenetshop.repository.ProductRepository;
-import com.cidenetshop.service.api.PictureServiceAPI;
 import com.cidenetshop.service.api.ProductServiceAPI;
 
 @Service
@@ -23,13 +21,19 @@ public class ProductServiceImpl implements ProductServiceAPI {
 
 	private final ProductRepository productRepository;
 
-	private final PictureServiceAPI pictureServiceAPI;
-
 	@Autowired
-	public ProductServiceImpl(ProductRepository productRepository, PictureServiceAPI pictureServiceAPI) {
+	public ProductServiceImpl(ProductRepository productRepository) {
 		this.productRepository = productRepository;
-		this.pictureServiceAPI = pictureServiceAPI;
 
+	}
+
+	private GetProductDTO convertProductToDTO(Product product) throws Exception {
+
+		ModelMapper modelMapper = new ModelMapper();
+
+		GetProductDTO getProductDTO = modelMapper.map(product, GetProductDTO.class);
+
+		return getProductDTO;
 	}
 
 	public Product findById(Long productId) {
@@ -113,15 +117,6 @@ public class ProductServiceImpl implements ProductServiceAPI {
 		return productsDTO;
 	}
 
-	private GetProductDTO convertProductToDTO(Product product) throws Exception {
-
-		ModelMapper modelMapper = new ModelMapper();
-
-		GetProductDTO getProductDTO = modelMapper.map(product, GetProductDTO.class);
-
-		return getProductDTO;
-	}
-
 	public List<GetProductDTO> getProductByGender(String gender) {
 
 		List<GetProductDTO> productsDTO = new ArrayList<>();
@@ -138,21 +133,15 @@ public class ProductServiceImpl implements ProductServiceAPI {
 		return productsDTO;
 	}
 
-	public void sort(ArrayList<Product> list) {
-
-		list.sort((p1, p2) -> p1.getSearches().compareTo(p2.getSearches()));
-
-	}
-
 	@Override
 	public List<GetProductDTO> RankingOfProducts() {
 
 		List<Product> AllProducts = (List<Product>) productRepository.findAll();
 
 		AllProducts.sort((p1, p2) -> p1.getSearches().compareTo(p2.getSearches()));
-		
+
 		Collections.reverse(AllProducts);
-		
+
 		List<GetProductDTO> productsRankingDTO = new ArrayList<>();
 
 		AllProducts.forEach(obj -> {
@@ -164,7 +153,7 @@ public class ProductServiceImpl implements ProductServiceAPI {
 			}
 		});
 
-		return productsRankingDTO.subList(0, 3);
-	};
+		return productsRankingDTO.subList(0, 8);
+	}
 
 }

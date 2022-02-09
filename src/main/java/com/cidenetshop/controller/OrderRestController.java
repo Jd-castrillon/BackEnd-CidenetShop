@@ -35,7 +35,7 @@ public class OrderRestController {
             return new ResponseEntity(this.orderServiceAPI.findOrderById(orderId), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity(e.getMessage(), HttpStatus.OK);
 
         }
 
@@ -51,7 +51,7 @@ public class OrderRestController {
             orderServiceAPI.saveOrder(idUser, newOrder);
             return new ResponseEntity(new MessageDTO("Orden guardada"), HttpStatus.CREATED);
         } catch (Exception e) {
-            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(new MessageDTO(e.getMessage()), HttpStatus.OK);
 
         }
 
