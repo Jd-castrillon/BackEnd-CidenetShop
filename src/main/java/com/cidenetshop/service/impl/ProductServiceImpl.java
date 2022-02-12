@@ -12,8 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cidenetshop.model.dto.GetProductDTO;
+import com.cidenetshop.model.dto.NewProductDTO;
+import com.cidenetshop.model.entity.Picture;
 import com.cidenetshop.model.entity.Product;
+import com.cidenetshop.repository.PictureRepository;
 import com.cidenetshop.repository.ProductRepository;
+import com.cidenetshop.service.api.GenderServiceAPI;
 import com.cidenetshop.service.api.ProductServiceAPI;
 
 @Service
@@ -21,9 +25,16 @@ public class ProductServiceImpl implements ProductServiceAPI {
 
 	private final ProductRepository productRepository;
 
+	private final GenderServiceAPI genderServiceAPI;
+
+	private final PictureRepository pictureRepository;
+
 	@Autowired
-	public ProductServiceImpl(ProductRepository productRepository) {
+	public ProductServiceImpl(ProductRepository productRepository, GenderServiceAPI genderServiceAPI,
+			PictureRepository pictureRepository) {
 		this.productRepository = productRepository;
+		this.genderServiceAPI = genderServiceAPI;
+		this.pictureRepository = pictureRepository;
 
 	}
 
@@ -154,6 +165,52 @@ public class ProductServiceImpl implements ProductServiceAPI {
 		});
 
 		return productsRankingDTO.subList(0, 8);
+	}
+
+	@Override
+	public void saveNewProduct(NewProductDTO newProduct, byte[] newPicture) throws Exception {
+
+		final Product product = new Product();
+
+		final Picture picture = new Picture();
+		
+		if(newProduct.getName().equals(null) || newProduct.getName().equals("") )
+			throw new Exception("Name needed");
+		
+		if(newProduct.getDescription().equals(null) || newProduct.getDescription().equals("") )
+			throw new Exception("Description needed");
+		
+		if(newProduct.getBrand().equals(null) || newProduct.getBrand().equals("") )
+			throw new Exception("Brand needed");
+		
+		if(newProduct.getColor().equals(null) || newProduct.getColor().equals("") )
+			throw new Exception("color needed");
+			
+		if(newProduct.getPrice().equals(null) || newProduct.getPrice(	) <= 0 )
+			throw new Exception("incorrect price");
+		
+		product.setName(newProduct.getName());
+
+		product.setDescription(newProduct.getDescription());
+
+		product.setColor(newProduct.getColor());
+
+		product.setPrice(newProduct.getPrice());
+
+		product.setBrand(newProduct.getBrand());
+
+		product.setGender(genderServiceAPI.findByGender(newProduct.getGender()));
+
+		product.setSearches((long) 0);
+
+		picture.setProduct(product);
+
+		picture.setPicture(newPicture);
+
+		productRepository.save(product);
+		
+		pictureRepository.save(picture);
+
 	}
 
 }

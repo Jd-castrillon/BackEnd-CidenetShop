@@ -2,8 +2,8 @@ package com.cidenetshop.service.api;
 
 import java.util.List;
 
-import com.cidenetshop.model.dto.GetOrderDetailDTO;
 import com.cidenetshop.model.dto.GetProductDTO;
+import com.cidenetshop.model.dto.NewProductDTO;
 import com.cidenetshop.model.entity.Product;
 
 public interface ProductServiceAPI {
@@ -21,6 +21,8 @@ public interface ProductServiceAPI {
 	List<GetProductDTO> getProductByGender(String productType);
 
 	Product findById(Long productId);
+	
+	void saveNewProduct( NewProductDTO newProduct , byte[] picture ) throws Exception;
 	
 	
 	

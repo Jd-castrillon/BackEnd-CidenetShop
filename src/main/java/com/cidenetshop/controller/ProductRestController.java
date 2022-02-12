@@ -12,12 +12,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.cidenetshop.model.entity.Product;
 import com.cidenetshop.service.api.ProductServiceAPI;
 
 import com.cidenetshop.model.dto.GetProductDTO;
+import com.cidenetshop.model.dto.MessageDTO;
+import com.cidenetshop.model.dto.NewProductDTO;
 import com.cidenetshop.model.dto.OutOfStockDTO;
 
 @RestController
@@ -32,6 +36,7 @@ public class ProductRestController {
 		this.productServiceAPI = productServiceAPI;
 	}
 
+	
 	@GetMapping(value = "/ranking")
 	public List<GetProductDTO> getAllProducts() {
 		List<GetProductDTO> products = this.productServiceAPI.RankingOfProducts();
@@ -60,16 +65,18 @@ public class ProductRestController {
 		return products;
 	}
 
-	@PreAuthorize("hasAuthority(admin)")
+	@PreAuthorize("hasAuthority('admin')")
 	@PostMapping
-	public ResponseEntity<Product> saveProduct(@RequestBody Product product) {
+	public ResponseEntity<Product> saveProduct(@RequestPart("picture") MultipartFile picture,
+			@RequestPart("newProduct") NewProductDTO newProduct) {
 
 		try {
-			productServiceAPI.saveProduct(product);
 
-			return new ResponseEntity(HttpStatus.OK);
+			productServiceAPI.saveNewProduct(newProduct, picture.getBytes());
+
+			return new ResponseEntity(new MessageDTO("Producto guardado"), HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity(e.getMessage(), HttpStatus.NOT_ACCEPTABLE);
+			return new ResponseEntity(new MessageDTO(e.getMessage()), HttpStatus.NOT_ACCEPTABLE);
 		}
 
 	}
@@ -89,7 +96,5 @@ public class ProductRestController {
 
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-
-	
 
 }
