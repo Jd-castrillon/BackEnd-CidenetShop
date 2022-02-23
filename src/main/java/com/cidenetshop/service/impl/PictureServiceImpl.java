@@ -2,11 +2,15 @@ package com.cidenetshop.service.impl;
 
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.cidenetshop.model.entity.Picture;
+import com.cidenetshop.model.entity.Product;
 import com.cidenetshop.repository.PictureRepository;
 import com.cidenetshop.service.api.PictureServiceAPI;
 
@@ -22,24 +26,6 @@ public class PictureServiceImpl implements PictureServiceAPI {
 		super();
 		this.pictureRepository = pictureRepository;
 	}
-
-//	@Override
-//	public Picture savePicture(Picture picture) throws Exception {
-//		if (true) {
-//			throw new Exception("No esta llegando la imagen");
-//		} else if (picture.getProduct() == null) {
-//			throw new Exception("No hay producto relacionado a la imagen");
-//
-//		}
-//		try {
-//			return this.pictureRepository.save(picture);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			throw new Exception("Ha ocurrido un error inesperado al guardar la imagen en la base de datos."
-//					+ picture.getProduct().getId());
-//		}
-//
-//	}
 
 	@Override
 	public GetPictureDTO findPictureById(Long id) throws Exception {
@@ -68,21 +54,50 @@ public class PictureServiceImpl implements PictureServiceAPI {
 		final Optional<Picture> repoResponse = this.pictureRepository.findById(id);
 
 		if (repoResponse.isEmpty() || id == null) {
-			new Exception("Imagen no encontrada para el id " + id);
+			throw new Exception("Imagen no encontrada para el id " + id);
 		}
-
-//		final Picture pictureFound = repoResponse.get();
-//
-//		return pictureFound.getPicture();}
 
 		return null;
 
 	}
 
 	@Override
-	public Picture savePicture(Picture picture) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public void savePicture(Product product, MultipartFile picture) throws Exception {
+
+		if (picture.isEmpty())
+			throw new Exception("Image is needed");
+
+		Picture newPicture = new Picture();
+
+		newPicture.setProduct(product);
+
+		newPicture.setPicture(picture.getBytes());
+
+		pictureRepository.save(newPicture);
+
+	}
+
+	@Override
+	public Picture findById(Long id) throws Exception {
+		Optional<Picture> response = pictureRepository.findById(id);
+
+		if (response.isEmpty())
+			throw new Exception(" Picture don't found with id:  " + id);
+
+		return response.get();
+	}
+	
+	@Transactional
+	@Override
+	public void updatePicture(Long id, MultipartFile updatePicture) throws Exception {
+
+		if (updatePicture.isEmpty())
+			throw new Exception("Image is needed");
+
+		Picture picture = findById(id);
+
+		picture.setPicture(updatePicture.getBytes());
+
 	}
 
 }

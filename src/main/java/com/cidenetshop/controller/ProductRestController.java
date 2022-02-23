@@ -10,19 +10,16 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.cidenetshop.model.entity.Product;
-import com.cidenetshop.service.api.ProductServiceAPI;
-
 import com.cidenetshop.model.dto.GetProductDTO;
 import com.cidenetshop.model.dto.MessageDTO;
 import com.cidenetshop.model.dto.NewProductDTO;
-import com.cidenetshop.model.dto.OutOfStockDTO;
+import com.cidenetshop.service.api.ProductServiceAPI;
 
 @RestController
 @RequestMapping(value = "/products")
@@ -36,7 +33,6 @@ public class ProductRestController {
 		this.productServiceAPI = productServiceAPI;
 	}
 
-	
 	@GetMapping(value = "/ranking")
 	public List<GetProductDTO> getAllProducts() {
 		List<GetProductDTO> products = this.productServiceAPI.RankingOfProducts();
@@ -50,12 +46,12 @@ public class ProductRestController {
 	}
 
 	@GetMapping(value = "/id/{productId}")
-	public ResponseEntity<GetProductDTO> getProductById(@PathVariable("productId") Long productId) {
+	public ResponseEntity<?> getProductById(@PathVariable("productId") Long productId) {
 		try {
-			return new ResponseEntity(this.productServiceAPI.findProductById(productId), HttpStatus.OK);
+			return new ResponseEntity<GetProductDTO>(this.productServiceAPI.findProductById(productId), HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<MessageDTO>(new MessageDTO(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
@@ -66,35 +62,49 @@ public class ProductRestController {
 	}
 
 	@PreAuthorize("hasAuthority('admin')")
-	@PostMapping
-	public ResponseEntity<Product> saveProduct(@RequestPart("picture") MultipartFile picture,
+	@PostMapping(consumes = { "multipart/form-data" })
+	public ResponseEntity<MessageDTO> saveProduct(@RequestPart("picture") MultipartFile picture,
 			@RequestPart("newProduct") NewProductDTO newProduct) {
 
 		try {
 
-			productServiceAPI.saveNewProduct(newProduct, picture.getBytes());
+			productServiceAPI.saveNewProduct(newProduct, picture);
 
-			return new ResponseEntity(new MessageDTO("Producto guardado"), HttpStatus.OK);
+			return new ResponseEntity<MessageDTO>(new MessageDTO("Producto guardado"), HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity(new MessageDTO(e.getMessage()), HttpStatus.NOT_ACCEPTABLE);
+			return new ResponseEntity<MessageDTO>(new MessageDTO(e.getMessage()), HttpStatus.NOT_ACCEPTABLE);
 		}
 
 	}
 
+	@PreAuthorize("hasAuthority('admin')")
+	@PutMapping(value = "/{idProduct}", consumes = { "multipart/form-data" })
+	public ResponseEntity<MessageDTO> updateProduct(@RequestPart("picture") MultipartFile picture,
+			@RequestPart("updateProduct") NewProductDTO updateProduct, @PathVariable("idProduct") Long idProduct) {
+		try {
+			productServiceAPI.updateProduct(updateProduct, picture, idProduct);
+			return new ResponseEntity<MessageDTO>(new MessageDTO("Producto actualizado"), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<MessageDTO>(new MessageDTO(e.getMessage()), HttpStatus.BAD_REQUEST);
+		}
+
+	}
+
+	@PreAuthorize("hasAuthority('admin')")
 	@DeleteMapping(value = "/{productId}")
-	public ResponseEntity<Product> deleteProductById(@PathVariable("productId") Long productId) {
+	public ResponseEntity<MessageDTO> deleteProductById(@PathVariable("productId") Long productId) {
 
 		try {
 			final Boolean response = this.productServiceAPI.deleteProductById(productId);
 			if (response) {
-				return new ResponseEntity<Product>(HttpStatus.OK);
+				return new ResponseEntity<MessageDTO>(new MessageDTO("Producto eliminado"), HttpStatus.OK);
 			}
 
 		} catch (Exception e) {
-			return new ResponseEntity(e.getMessage(), HttpStatus.NOT_ACCEPTABLE);
+			return new ResponseEntity<MessageDTO>(new MessageDTO(e.getMessage()), HttpStatus.NOT_ACCEPTABLE);
 		}
 
-		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<MessageDTO>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 }

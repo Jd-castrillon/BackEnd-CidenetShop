@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cidenetshop.model.dto.GetOrderDetailDTO;
 import com.cidenetshop.model.dto.MessageDTO;
-import com.cidenetshop.model.entity.Product;
 import com.cidenetshop.service.api.OrderDetailServiceAPI;
 
 @RestController
@@ -20,7 +19,7 @@ import com.cidenetshop.service.api.OrderDetailServiceAPI;
 public class OrderDetailRestController {
 
 	private final OrderDetailServiceAPI orderDetailServiceAPI;
-	
+
 	@Autowired
 	public OrderDetailRestController(OrderDetailServiceAPI orderDetailServiceAPI) {
 		super();
@@ -28,13 +27,13 @@ public class OrderDetailRestController {
 	}
 
 	@PostMapping(value = "/outofstock")
-	public ResponseEntity<Product> productsOutOfStock(@RequestBody List<GetOrderDetailDTO> listOrderDetails) {
+	public ResponseEntity<Object> productsOutOfStock(@RequestBody List<GetOrderDetailDTO> listOrderDetails) {
 
 		try {
 			List<GetOrderDetailDTO> productsDTOOutOfStock = orderDetailServiceAPI.OutOfStock(listOrderDetails);
-			return new ResponseEntity(productsDTOOutOfStock, HttpStatus.OK);
+			return new ResponseEntity<Object>(productsDTOOutOfStock, HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity(new MessageDTO(e.getMessage()), HttpStatus.OK);
+			return new ResponseEntity<Object>(new MessageDTO(e.getMessage()), HttpStatus.OK);
 		}
 
 	}

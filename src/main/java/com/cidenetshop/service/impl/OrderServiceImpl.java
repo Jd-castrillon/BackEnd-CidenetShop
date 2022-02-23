@@ -91,7 +91,7 @@ public class OrderServiceImpl implements OrderServiceAPI {
 
 			if (orderDetailDTO.getQuantity() > stock.getExistingQuantity())
 				throw new Exception("the requested quantity is greater than the stock in the product with id "
-						+ orderDetailDTO.getIdProduct() + "and size " + orderDetailDTO.getSize());
+						+ orderDetailDTO.getIdProduct() + " and size " + orderDetailDTO.getSize());
 
 			final OrderDetail orderDetail = new OrderDetail();
 			orderDetail.setProduct(product);

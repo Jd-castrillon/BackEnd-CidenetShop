@@ -27,6 +27,19 @@ public class ExistingQuantity {
 	@JoinColumn(name = "id_size")
 	private Size size;
 
+	public ExistingQuantity(ExistingQuantityKey id, Product product, Size size, Integer existingQuantity) {
+		super();
+		id = new ExistingQuantityKey();
+		
+		this.product = product;
+		this.size = size;
+		this.existingQuantity = existingQuantity;
+	}
+
+	public ExistingQuantity() {
+		super();
+	}
+
 	private Integer existingQuantity;
 
 	public ExistingQuantityKey getId() {
@@ -59,18 +72,6 @@ public class ExistingQuantity {
 
 	public void setExistingQuantity(Integer existingQuantity) {
 		this.existingQuantity = existingQuantity;
-	}
-
-	public ExistingQuantity(ExistingQuantityKey id, Product product, Size size, Integer existingQuantity) {
-		super();
-		this.id = id;
-		this.product = product;
-		this.size = size;
-		this.existingQuantity = existingQuantity;
-	}
-
-	public ExistingQuantity() {
-		super();
 	}
 
 }

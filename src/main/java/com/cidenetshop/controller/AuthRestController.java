@@ -37,22 +37,24 @@ public class AuthRestController {
 	@PostMapping("/newuser")
 	public ResponseEntity<?> newUser(@RequestBody NewUserDTO newUserDto, BindingResult bindingResult) {
 		if (bindingResult.hasErrors())
-			return new ResponseEntity(new MessageDTO("campos mal puestos o email inválido"), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<MessageDTO>(new MessageDTO("campos mal puestos o email inválido"),
+					HttpStatus.BAD_REQUEST);
 		try {
 			userServiceAPI.save(newUserDto);
-			return new ResponseEntity(new MessageDTO("usuario guardado"), HttpStatus.CREATED);
+			return new ResponseEntity<MessageDTO>(new MessageDTO("usuario guardado"), HttpStatus.CREATED);
 
 		} catch (Exception e) {
-			return new ResponseEntity(new MessageDTO("campos mal puestos o email inválido"), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<MessageDTO>(new MessageDTO("campos mal puestos o email inválido"),
+					HttpStatus.BAD_REQUEST);
 		}
 
 	}
 
 	@PostMapping("/login")
-	public ResponseEntity<JwtDTO> login(@RequestBody LoginUserDTO loginUserDTO, BindingResult bindingResult) {
+	public ResponseEntity<?> login(@RequestBody LoginUserDTO loginUserDTO, BindingResult bindingResult) {
 
 		if (bindingResult.hasErrors())
-			return new ResponseEntity(new MessageDTO("Badly placed fields"), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<MessageDTO>(new MessageDTO("Badly placed fields"), HttpStatus.BAD_REQUEST);
 
 		try {
 			Authentication authentication = authenticationManager.authenticate(
@@ -65,10 +67,11 @@ public class AuthRestController {
 
 			JwtDTO jwtDTO = new JwtDTO(jwt, userDetails.getUsername(), userDetails.getAuthorities());
 
-			return new ResponseEntity(jwtDTO, HttpStatus.OK);
+			return new ResponseEntity<JwtDTO>(jwtDTO, HttpStatus.OK);
 
 		} catch (Exception e) {
-			return new ResponseEntity(new MessageDTO("No se ha encontrado al usuario"), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<MessageDTO>(new MessageDTO("No se ha encontrado al usuario"),
+					HttpStatus.BAD_REQUEST);
 		}
 
 	}

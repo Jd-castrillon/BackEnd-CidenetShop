@@ -21,9 +21,12 @@ public class SizeServiceImpl implements SizeServiceAPI {
 	}
 
 	@Override
-	public Size findByShortText(String shortText) {
+	public Size findByShortText(String shortText) throws Exception {
 
 		Optional<Size> size = sizeRepository.findByShortText(shortText);
+
+		if (size.isEmpty())
+			throw new Exception("Don't found size whit shortText : " + shortText);
 
 		if (size.isPresent())
 			return size.get();

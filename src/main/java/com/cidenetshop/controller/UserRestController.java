@@ -23,15 +23,15 @@ public class UserRestController {
 		super();
 		this.userServiceAPI = userServiceAPI;
 	}
-	
-	@GetMapping(value="/email/{email}")
-	public ResponseEntity<GetUserDTO> getUserByEmail(@PathVariable String email) {
+
+	@GetMapping(value = "/email/{email}")
+	public ResponseEntity<?> getUserByEmail(@PathVariable String email) {
 
 		try {
 			final GetUserDTO userDTO = userServiceAPI.findByEmail(email);
-			return new ResponseEntity(userDTO, HttpStatus.CREATED);
+			return new ResponseEntity<GetUserDTO>(userDTO, HttpStatus.CREATED);
 		} catch (Exception e) {
-			return new ResponseEntity(new MessageDTO(e.getMessage()), HttpStatus.NOT_FOUND);
+			return new ResponseEntity<MessageDTO>(new MessageDTO(e.getMessage()), HttpStatus.NOT_FOUND);
 		}
 
 	}

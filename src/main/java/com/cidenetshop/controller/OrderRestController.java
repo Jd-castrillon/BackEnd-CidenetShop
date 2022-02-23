@@ -21,41 +21,40 @@ import com.cidenetshop.service.api.OrderServiceAPI;
 @RequestMapping(value = "/orders")
 public class OrderRestController {
 
-    private final OrderServiceAPI orderServiceAPI;
+	private final OrderServiceAPI orderServiceAPI;
 
-    @Autowired
-    public OrderRestController(OrderServiceAPI orderServiceAPI) {
-        super();
-        this.orderServiceAPI = orderServiceAPI;
-    }
+	@Autowired
+	public OrderRestController(OrderServiceAPI orderServiceAPI) {
+		super();
+		this.orderServiceAPI = orderServiceAPI;
+	}
 
-    @GetMapping(value = "/{orderId}")
-    public ResponseEntity<GetOrderDTO> getOrderById(@PathVariable("orderId") Long orderId) {
-        try {
-            return new ResponseEntity(this.orderServiceAPI.findOrderById(orderId), HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity(e.getMessage(), HttpStatus.OK);
+	@GetMapping(value = "/{orderId}")
+	public ResponseEntity<?> getOrderById(@PathVariable("orderId") Long orderId) {
+		try {
+			return new ResponseEntity<GetOrderDTO>(this.orderServiceAPI.findOrderById(orderId), HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<MessageDTO>(new MessageDTO(e.getMessage()), HttpStatus.OK);
 
-        }
+		}
 
-    }
+	}
 
-    @PostMapping
-    public ResponseEntity<GetOrderDTO> saveNewOrder(@RequestBody NewOrderDTO newOrder) {
-       
-        try {
-            final Long idUser =
-                    ((UserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getIdUser();
+	@PostMapping
+	public ResponseEntity<MessageDTO> saveNewOrder(@RequestBody NewOrderDTO newOrder) {
 
-            orderServiceAPI.saveOrder(idUser, newOrder);
-            return new ResponseEntity(new MessageDTO("Orden guardada"), HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity(new MessageDTO(e.getMessage()), HttpStatus.OK);
+		try {
+			final Long idUser = ((UserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
+					.getIdUser();
 
-        }
+			orderServiceAPI.saveOrder(idUser, newOrder);
+			return new ResponseEntity<MessageDTO>(new MessageDTO("Orden guardada"), HttpStatus.CREATED);
+		} catch (Exception e) {
+			return new ResponseEntity<MessageDTO>(new MessageDTO(e.getMessage()), HttpStatus.OK);
 
+		}
 
-    }
+	}
 
 }

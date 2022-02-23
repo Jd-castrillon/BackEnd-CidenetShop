@@ -1,5 +1,6 @@
 package com.cidenetshop.model.entity;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -52,15 +53,18 @@ public class Product {
 	@JoinColumn(name = "id_gender")
 	private Gender gender;
 
-	@OneToMany(mappedBy = "product")
+	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
 	private Set<ExistingQuantity> existingQuantity;
+
+	@OneToMany(mappedBy = "product", cascade = { CascadeType.ALL })
+	private List<OrderDetail> orderDetails;
 
 	@OneToOne(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@PrimaryKeyJoinColumn
 	private Picture picture;
 
-	public Product(Long id, String name, String description, String color, Double price, String brand,
-			Gender gender, Set<ExistingQuantity> existingQuantity, Picture picture) {
+	public Product(Long id, String name, String description, String color, Double price, String brand, Gender gender,
+			Set<ExistingQuantity> existingQuantity, Picture picture) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -164,6 +168,14 @@ public class Product {
 
 	public void setExistingQuantity(Set<ExistingQuantity> existingQuantity) {
 		this.existingQuantity = existingQuantity;
+	}
+
+	public List<OrderDetail> getOrderDetails() {
+		return orderDetails;
+	}
+
+	public void setOrderDetails(List<OrderDetail> orderDetails) {
+		this.orderDetails = orderDetails;
 	}
 
 }
