@@ -5,13 +5,16 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cidenetshop.model.dto.DeleteExistingQuantityDTO;
 import com.cidenetshop.model.dto.GetExistingQuantityDTO;
 import com.cidenetshop.model.dto.MessageDTO;
 import com.cidenetshop.model.dto.NewExistingQuantityDTO;
@@ -43,19 +46,42 @@ public class ExistingQuantityRestController {
 		}
 
 	}
-	
+
 	@PostMapping
-	public ResponseEntity<?> saveExistingQuantity(@RequestBody NewExistingQuantityDTO newExistingQuantityDTO){
-		
+	public ResponseEntity<?> saveExistingQuantity(@RequestBody NewExistingQuantityDTO newExistingQuantityDTO) {
+
 		try {
 			existingQuantityServiceAPI.saveExistingQuantity(newExistingQuantityDTO);
 			return new ResponseEntity<Object>(new MessageDTO("existingQuantity created"), HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity<Object>(new MessageDTO(e.getMessage()), HttpStatus.OK);
+			return new ResponseEntity<Object>(new MessageDTO(e.getMessage()), HttpStatus.BAD_REQUEST);
 		}
-		
-		
+	}
+
+	@PutMapping(value = "/{idProduct}")
+	public ResponseEntity<?> updateExistingQuantity(@RequestBody NewExistingQuantityDTO updateExistingQuantity) {
+		try {
+			existingQuantityServiceAPI.updateStock(updateExistingQuantity);
+
+			return new ResponseEntity<MessageDTO>(new MessageDTO("Stock was update"), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<Object>(new MessageDTO(e.getMessage()), HttpStatus.BAD_REQUEST);
+
+		}
+
 	}
 	
+	@DeleteMapping
+	public ResponseEntity<?> deleteExistingQuantity(@RequestBody DeleteExistingQuantityDTO deleteExistingQuantityDTO) {
+		try {
+			existingQuantityServiceAPI.deleteExistingQuantity(deleteExistingQuantityDTO);
+
+			return new ResponseEntity<MessageDTO>(new MessageDTO("Stock was delete"), HttpStatus.OK);
+
+		} catch (Exception e) {
+			return new ResponseEntity<MessageDTO>(new MessageDTO(e.getMessage()), HttpStatus.OK);
+		
+		}
+	}
 
 }

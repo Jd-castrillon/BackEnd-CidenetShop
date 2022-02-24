@@ -15,4 +15,7 @@ public interface ExistingQuantityRepository extends CrudRepository<ExistingQuant
 	Optional<ExistingQuantity> findByProductIdAndSizeId(Long idProduct, Long idSize);
 
 	List<ExistingQuantity> findByProductId(Long idProduct);
+	
+	
+	
 }

@@ -13,7 +13,7 @@ public class ExistingQuantityKey implements Serializable {
 	private Long idProduct;
 
 	@Column(name = "id_size")
-	private Integer idSize;
+	private Long idSize;
 
 	public Long getIdProduct() {
 		return idProduct;
@@ -23,15 +23,16 @@ public class ExistingQuantityKey implements Serializable {
 		this.idProduct = idProduct;
 	}
 
-	public Integer getIdSize() {
+
+	public Long getIdSize() {
 		return idSize;
 	}
 
-	public void setIdSize(Integer idSize) {
+	public void setIdSize(Long idSize) {
 		this.idSize = idSize;
 	}
 
-	public ExistingQuantityKey(Long idProduct, Integer idSize) {
+	public ExistingQuantityKey(Long idProduct, Long idSize) {
 		super();
 		this.idProduct = idProduct;
 		this.idSize = idSize;

@@ -43,8 +43,6 @@ public class OrderDetail {
 		id = new OrderDetailKey();
 	}
 
-	
-
 	public OrderDetail(Product product, Order order, Size size, Integer quantity, Double salePrice) {
 		super();
 		id = new OrderDetailKey();
@@ -54,8 +52,6 @@ public class OrderDetail {
 		this.quantity = quantity;
 		this.salePrice = salePrice;
 	}
-
-
 
 	public OrderDetailKey getId() {
 		return id;

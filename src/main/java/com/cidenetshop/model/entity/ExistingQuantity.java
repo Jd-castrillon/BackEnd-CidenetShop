@@ -38,6 +38,7 @@ public class ExistingQuantity {
 
 	public ExistingQuantity() {
 		super();
+		id = new ExistingQuantityKey();
 	}
 
 	private Integer existingQuantity;

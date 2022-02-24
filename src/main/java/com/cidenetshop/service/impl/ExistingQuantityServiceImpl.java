@@ -10,6 +10,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.cidenetshop.model.dto.DeleteExistingQuantityDTO;
 import com.cidenetshop.model.dto.GetExistingQuantityDTO;
 import com.cidenetshop.model.dto.NewExistingQuantityDTO;
 import com.cidenetshop.model.entity.ExistingQuantity;
@@ -40,11 +41,12 @@ public class ExistingQuantityServiceImpl implements ExistingQuantityServiceAPI {
 	}
 
 	private GetExistingQuantityDTO convertToDTO(ExistingQuantity existingQuantity) throws Exception {
-		
+
 		try {
-			GetExistingQuantityDTO getExistingQuantityDTO = modelMapper.map(existingQuantity, GetExistingQuantityDTO.class);
+			GetExistingQuantityDTO getExistingQuantityDTO = modelMapper.map(existingQuantity,
+					GetExistingQuantityDTO.class);
 			return getExistingQuantityDTO;
-			
+
 		} catch (Exception e) {
 			throw new Exception("Don't convert to DTO");
 		}
@@ -76,7 +78,11 @@ public class ExistingQuantityServiceImpl implements ExistingQuantityServiceAPI {
 	@Override
 	public void saveExistingQuantity(NewExistingQuantityDTO newExistingQuantityDTO) throws Exception {
 
-		if (newExistingQuantityDTO.getQuantity().equals(null) ||newExistingQuantityDTO.getQuantity() <= 0)
+		if (findByIdProductAndShortText(newExistingQuantityDTO.getIdProduct(), newExistingQuantityDTO.getShortText())
+				.isPresent())
+			throw new Exception("That ExistingQuantity already exists");
+
+		if (newExistingQuantityDTO.getQuantity().equals(null) || newExistingQuantityDTO.getQuantity() <= 0)
 			throw new Exception("ExistingQuantity value incorrect");
 
 		Product product = productServiceAPI.findById(newExistingQuantityDTO.getIdProduct());
@@ -97,11 +103,15 @@ public class ExistingQuantityServiceImpl implements ExistingQuantityServiceAPI {
 
 	@Transactional
 	@Override
-	public void updateStock(Long idProduct, String shortText, Integer quantity) throws Exception {
+	public void updateStock(NewExistingQuantityDTO updateExistingQuantityDTO) throws Exception {
 
-		ExistingQuantity existingQuantity = findByProductIdAndShortText(idProduct, shortText);
+		if (updateExistingQuantityDTO.getQuantity() < 0 || updateExistingQuantityDTO.getQuantity().equals(null))
+			throw new Exception("Quantity is invalid");
 
-		existingQuantity.setExistingQuantity(quantity);
+		ExistingQuantity existingQuantity = findByProductIdAndShortText(updateExistingQuantityDTO.getIdProduct(),
+				updateExistingQuantityDTO.getShortText());
+
+		existingQuantity.setExistingQuantity(updateExistingQuantityDTO.getQuantity());
 
 	}
 
@@ -116,12 +126,36 @@ public class ExistingQuantityServiceImpl implements ExistingQuantityServiceAPI {
 			try {
 				getDtos.add(convertToDTO(obj));
 			} catch (Exception e) {
-				
+
 				e.printStackTrace();
 			}
 		});
 
 		return getDtos;
+	}
+
+	@Override
+	public Optional<ExistingQuantity> findByIdProductAndShortText(Long idProduct, String shortText) throws Exception {
+
+		Size size = sizeServiceAPI.findByShortText(shortText);
+
+		Optional<ExistingQuantity> eOptional = existingQuantityRepository.findByProductIdAndSizeId(idProduct,
+				size.getId());
+
+		return eOptional;
+	}
+
+	@Override
+	public void deleteExistingQuantity(DeleteExistingQuantityDTO deleteExistingQuantityDTO) throws Exception {
+
+		Optional<ExistingQuantity> eOptional = findByIdProductAndShortText(deleteExistingQuantityDTO.getIdProduct(),
+				deleteExistingQuantityDTO.getShortText());
+
+		if (eOptional.isEmpty())
+			throw new Exception("Don't found");
+
+		existingQuantityRepository.delete(eOptional.get());
+
 	}
 
 }
