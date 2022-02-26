@@ -1058,8 +1058,13 @@
 			referencedColumnNames="id" />
 
 
-
-
 	</changeSet>
+			
+		<changeSet id="1645829806113-1" author="jdkastrillon@gmail.com">
+			<addColumn tableName="products">
+			<column name="active" type="INT"></column>
+		</addColumn>
+		</changeSet>	
+		
 
 </databaseChangeLog>

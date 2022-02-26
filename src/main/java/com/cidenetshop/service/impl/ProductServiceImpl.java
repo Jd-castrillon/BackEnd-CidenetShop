@@ -12,16 +12,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.cidenetshop.model.dto.GetAdminProductDTO;
 import com.cidenetshop.model.dto.GetProductDTO;
 import com.cidenetshop.model.dto.NewProductDTO;
+import com.cidenetshop.model.entity.ExistingQuantity;
 import com.cidenetshop.model.entity.Product;
+import com.cidenetshop.repository.ExistingQuantityRepository;
 import com.cidenetshop.repository.ProductRepository;
 import com.cidenetshop.service.api.GenderServiceAPI;
 import com.cidenetshop.service.api.PictureServiceAPI;
 import com.cidenetshop.service.api.ProductServiceAPI;
 
 @Service
-public class ProductServiceImpl<U> implements ProductServiceAPI {
+public class ProductServiceImpl implements ProductServiceAPI {
 
 	private final ProductRepository productRepository;
 
@@ -29,13 +32,20 @@ public class ProductServiceImpl<U> implements ProductServiceAPI {
 
 	private final PictureServiceAPI pictureServiceAPI;
 
+	private final ExistingQuantityRepository existingQuantityRepository;
+
+	private final ModelMapper modelMapper;
+
 	@Autowired
 	public ProductServiceImpl(ProductRepository productRepository, GenderServiceAPI genderServiceAPI,
-			PictureServiceAPI pictureServiceAPI) {
+			PictureServiceAPI pictureServiceAPI, ExistingQuantityRepository existingQuantityRepository,
+			ModelMapper modelMapper) {
+		super();
 		this.productRepository = productRepository;
 		this.genderServiceAPI = genderServiceAPI;
 		this.pictureServiceAPI = pictureServiceAPI;
-
+		this.existingQuantityRepository = existingQuantityRepository;
+		this.modelMapper = modelMapper;
 	}
 
 	private GetProductDTO convertProductToDTO(Product product) throws Exception {
@@ -80,27 +90,28 @@ public class ProductServiceImpl<U> implements ProductServiceAPI {
 	}
 
 	@Override
-	public Boolean deleteProductById(Long productId) throws Exception {
+	public void deleteProductById(Long productId) throws Exception {
 
-		if (findProductById(productId) != null) {
-			try {
-				this.productRepository.deleteById(productId);
-				return true;
-			} catch (Exception e) {
-				throw new Exception("Hubo un error eliminando el producto, intentalo nuevamente mas tarde");
+		List<ExistingQuantity> existingQuantities = existingQuantityRepository.findByProductId(productId);
 
-			}
-		}
-		return false;
+		if (!existingQuantities.isEmpty())
+			throw new Exception("Don't delete product with stock");
+
+		Product product = findById(productId);
+
+		this.productRepository.delete(product);
+
 	}
 
 	@Override
-	public List<GetProductDTO> getAllProducts() {
+	public List<GetAdminProductDTO> getAllProducts() {
 
-		List<GetProductDTO> productsDTO = new ArrayList<>();
+		List<GetAdminProductDTO> productsDTO = new ArrayList<>();
 		this.productRepository.findAll().forEach(obj -> {
 			try {
-				productsDTO.add(convertProductToDTO(obj));
+				GetAdminProductDTO product = modelMapper.map(obj, GetAdminProductDTO.class);
+
+				productsDTO.add(product);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -116,7 +127,9 @@ public class ProductServiceImpl<U> implements ProductServiceAPI {
 
 		this.productRepository.findAllByGender(gender).forEach(obj -> {
 			try {
-				productsDTO.add(convertProductToDTO(obj));
+				if (obj.getActive().equals(1)) {
+					productsDTO.add(convertProductToDTO(obj));
+				}
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -153,7 +166,7 @@ public class ProductServiceImpl<U> implements ProductServiceAPI {
 	public void saveNewProduct(NewProductDTO newProduct, MultipartFile newPicture) throws Exception {
 
 		if (findByName(newProduct.getName()).isPresent())
-			throw new Exception("product with name " + newProduct.getName() + " already exist");
+			throw new Exception("Product already exists");
 
 		final Product product = new Product();
 
@@ -236,6 +249,25 @@ public class ProductServiceImpl<U> implements ProductServiceAPI {
 		Optional<Product> response = productRepository.findByName(name);
 
 		return response;
+	}
+
+	@Override
+	public List<GetProductDTO> getActiveProducts() {
+
+		List<GetProductDTO> productsDTO = new ArrayList<>();
+		this.productRepository.findAll().forEach(obj -> {
+			try {
+				if (obj.getActive().equals(1)) {
+					productsDTO.add(convertProductToDTO(obj));
+				}
+
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		});
+
+		return productsDTO;
 	}
 
 }

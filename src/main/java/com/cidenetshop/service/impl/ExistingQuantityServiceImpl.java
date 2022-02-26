@@ -58,13 +58,10 @@ public class ExistingQuantityServiceImpl implements ExistingQuantityServiceAPI {
 		Optional<ExistingQuantity> existingQuantity = existingQuantityRepository.findByProductIdAndSizeId(idProduct,
 				idSize);
 		if (existingQuantity.isEmpty())
-			throw new Exception("Don't found ExistingQuantity whit idProduct: " + idProduct + " idSize:  " + idSize);
+			throw new Exception("Don't found ExistingQuantity");
 
-		if (existingQuantity.isPresent()) {
-			return existingQuantity.get();
-		}
+		return existingQuantity.get();
 
-		return null;
 	}
 
 	@Override
@@ -75,6 +72,7 @@ public class ExistingQuantityServiceImpl implements ExistingQuantityServiceAPI {
 		return findByProductIdAndSizeId(idProduct, size.getId());
 	}
 
+	@Transactional
 	@Override
 	public void saveExistingQuantity(NewExistingQuantityDTO newExistingQuantityDTO) throws Exception {
 
@@ -86,6 +84,10 @@ public class ExistingQuantityServiceImpl implements ExistingQuantityServiceAPI {
 			throw new Exception("ExistingQuantity value incorrect");
 
 		Product product = productServiceAPI.findById(newExistingQuantityDTO.getIdProduct());
+
+		if (product.getActive().equals(0)) {
+			product.setActive(1);
+		}
 
 		Size size = sizeServiceAPI.findByShortText(newExistingQuantityDTO.getShortText());
 
@@ -114,13 +116,22 @@ public class ExistingQuantityServiceImpl implements ExistingQuantityServiceAPI {
 		existingQuantity.setExistingQuantity(updateExistingQuantityDTO.getQuantity());
 
 	}
-
+	
+	@Transactional
 	@Override
-	public List<GetExistingQuantityDTO> findByIdProduct(Long idProduct) {
+	public List<GetExistingQuantityDTO> findByIdProduct(Long idProduct) throws Exception {
 
 		List<GetExistingQuantityDTO> getDtos = new ArrayList<GetExistingQuantityDTO>();
 
 		List<ExistingQuantity> existingQuantitys = existingQuantityRepository.findByProductId(idProduct);
+		
+		Product product = productServiceAPI.findById(idProduct);
+		if (existingQuantitys.isEmpty()) {
+			product.setActive(0);
+			
+		
+			
+		
 
 		existingQuantitys.forEach(obj -> {
 			try {
@@ -134,8 +145,11 @@ public class ExistingQuantityServiceImpl implements ExistingQuantityServiceAPI {
 		return getDtos;
 	}
 
+	
 	@Override
 	public Optional<ExistingQuantity> findByIdProductAndShortText(Long idProduct, String shortText) throws Exception {
+
+		
 
 		Size size = sizeServiceAPI.findByShortText(shortText);
 
@@ -144,7 +158,8 @@ public class ExistingQuantityServiceImpl implements ExistingQuantityServiceAPI {
 
 		return eOptional;
 	}
-
+	
+	@Transactional
 	@Override
 	public void deleteExistingQuantity(DeleteExistingQuantityDTO deleteExistingQuantityDTO) throws Exception {
 
@@ -155,6 +170,13 @@ public class ExistingQuantityServiceImpl implements ExistingQuantityServiceAPI {
 			throw new Exception("Don't found");
 
 		existingQuantityRepository.delete(eOptional.get());
+		
+		List<ExistingQuantity> existingQuantitys = existingQuantityRepository.findByProductId(deleteExistingQuantityDTO.getIdProduct());
+
+		if (existingQuantitys.isEmpty()) {
+			Product product = productServiceAPI.findById(deleteExistingQuantityDTO.getIdProduct());
+			product.setActive(0);
+		}
 
 	}
 

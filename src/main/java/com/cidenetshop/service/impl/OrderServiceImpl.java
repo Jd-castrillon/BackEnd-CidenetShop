@@ -112,7 +112,10 @@ public class OrderServiceImpl implements OrderServiceAPI {
 
 			final ExistingQuantity stock = existingQuantityServiceAPI.findByProductIdAndShortText(
 					orderDetail.getProduct().getId(), orderDetail.getSize().getShortText());
-
+			
+			if(stock.getExistingQuantity() - orderDetail.getQuantity() < 0)
+				throw new Exception("Don't can set negative value to setExistingQuantity");
+			
 			stock.setExistingQuantity(stock.getExistingQuantity() - orderDetail.getQuantity());
 
 		}

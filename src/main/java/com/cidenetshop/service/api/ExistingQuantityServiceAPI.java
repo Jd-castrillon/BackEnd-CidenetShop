@@ -14,7 +14,7 @@ public interface ExistingQuantityServiceAPI {
 	
 	ExistingQuantity findByProductIdAndShortText(Long idProduct , String shortText) throws Exception;
 	
-	List<GetExistingQuantityDTO> findByIdProduct(Long idProduct);
+	List<GetExistingQuantityDTO> findByIdProduct(Long idProduct) throws Exception;
 	
 	Optional<ExistingQuantity> findByIdProductAndShortText(Long idProdiuct , String idSize) throws Exception;
 	

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,7 +32,8 @@ public class ExistingQuantityRestController {
 		super();
 		this.existingQuantityServiceAPI = existingQuantityServiceAPI;
 	}
-
+	
+	@PreAuthorize("hasAuthority('admin')")
 	@GetMapping(value = "/{idProduct}")
 	public ResponseEntity<?> getExistingQuantityByProduct(@PathVariable("idProduct") Long idProduct) {
 
@@ -46,18 +48,20 @@ public class ExistingQuantityRestController {
 		}
 
 	}
-
+	
+	@PreAuthorize("hasAuthority('admin')")
 	@PostMapping
 	public ResponseEntity<?> saveExistingQuantity(@RequestBody NewExistingQuantityDTO newExistingQuantityDTO) {
 
 		try {
 			existingQuantityServiceAPI.saveExistingQuantity(newExistingQuantityDTO);
-			return new ResponseEntity<Object>(new MessageDTO("existingQuantity created"), HttpStatus.OK);
+			return new ResponseEntity<Object>(new MessageDTO("ExistingQuantity created"), HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<Object>(new MessageDTO(e.getMessage()), HttpStatus.BAD_REQUEST);
 		}
 	}
-
+	
+	@PreAuthorize("hasAuthority('admin')")
 	@PutMapping(value = "/{idProduct}")
 	public ResponseEntity<?> updateExistingQuantity(@RequestBody NewExistingQuantityDTO updateExistingQuantity) {
 		try {
@@ -71,6 +75,7 @@ public class ExistingQuantityRestController {
 
 	}
 	
+	@PreAuthorize("hasAuthority('admin')")
 	@DeleteMapping
 	public ResponseEntity<?> deleteExistingQuantity(@RequestBody DeleteExistingQuantityDTO deleteExistingQuantityDTO) {
 		try {

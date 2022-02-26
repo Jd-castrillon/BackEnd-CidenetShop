@@ -49,6 +49,9 @@ public class Product {
 	@Column(name = "searches")
 	private Long searches;
 
+	@Column
+	private Integer active;
+
 	@ManyToOne
 	@JoinColumn(name = "id_gender")
 	private Gender gender;
@@ -64,7 +67,7 @@ public class Product {
 	private Picture picture;
 
 	public Product(Long id, String name, String description, String color, Double price, String brand, Gender gender,
-			Set<ExistingQuantity> existingQuantity, Picture picture) {
+			Set<ExistingQuantity> existingQuantity, List<OrderDetail> orderDetails, Picture picture) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -73,8 +76,10 @@ public class Product {
 		this.price = price;
 		this.brand = brand;
 		this.searches = (long) 0;
+		this.active = 0;
 		this.gender = gender;
 		this.existingQuantity = existingQuantity;
+		this.orderDetails = orderDetails;
 		this.picture = picture;
 	}
 
@@ -176,6 +181,14 @@ public class Product {
 
 	public void setOrderDetails(List<OrderDetail> orderDetails) {
 		this.orderDetails = orderDetails;
+	}
+
+	public Integer getActive() {
+		return active;
+	}
+
+	public void setActive(Integer active) {
+		this.active = active;
 	}
 
 }

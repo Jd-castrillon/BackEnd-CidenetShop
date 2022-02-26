@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.cidenetshop.model.dto.GetAdminProductDTO;
 import com.cidenetshop.model.dto.GetProductDTO;
 import com.cidenetshop.model.dto.NewProductDTO;
 import com.cidenetshop.model.entity.Product;
@@ -13,9 +14,11 @@ public interface ProductServiceAPI {
 
 	GetProductDTO findProductById(Long productId) throws Exception;
 
-	Boolean deleteProductById(Long productId) throws Exception;
+	void deleteProductById(Long productId) throws Exception;
 
-	List<GetProductDTO> getAllProducts();
+	List<GetAdminProductDTO> getAllProducts();
+	
+	List<GetProductDTO> getActiveProducts();
 
 	List<GetProductDTO> RankingOfProducts();
 

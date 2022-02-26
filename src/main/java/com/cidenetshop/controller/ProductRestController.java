@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.cidenetshop.model.dto.GetAdminProductDTO;
 import com.cidenetshop.model.dto.GetProductDTO;
 import com.cidenetshop.model.dto.MessageDTO;
 import com.cidenetshop.model.dto.NewProductDTO;
@@ -32,17 +33,30 @@ public class ProductRestController {
 	public ProductRestController(ProductServiceAPI productServiceAPI) {
 		this.productServiceAPI = productServiceAPI;
 	}
-
+	
+	
 	@GetMapping(value = "/ranking")
 	public List<GetProductDTO> getAllProducts() {
 		List<GetProductDTO> products = this.productServiceAPI.RankingOfProducts();
 		return products;
 	}
-
+	
+	@PreAuthorize("hasAuthority('admin')")
 	@GetMapping
-	public List<GetProductDTO> getRankingProducts() {
-		List<GetProductDTO> products = this.productServiceAPI.getAllProducts();
+	public List<GetAdminProductDTO> getRankingProducts() {
+		List<GetAdminProductDTO> products = this.productServiceAPI.getAllProducts();
 		return products;
+	}
+
+	@GetMapping(value="/active")
+	public ResponseEntity<?> getActiveProducts() {
+		try {
+			List<GetProductDTO> activeProducts = productServiceAPI.getActiveProducts();
+			return new ResponseEntity<Object>(activeProducts, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<MessageDTO>(new MessageDTO(e.getMessage()),HttpStatus.NOT_FOUND);
+		}
+
 	}
 
 	@GetMapping(value = "/id/{productId}")
@@ -55,7 +69,7 @@ public class ProductRestController {
 		}
 	}
 
-	@GetMapping(value = "/{gender}")
+	@GetMapping(value = "/active/{gender}")
 	public List<GetProductDTO> getProductByGender(@PathVariable("gender") String gender) {
 		List<GetProductDTO> products = this.productServiceAPI.getProductByGender(gender);
 		return products;
@@ -70,7 +84,7 @@ public class ProductRestController {
 
 			productServiceAPI.saveNewProduct(newProduct, picture);
 
-			return new ResponseEntity<MessageDTO>(new MessageDTO("Producto guardado"), HttpStatus.OK);
+			return new ResponseEntity<MessageDTO>(new MessageDTO("Product was created"), HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<MessageDTO>(new MessageDTO(e.getMessage()), HttpStatus.NOT_ACCEPTABLE);
 		}
@@ -83,7 +97,7 @@ public class ProductRestController {
 			@RequestPart("updateProduct") NewProductDTO updateProduct, @PathVariable("idProduct") Long idProduct) {
 		try {
 			productServiceAPI.updateProduct(updateProduct, picture, idProduct);
-			return new ResponseEntity<MessageDTO>(new MessageDTO("Producto actualizado"), HttpStatus.OK);
+			return new ResponseEntity<MessageDTO>(new MessageDTO("Product was update"), HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<MessageDTO>(new MessageDTO(e.getMessage()), HttpStatus.BAD_REQUEST);
 		}
@@ -95,16 +109,14 @@ public class ProductRestController {
 	public ResponseEntity<MessageDTO> deleteProductById(@PathVariable("productId") Long productId) {
 
 		try {
-			final Boolean response = this.productServiceAPI.deleteProductById(productId);
-			if (response) {
-				return new ResponseEntity<MessageDTO>(new MessageDTO("Producto eliminado"), HttpStatus.OK);
-			}
+			productServiceAPI.deleteProductById(productId);
+
+			return new ResponseEntity<MessageDTO>(new MessageDTO("Product was delete"), HttpStatus.OK);
 
 		} catch (Exception e) {
 			return new ResponseEntity<MessageDTO>(new MessageDTO(e.getMessage()), HttpStatus.NOT_ACCEPTABLE);
 		}
 
-		return new ResponseEntity<MessageDTO>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 }
