@@ -62,7 +62,7 @@ public class OrderDetailServiceImpl implements OrderDetailServiceAPI {
 		}
 
 		if (productOutOfStock.isEmpty())
-			throw new Exception("All products have enough stocke");
+			throw new Exception("All products have enough stock");
 
 		return productOutOfStock;
 	};

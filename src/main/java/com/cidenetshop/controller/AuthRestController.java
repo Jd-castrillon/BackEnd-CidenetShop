@@ -38,7 +38,7 @@ public class AuthRestController {
 
 		try {
 			userServiceAPI.save(newUserDto);
-			return new ResponseEntity<MessageDTO>(new MessageDTO("usuario guardado"), HttpStatus.CREATED);
+			return new ResponseEntity<MessageDTO>(new MessageDTO("user save"), HttpStatus.CREATED);
 
 		} catch (Exception e) {
 			return new ResponseEntity<MessageDTO>(new MessageDTO(e.getMessage()),
@@ -64,7 +64,7 @@ public class AuthRestController {
 			return new ResponseEntity<JwtDTO>(jwtDTO, HttpStatus.OK);
 
 		} catch (Exception e) {
-			return new ResponseEntity<MessageDTO>(new MessageDTO("No se ha encontrado al usuario"),
+			return new ResponseEntity<MessageDTO>(new MessageDTO("Don't found user"),
 					HttpStatus.BAD_REQUEST);
 		}
 
