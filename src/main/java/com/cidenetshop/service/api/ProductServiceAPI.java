@@ -17,12 +17,14 @@ public interface ProductServiceAPI {
 	void deleteProductById(Long productId) throws Exception;
 
 	List<GetAdminProductDTO> getAllProducts();
-	
+
+	List<GetProductDTO> getActiveProductByGender(String productType);
+
 	List<GetProductDTO> getActiveProducts();
 
 	List<GetProductDTO> RankingOfProducts();
 
-	List<GetProductDTO> getProductByGender(String productType);
+	List<GetAdminProductDTO> getProductByGender(String productType);
 
 	Product findById(Long productId) throws Exception;
 

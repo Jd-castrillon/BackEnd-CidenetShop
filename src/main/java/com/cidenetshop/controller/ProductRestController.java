@@ -33,14 +33,13 @@ public class ProductRestController {
 	public ProductRestController(ProductServiceAPI productServiceAPI) {
 		this.productServiceAPI = productServiceAPI;
 	}
-	
-	
+
 	@GetMapping(value = "/ranking")
 	public List<GetProductDTO> getAllProducts() {
 		List<GetProductDTO> products = this.productServiceAPI.RankingOfProducts();
 		return products;
 	}
-	
+
 	@PreAuthorize("hasAuthority('admin')")
 	@GetMapping
 	public List<GetAdminProductDTO> getRankingProducts() {
@@ -48,13 +47,13 @@ public class ProductRestController {
 		return products;
 	}
 
-	@GetMapping(value="/active")
+	@GetMapping(value = "/active")
 	public ResponseEntity<?> getActiveProducts() {
 		try {
 			List<GetProductDTO> activeProducts = productServiceAPI.getActiveProducts();
 			return new ResponseEntity<Object>(activeProducts, HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity<MessageDTO>(new MessageDTO(e.getMessage()),HttpStatus.NOT_FOUND);
+			return new ResponseEntity<MessageDTO>(new MessageDTO(e.getMessage()), HttpStatus.NOT_FOUND);
 		}
 
 	}
@@ -69,9 +68,17 @@ public class ProductRestController {
 		}
 	}
 
+	
 	@GetMapping(value = "/active/{gender}")
 	public List<GetProductDTO> getProductByGender(@PathVariable("gender") String gender) {
-		List<GetProductDTO> products = this.productServiceAPI.getProductByGender(gender);
+		List<GetProductDTO> products = this.productServiceAPI.getActiveProductByGender(gender);
+		return products;
+	}
+
+	@PreAuthorize("hasAuthority('admin')")	
+	@GetMapping(value = "/{gender}")
+	public List<GetAdminProductDTO> getAdminProductByGender(@PathVariable("gender") String gender) {
+		List<GetAdminProductDTO> products = this.productServiceAPI.getProductByGender(gender);
 		return products;
 	}
 

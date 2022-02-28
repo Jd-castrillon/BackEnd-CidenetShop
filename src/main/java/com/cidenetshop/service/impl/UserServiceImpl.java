@@ -64,7 +64,7 @@ public class UserServiceImpl implements UserServiceAPI {
 		try {
 
 			if (userRepository.existsByEmail(newUserDTO.getEmail()))
-				throw new Exception("El correo ya existe");
+				throw new Exception("That email already exists");
 
 			DocumentType documenType = documentTypeRepository.findByDocumentType(newUserDTO.getDocumentType()).get();
 
@@ -74,9 +74,6 @@ public class UserServiceImpl implements UserServiceAPI {
 			Set<Role> roles = new HashSet<>();
 
 			roles.add(roleServiceAPI.findByRole("client").get());
-
-//			if(newUserDTO.getRoles().contains("admin"))
-//				roles.add(roleServiceAPI.findByRole("admin").get());
 
 			user.setRoles(roles);
 
@@ -95,7 +92,7 @@ public class UserServiceImpl implements UserServiceAPI {
 		final Optional<User> repoResponse = userRepository.findByEmail(email);
 
 		if (repoResponse.isEmpty()) {
-			new Exception("usuario no encontrado para el email :" + email);
+			new Exception("Don't found user by email:" + email);
 		}
 
 		final User userFound = repoResponse.get();

@@ -8,7 +8,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,26 +34,21 @@ public class AuthRestController {
 	private JwtProvider jwtProvider;
 
 	@PostMapping("/newuser")
-	public ResponseEntity<?> newUser(@RequestBody NewUserDTO newUserDto, BindingResult bindingResult) {
-		if (bindingResult.hasErrors())
-			return new ResponseEntity<MessageDTO>(new MessageDTO("campos mal puestos o email inválido"),
-					HttpStatus.BAD_REQUEST);
+	public ResponseEntity<?> newUser(@RequestBody NewUserDTO newUserDto) {
+
 		try {
 			userServiceAPI.save(newUserDto);
 			return new ResponseEntity<MessageDTO>(new MessageDTO("usuario guardado"), HttpStatus.CREATED);
 
 		} catch (Exception e) {
-			return new ResponseEntity<MessageDTO>(new MessageDTO("campos mal puestos o email inválido"),
+			return new ResponseEntity<MessageDTO>(new MessageDTO(e.getMessage()),
 					HttpStatus.BAD_REQUEST);
 		}
 
 	}
 
 	@PostMapping("/login")
-	public ResponseEntity<?> login(@RequestBody LoginUserDTO loginUserDTO, BindingResult bindingResult) {
-
-		if (bindingResult.hasErrors())
-			return new ResponseEntity<MessageDTO>(new MessageDTO("Badly placed fields"), HttpStatus.BAD_REQUEST);
+	public ResponseEntity<?> login(@RequestBody LoginUserDTO loginUserDTO) {
 
 		try {
 			Authentication authentication = authenticationManager.authenticate(

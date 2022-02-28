@@ -128,11 +128,7 @@ public class ExistingQuantityServiceImpl implements ExistingQuantityServiceAPI {
 		Product product = productServiceAPI.findById(idProduct);
 		if (existingQuantitys.isEmpty()) {
 			product.setActive(0);
-			
-		
-			
-		
-
+		}
 		existingQuantitys.forEach(obj -> {
 			try {
 				getDtos.add(convertToDTO(obj));

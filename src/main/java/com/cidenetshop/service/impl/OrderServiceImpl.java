@@ -141,7 +141,7 @@ public class OrderServiceImpl implements OrderServiceAPI {
 		final Optional<Order> repoResponse = this.orderRepository.findById(orderId);
 
 		if (repoResponse.isEmpty()) {
-			new Exception("Orden no encontrada para el id " + orderId);
+			new Exception("Order not found by id: " + orderId);
 		}
 
 		final Order orderFound = repoResponse.get();

@@ -121,15 +121,16 @@ public class ProductServiceImpl implements ProductServiceAPI {
 		return productsDTO;
 	}
 
-	public List<GetProductDTO> getProductByGender(String gender) {
+	public List<GetAdminProductDTO> getProductByGender(String gender) {
 
-		List<GetProductDTO> productsDTO = new ArrayList<>();
+		List<GetAdminProductDTO> productsDTO = new ArrayList<>();
 
 		this.productRepository.findAllByGender(gender).forEach(obj -> {
 			try {
-				if (obj.getActive().equals(1)) {
-					productsDTO.add(convertProductToDTO(obj));
-				}
+
+				GetAdminProductDTO product = modelMapper.map(obj, GetAdminProductDTO.class);
+				productsDTO.add(product);
+
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -152,7 +153,9 @@ public class ProductServiceImpl implements ProductServiceAPI {
 
 		AllProducts.forEach(obj -> {
 			try {
-				productsRankingDTO.add(convertProductToDTO(obj));
+				if (obj.getActive().equals(1)) {		
+					productsRankingDTO.add(convertProductToDTO(obj));
+				}
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -160,6 +163,26 @@ public class ProductServiceImpl implements ProductServiceAPI {
 		});
 
 		return productsRankingDTO.subList(0, 8);
+	}
+
+	@Override
+	public List<GetProductDTO> getActiveProductByGender(String gender) {
+
+		List<GetProductDTO> productsDTO = new ArrayList<>();
+
+		this.productRepository.findAllByGender(gender).forEach(obj -> {
+			try {
+				if (obj.getActive().equals(1)) {
+
+					productsDTO.add(convertProductToDTO(obj));
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		});
+
+		return productsDTO;
 	}
 
 	@Override

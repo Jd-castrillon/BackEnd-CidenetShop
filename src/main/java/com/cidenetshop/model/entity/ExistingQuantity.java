@@ -27,8 +27,8 @@ public class ExistingQuantity {
 	@JoinColumn(name = "id_size")
 	private Size size;
 
-	public ExistingQuantity(ExistingQuantityKey id, Product product, Size size, Integer existingQuantity) {
-		super();
+	public ExistingQuantity( Product product, Size size, Integer existingQuantity) {
+		
 		id = new ExistingQuantityKey();
 		
 		this.product = product;
@@ -37,7 +37,7 @@ public class ExistingQuantity {
 	}
 
 	public ExistingQuantity() {
-		super();
+		
 		id = new ExistingQuantityKey();
 	}
 
