@@ -1,0 +1,27 @@
+version: '3.9'
+services:
+
+  jdshop-postgresql-db:
+    image: postgres:13
+    ports:
+      - 5432:5432
+    volumes:
+      - jdshop-postgresql-db-data:/var/lib/postgresql/data
+    env_file:
+      - .env
+
+  jdshop-liquibase:
+    image: liquibase/liquibase:4.6.2
+    env_file:
+      - .env
+    depends_on:
+      - jdshop-postgresql-db
+    volumes:
+      - .:/liquibase/changelog
+    command: liquibase update --logLevel=INFO
+      --changelog-file=changelog/jdshop-db.changelog.xml
+      --url=jdbc:postgresql://jdshop-postgresql-db:5432/${POSTGRES_DB}
+      --username=${POSTGRES_USER} --password=${POSTGRES_PASSWORD}
+
+volumes:
+  jdshop-postgresql-db-data:
