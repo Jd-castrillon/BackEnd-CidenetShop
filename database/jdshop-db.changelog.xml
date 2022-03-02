@@ -27,7 +27,7 @@
 			<column name="id" type="BIGINT">
 				<constraints nullable="false" primaryKey="true" />
 			</column>
-			<column name="role" type="VARCHAR">
+			<column name="document_type" type="VARCHAR">
 				<constraints nullable="false" />
 			</column>
 		</createTable>
@@ -72,7 +72,7 @@
 			<column name="id" type="BIGINT" autoIncrement="true">
 				<constraints nullable="false" primaryKey="true" />
 			</column>
-			<column name="size" type="VARCHAR">
+			<column name="short_text" type="VARCHAR">
 				<constraints nullable="false" />
 			</column>
 		</createTable>
@@ -105,6 +105,10 @@
 				<constraints nullable="false" />
 			</column>
 			<column name="id_gender" type="INT"></column>
+			<column name="active" type="INT">
+				<constraints nullable="false" />
+			</column>
+			<column name="searches" type="BIGINT"></column>
 		</createTable>
 
 		<addForeignKeyConstraint
@@ -236,11 +240,7 @@
 
 	</changeSet>
 
-	<changeSet id="1640186318533-3"
-		author="jdkastrillon@gmail.com">
-		<renameColumn tableName="document_types"
-			oldColumnName="role" newColumnName="document_type" />
-	</changeSet>
+
 
 	<changeSet id="1640186318533-4"
 		author="jdkastrillon@gmail.com">
@@ -270,92 +270,11 @@
 		</dropColumn>
 	</changeSet>
 
-	<changeSet author="jdkastrillon@gmail.com"
-		id="1641944783112-2">
-		<insert tableName="roles">
-			<column name="id" valueSequenceNext="roles_id_sequence" />
-			<column name="role" value="admin" />
-		</insert>
-		<insert tableName="roles">
-			<column name="id" valueSequenceNext="roles_id_sequence" />
-			<column name="role" value="client" />
-		</insert>
-	</changeSet>
 
-	<changeSet id="1641944783112-3"
+	<changeSet id="1642605916926-1"
 		author="jdkastrillon@gmail.com">
-		<insert tableName="document_types">
-			<column name="id"
-				valueSequenceNext="document_types_id_sequence"></column>
-			<column name="document_type" value="cedula de ciudadania"></column>
-		</insert>
-		<insert tableName="document_types">
-			<column name="id"
-				valueSequenceNext="document_types_id_sequence"></column>
-			<column name="document_type" value="tarjeta de identidad"></column>
-		</insert>
-	</changeSet>
-	<changeSet id="1641944783112-4"
-		author="jdkastrillon@gmail.com">
-		<insert tableName="sizes">
-			<column name="id" valueSequenceNext="sizes_id_sequence"></column>
-			<column name="size" value="XS"></column>
-		</insert>
-		<insert tableName="sizes">
-			<column name="id" valueSequenceNext="sizes_id_sequence"></column>
-			<column name="size" value="S"></column>
-		</insert>
-		<insert tableName="sizes">
-			<column name="id" valueSequenceNext="sizes_id_sequence"></column>
-			<column name="size" value="M"></column>
-		</insert>
-		<insert tableName="sizes">
-			<column name="id" valueSequenceNext="sizes_id_sequence"></column>
-			<column name="size" value="L"></column>
-		</insert>
-		<insert tableName="sizes">
-			<column name="id" valueSequenceNext="sizes_id_sequence"></column>
-			<column name="size" value="XL"></column>
-		</insert>
-
-		<insert tableName="genders">
-			<column name="id" valueSequenceNext="genders_id_sequence"></column>
-			<column name="gender" value="masculino"></column>
-		</insert>
-		<insert tableName="genders">
-			<column name="id" valueSequenceNext="genders_id_sequence"></column>
-			<column name="gender" value="femenino"></column>
-		</insert>
-
-	</changeSet>
 
 
-
-	<changeSet id="1642093096714-2"
-		author="jdkastrillon@gmail.com">
-		<renameColumn tableName="sizes" oldColumnName="size"
-			newColumnName="short_text" />
-	</changeSet>
-
-	<changeSet id="1642093096714-3"
-		author="jdkastrillon@gmail.com">
-		<modifyDataType tableName="pictures"
-			columnName="picture" newDataType="blob" />
-	</changeSet>
-
-	<changeSet id="1642093096714-4"
-		author="jdkastrillon@gmail.com">
-		<modifyDataType tableName="pictures"
-			columnName="picture" newDataType="BLOB" />
-	</changeSet>
-	<changeSet id="1642093096714-5"
-		author="jdkastrillon@gmail.com">
-		<modifyDataType tableName="pictures"
-			columnName="picture" newDataType="blob" />
-	</changeSet>
-
-	<changeSet id="1642093096714-6"
-		author="jdkastrillon@gmail.com">
 		<dropTable tableName="pictures" />
 		<createTable tableName="pictures">
 			<column name="id_product" type="BIGINT">
@@ -364,6 +283,8 @@
 			<column name="picture" type="bytea">
 			</column>
 		</createTable>
+
+
 		<addForeignKeyConstraint
 			constraintName="fk_product" referencedTableName="products"
 			baseColumnNames="id_product" baseTableName="pictures"
@@ -372,9 +293,44 @@
 
 
 
+	<changeSet id="1643081181898-1"
+		author="jdkastrillon@gmail.com">
+		<dropTable tableName="order_details" />
+		<createTable tableName="order_details">
+			<column name="id_order" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" />
+			</column>
+			<column name="id_product" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" />
+			</column>
+			<column name="id_size" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" />
+			</column>
+			<column name="sale_price" type="DOUBLE">
+				<constraints nullable="false" />
+			</column>
+			<column name="quantity" type="INT">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+		<addForeignKeyConstraint
+			constraintName="fk_order" referencedTableName="orders"
+			baseColumnNames="id_order" baseTableName="order_details"
+			referencedColumnNames="id" />
+		<addForeignKeyConstraint
+			constraintName="fk_products" referencedTableName="products"
+			baseColumnNames="id_product" baseTableName="order_details"
+			referencedColumnNames="id" />
+
+		<addForeignKeyConstraint
+			constraintName="fk_size" referencedTableName="sizes"
+			baseColumnNames="id_size" baseTableName="order_details"
+			referencedColumnNames="id" />
+	</changeSet>
 
 
-	<changeSet id="1642534030238-2"
+
+	<changeSet id="1646233539094-1"
 		author="jdkastrillon@gmail.com">
 		<insert tableName="roles">
 			<column name="id" valueSequenceNext="roles_id_sequence" />
@@ -425,71 +381,7 @@
 		</insert>
 	</changeSet>
 
-
-	<changeSet id="1642605916926-1"
-		author="jdkastrillon@gmail.com">
-
-
-		<dropTable tableName="pictures" />
-		<createTable tableName="pictures">
-			<column name="id_product" type="BIGINT">
-				<constraints nullable="false" primaryKey="true" />
-			</column>
-			<column name="picture" type="bytea">
-			</column>
-		</createTable>
-
-
-		<addForeignKeyConstraint
-			constraintName="fk_product" referencedTableName="products"
-			baseColumnNames="id_product" baseTableName="pictures"
-			referencedColumnNames="id" />
-	</changeSet>
-
-	<changeSet id="1643039852413-1"
-		author="jdkastrillon@gmail.com">
-		<addColumn tableName="products">
-			<column name="searches" type="BIGINT"></column>
-		</addColumn>
-	</changeSet>
-
-	<changeSet id="1643081181898-1"
-		author="jdkastrillon@gmail.com">
-		<dropTable tableName="order_details" />
-		<createTable tableName="order_details">
-			<column name="id_order" type="BIGINT">
-				<constraints nullable="false" primaryKey="true" />
-			</column>
-			<column name="id_product" type="BIGINT">
-				<constraints nullable="false" primaryKey="true" />
-			</column>
-			<column name="id_size" type="BIGINT">
-				<constraints nullable="false" primaryKey="true" />
-			</column>
-			<column name="sale_price" type="DOUBLE">
-				<constraints nullable="false" />
-			</column>
-			<column name="quantity" type="INT">
-				<constraints nullable="false" />
-			</column>
-		</createTable>
-		<addForeignKeyConstraint
-			constraintName="fk_order" referencedTableName="orders"
-			baseColumnNames="id_order" baseTableName="order_details"
-			referencedColumnNames="id" />
-		<addForeignKeyConstraint
-			constraintName="fk_products" referencedTableName="products"
-			baseColumnNames="id_product" baseTableName="order_details"
-			referencedColumnNames="id" />
-
-		<addForeignKeyConstraint
-			constraintName="fk_size" referencedTableName="sizes"
-			baseColumnNames="id_size" baseTableName="order_details"
-			referencedColumnNames="id" />
-	</changeSet>
-
-
-	<changeSet id="1643148657506-1"
+	<changeSet id="1646233539094-2"
 		author="jdkastrillon@gmail.com">
 		<insert tableName="products">
 			<column name="id" valueSequenceNext="products_id_sequence"></column>
@@ -500,6 +392,8 @@
 				value="camisa negra con un gran estilo para una salida ocasional"></column>
 			<column name="price" value="54000"></column>
 			<column name="id_gender" value="1"></column>
+			<column name="active" value="1"></column>
+			<column name="searches" value="0"></column>
 		</insert>
 		<insert tableName="products">
 			<column name="id" valueSequenceNext="products_id_sequence"></column>
@@ -510,6 +404,8 @@
 				value="camiseta con colores blanco y negro, perfecta con cualquier oufit"></column>
 			<column name="price" value="28000"></column>
 			<column name="id_gender" value="1"></column>
+			<column name="active" value="1"></column>
+			<column name="searches" value="0"></column>
 		</insert>
 		<insert tableName="products">
 			<column name="id" valueSequenceNext="products_id_sequence"></column>
@@ -520,6 +416,8 @@
 				value="camisa mayormente blanca y con hombros amarillos"></column>
 			<column name="price" value="25000"></column>
 			<column name="id_gender" value="1"></column>
+			<column name="active" value="1"></column>
+			<column name="searches" value="0"></column>
 		</insert>
 		<insert tableName="products">
 			<column name="id" valueSequenceNext="products_id_sequence"></column>
@@ -530,6 +428,8 @@
 				value="camiseta negra con un bolsilo en el pecho"></column>
 			<column name="price" value="27000"></column>
 			<column name="id_gender" value="1"></column>
+			<column name="active" value="1"></column>
+			<column name="searches" value="0"></column>
 		</insert>
 
 
@@ -542,6 +442,8 @@
 				value="camiseta tricolor con azul gris amarillo en este orden dandole un gran diseño"></column>
 			<column name="price" value="45000"></column>
 			<column name="id_gender" value="1"></column>
+			<column name="active" value="1"></column>
+			<column name="searches" value="0"></column>
 		</insert>
 		<insert tableName="products">
 			<column name="id" valueSequenceNext="products_id_sequence"></column>
@@ -552,6 +454,8 @@
 				value="camiseta de triangulos de colores negro gris y blanco"></column>
 			<column name="price" value="39000"></column>
 			<column name="id_gender" value="1"></column>
+			<column name="active" value="1"></column>
+			<column name="searches" value="0"></column>
 		</insert>
 		<insert tableName="products">
 			<column name="id" valueSequenceNext="products_id_sequence"></column>
@@ -562,6 +466,8 @@
 				value="camiseta tricolor con negro blanco y un cafe claro que hacen una combinacion excelente"></column>
 			<column name="price" value="36000"></column>
 			<column name="id_gender" value="1"></column>
+			<column name="active" value="1"></column>
+			<column name="searches" value="0"></column>
 		</insert>
 		<insert tableName="products">
 			<column name="id" valueSequenceNext="products_id_sequence"></column>
@@ -572,6 +478,8 @@
 				value="camiseta tricolor con negro blanco y un cafe claro que hacen una combinacion excelente"></column>
 			<column name="price" value="30000"></column>
 			<column name="id_gender" value="1"></column>
+			<column name="active" value="1"></column>
+			<column name="searches" value="0"></column>
 		</insert>
 		<insert tableName="products">
 			<column name="id" valueSequenceNext="products_id_sequence"></column>
@@ -582,6 +490,8 @@
 				value="Camiseta mayormente azul con unos detalles en cafe y un bolsillo en ele pecho"></column>
 			<column name="price" value="35000"></column>
 			<column name="id_gender" value="1"></column>
+			<column name="active" value="1"></column>
+			<column name="searches" value="0"></column>
 		</insert>
 		<insert tableName="products">
 			<column name="id" valueSequenceNext="products_id_sequence"></column>
@@ -592,10 +502,12 @@
 				value="Camisa con un excelente diseño parecido a las camisetas de bolos en negro y gris"></column>
 			<column name="price" value="37000"></column>
 			<column name="id_gender" value="1"></column>
+			<column name="active" value="1"></column>
+			<column name="searches" value="0"></column>
 		</insert>
 	</changeSet>
 
-	<changeSet id="1643148657506-2"
+	<changeSet id="1646233539094-3"
 		author="jdkastrillon@gmail.com">
 
 		<insert tableName="products">
@@ -607,6 +519,8 @@
 				value="Blusa tricolor que es mayormente blanca y tiene unas franjas rosa y negra"></column>
 			<column name="price" value="28000"></column>
 			<column name="id_gender" value="2"></column>
+			<column name="active" value="1"></column>
+			<column name="searches" value="0"></column>
 		</insert>
 		<insert tableName="products">
 			<column name="id" valueSequenceNext="products_id_sequence"></column>
@@ -617,6 +531,8 @@
 				value="Blusa tricolor mayomermente negra con franjas cafe y gris"></column>
 			<column name="price" value="37000"></column>
 			<column name="id_gender" value="2"></column>
+			<column name="active" value="1"></column>
+			<column name="searches" value="0"></column>
 		</insert>
 		<insert tableName="products">
 			<column name="id" valueSequenceNext="products_id_sequence"></column>
@@ -627,6 +543,8 @@
 				value="Blusa para pijama la parte inferior es azul claro y la parte superior es gris con una tela extra comoda"></column>
 			<column name="price" value="27000"></column>
 			<column name="id_gender" value="2"></column>
+			<column name="active" value="1"></column>
+			<column name="searches" value="0"></column>
 		</insert>
 		<insert tableName="products">
 			<column name="id" valueSequenceNext="products_id_sequence"></column>
@@ -637,6 +555,8 @@
 				value="Blusa de botones con colores partidos por la mitad de la blusa, los colores son verde y blanco"></column>
 			<column name="price" value="43000"></column>
 			<column name="id_gender" value="2"></column>
+			<column name="active" value="1"></column>
+			<column name="searches" value="0"></column>
 		</insert>
 		<insert tableName="products">
 			<column name="id" valueSequenceNext="products_id_sequence"></column>
@@ -647,6 +567,8 @@
 				value="Blusa manga larga con la parte superior azul oscuro, detallada con lineas en la parte inferior y un bolsillo cafe"></column>
 			<column name="price" value="38000"></column>
 			<column name="id_gender" value="2"></column>
+			<column name="active" value="1"></column>
+			<column name="searches" value="0"></column>
 		</insert>
 		<insert tableName="products">
 			<column name="id" valueSequenceNext="products_id_sequence"></column>
@@ -657,6 +579,8 @@
 				value="Blusa tricolor que en la aprte superior viene detallada con unas lineas negras y fondo blanco, le sigue una franja y un bolsillo blanco y termina con una franja rosada"></column>
 			<column name="price" value="38000"></column>
 			<column name="id_gender" value="2"></column>
+			<column name="active" value="1"></column>
+			<column name="searches" value="0"></column>
 		</insert>
 		<insert tableName="products">
 			<column name="id" valueSequenceNext="products_id_sequence"></column>
@@ -667,6 +591,8 @@
 				value="BLusa larga que en la aprte superior en rosada y que en la aprte inferior es blanca y tiene unos detalles rosados"></column>
 			<column name="price" value="27000"></column>
 			<column name="id_gender" value="2"></column>
+			<column name="active" value="1"></column>
+			<column name="searches" value="0"></column>
 		</insert>
 		<insert tableName="products">
 			<column name="id" valueSequenceNext="products_id_sequence"></column>
@@ -677,6 +603,8 @@
 				value="blusa con hombros destapados y unos detalles de lineas negras en la parte del tronco"></column>
 			<column name="price" value="33000"></column>
 			<column name="id_gender" value="2"></column>
+			<column name="active" value="1"></column>
+			<column name="searches" value="0"></column>
 		</insert>
 		<insert tableName="products">
 			<column name="id" valueSequenceNext="products_id_sequence"></column>
@@ -687,6 +615,8 @@
 				value="blusa gris con detalles de puntos blancos"></column>
 			<column name="price" value="23000"></column>
 			<column name="id_gender" value="2"></column>
+			<column name="active" value="1"></column>
+			<column name="searches" value="0"></column>
 		</insert>
 		<insert tableName="products">
 			<column name="id" valueSequenceNext="products_id_sequence"></column>
@@ -697,11 +627,13 @@
 				value="blusa manga larga blanca bon algunas lineas negras"></column>
 			<column name="price" value="48000"></column>
 			<column name="id_gender" value="2"></column>
+			<column name="active" value="1"></column>
+			<column name="searches" value="0"></column>
 		</insert>
 
 	</changeSet>
 
-	<changeSet id="1643148657506-3"
+	<changeSet id="1646233539094-4"
 		author="jdkastrillon@gmail.com">
 		<insert tableName="existing_quantity">
 			<column name="id_product" value="1"></column>
@@ -956,115 +888,9 @@
 		</insert>
 
 
-
-
-
 	</changeSet>
 
-	<changeSet id="1643487520968-4"
-		author="jdkastrillon@gmail.com">
-
-		<dropColumn tableName="orders">
-			<column name="id_user"></column>
-		</dropColumn>
-
-		<dropColumn tableName="users_roles">
-			<column name="id_user"></column>
-			<column name="id_role"></column>
-		</dropColumn>
-
-		<dropTable tableName="users_roles" />
-		<dropTable tableName="users" />
-		<dropTable tableName="document_types" />
-		<dropTable tableName="roles" />
-
-		<createTable tableName="document_types">
-			<column name="id" type="BIGINT">
-				<constraints nullable="false" primaryKey="true" />
-			</column>
-			<column name="document_type" type="VARCHAR">
-				<constraints nullable="false" />
-			</column>
-		</createTable>
-
-		<createTable tableName="roles">
-			<column name="id" type="BIGINT">
-				<constraints nullable="false" primaryKey="true"
-					primaryKeyName="pk_roles" />
-			</column>
-			<column name="role" type="VARCHAR">
-				<constraints nullable="false" />
-			</column>
-		</createTable>
 
 
-
-		<createTable tableName="users">
-			<column name="id" type="BIGINT" autoIncrement="true">
-				<constraints nullable="false" primaryKey="true" />
-			</column>
-			<column name="document_number" type="VARCHAR">
-				<constraints nullable="false" />
-			</column>
-			<column name="name" type="VARCHAR">
-				<constraints nullable="false" />
-			</column>
-			<column name="email" type="VARCHAR">
-				<constraints nullable="false" />
-			</column>
-			<column name="password" type="VARCHAR">
-				<constraints nullable="false" />
-			</column>
-
-			<column name="document_type_id" type="BIGINT"></column>
-
-
-
-		</createTable>
-
-
-		<createTable tableName="users_roles">
-			<column name="id_user" type="BIGINT">
-				<constraints nullable="false" primaryKey="true" />
-			</column>
-			<column name="id_role" type="BIGINT">
-				<constraints nullable="false" primaryKey="true" />
-			</column>
-		</createTable>
-
-		<addForeignKeyConstraint
-			constraintName="fk_document_type"
-			referencedTableName="document_types"
-			baseColumnNames="document_type_id" baseTableName="users"
-			referencedColumnNames="id" />
-
-
-		<addForeignKeyConstraint
-			constraintName="pk_user" referencedTableName="users"
-			baseColumnNames="id_user" baseTableName="users_roles"
-			referencedColumnNames="id" />
-		<addForeignKeyConstraint
-			constraintName="pk_roles" referencedTableName="roles"
-			baseColumnNames="id_role" baseTableName="users_roles"
-			referencedColumnNames="id" />
-
-		<addColumn tableName="orders">
-			<column name="id_user" type="BIGINT"></column>
-		</addColumn>
-
-		<addForeignKeyConstraint
-			constraintName="fk_user" referencedTableName="users"
-			baseColumnNames="id_user" baseTableName="orders"
-			referencedColumnNames="id" />
-
-
-	</changeSet>
-			
-		<changeSet id="1645829806113-1" author="jdkastrillon@gmail.com">
-			<addColumn tableName="products">
-			<column name="active" type="INT"></column>
-		</addColumn>
-		</changeSet>	
-		
 
 </databaseChangeLog>
