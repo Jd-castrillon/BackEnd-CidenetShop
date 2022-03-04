@@ -54,6 +54,31 @@ public class User {
 	@JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "id_user"), inverseJoinColumns = @JoinColumn(name = "id_role"))
 	private Set<Role> roles;
 
+	public User(Long idUser, String documentNumber, String name, String email,
+			DocumentType documentType, String password, Set<Role> roles) {
+		super();
+		this.idUser = idUser;
+		this.documentNumber = documentNumber;
+		this.name = name;
+		this.email = email;
+		this.password = password;
+		this.documentType = documentType;
+		this.roles = roles;
+	}
+
+	public User(String documentNumber, String name, String email, DocumentType documentType, String password) {
+		super();
+		this.documentNumber = documentNumber;
+		this.name = name;
+		this.email = email;
+		this.password = password;
+		this.documentType = documentType;
+	}
+
+	public User() {
+		super();
+	}
+
 	public Long getIdUser() {
 		return idUser;
 	}
@@ -108,31 +133,6 @@ public class User {
 
 	public void setDocumentNumber(String documentNumber) {
 		this.documentNumber = documentNumber;
-	}
-
-	public User(Long idUser, String documentNumber, String name, String email, String password,
-			DocumentType documentType, Set<Role> roles) {
-		super();
-		this.idUser = idUser;
-		this.documentNumber = documentNumber;
-		this.name = name;
-		this.email = email;
-		this.password = password;
-		this.documentType = documentType;
-		this.roles = roles;
-	}
-
-	public User(String documentNumber, String name, String email, DocumentType documentType, String password) {
-		super();
-		this.documentNumber = documentNumber;
-		this.name = name;
-		this.email = email;
-		this.password = password;
-		this.documentType = documentType;
-	}
-
-	public User() {
-		super();
 	}
 
 }
