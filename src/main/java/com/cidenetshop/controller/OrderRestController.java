@@ -49,7 +49,7 @@ public class OrderRestController {
 					.getIdUser();
 
 			orderServiceAPI.saveOrder(idUser, newOrder);
-			return new ResponseEntity<MessageDTO>(new MessageDTO("Orden guardada"), HttpStatus.CREATED);
+			return new ResponseEntity<MessageDTO>(new MessageDTO("Order was created"), HttpStatus.CREATED);
 		} catch (Exception e) {
 			return new ResponseEntity<MessageDTO>(new MessageDTO(e.getMessage()), HttpStatus.OK);
 
