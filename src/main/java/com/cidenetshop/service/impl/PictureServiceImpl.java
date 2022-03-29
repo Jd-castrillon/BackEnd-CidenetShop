@@ -82,7 +82,7 @@ public class PictureServiceImpl implements PictureServiceAPI {
 		Optional<Picture> response = pictureRepository.findById(id);
 
 		if (response.isEmpty())
-			throw new Exception(" Picture don't found with id:  " + id);
+			throw new Exception("Picture don't found with id:  " + id);
 
 		return response.get();
 	}
@@ -93,10 +93,25 @@ public class PictureServiceImpl implements PictureServiceAPI {
 
 		if (updatePicture.isEmpty())
 			throw new Exception("Image is needed");
+		
+		Optional<Picture> response = pictureRepository.findById(id);
+		
+		if(response.isEmpty()) {
+			Picture picture = new Picture();
+			picture.setId(id);
+			picture.setPicture(updatePicture.getBytes());			
+			
+		}
+			
+		Optional<Picture> response2 = pictureRepository.findById(id);
 
-		Picture picture = findById(id);
-
-		picture.setPicture(updatePicture.getBytes());
+		if (response2.isEmpty()) {
+			throw new Exception("Can't update image");
+			
+		}
+	
+		
+		
 
 	}
 

@@ -1,17 +1,5 @@
 package com.cidenetshop.service.impl;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
-import javax.transaction.Transactional;
-
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.cidenetshop.model.dto.GetAdminProductDTO;
 import com.cidenetshop.model.dto.GetProductDTO;
 import com.cidenetshop.model.dto.NewProductDTO;
@@ -22,275 +10,294 @@ import com.cidenetshop.repository.ProductRepository;
 import com.cidenetshop.service.api.GenderServiceAPI;
 import com.cidenetshop.service.api.PictureServiceAPI;
 import com.cidenetshop.service.api.ProductServiceAPI;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductServiceImpl implements ProductServiceAPI {
 
-	private final ProductRepository productRepository;
+    private final ProductRepository productRepository;
 
-	private final GenderServiceAPI genderServiceAPI;
+    private final GenderServiceAPI genderServiceAPI;
 
-	private final PictureServiceAPI pictureServiceAPI;
+    private final PictureServiceAPI pictureServiceAPI;
 
-	private final ExistingQuantityRepository existingQuantityRepository;
+    private final ExistingQuantityRepository existingQuantityRepository;
 
-	private final ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
 
-	@Autowired
-	public ProductServiceImpl(ProductRepository productRepository, GenderServiceAPI genderServiceAPI,
-			PictureServiceAPI pictureServiceAPI, ExistingQuantityRepository existingQuantityRepository,
-			ModelMapper modelMapper) {
-		super();
-		this.productRepository = productRepository;
-		this.genderServiceAPI = genderServiceAPI;
-		this.pictureServiceAPI = pictureServiceAPI;
-		this.existingQuantityRepository = existingQuantityRepository;
-		this.modelMapper = modelMapper;
-	}
+    @Autowired
+    public ProductServiceImpl(ProductRepository productRepository, GenderServiceAPI genderServiceAPI,
+                              PictureServiceAPI pictureServiceAPI, ExistingQuantityRepository existingQuantityRepository,
+                              ModelMapper modelMapper) {
+        super();
+        this.productRepository = productRepository;
+        this.genderServiceAPI = genderServiceAPI;
+        this.pictureServiceAPI = pictureServiceAPI;
+        this.existingQuantityRepository = existingQuantityRepository;
+        this.modelMapper = modelMapper;
+    }
 
-	private GetProductDTO convertProductToDTO(Product product) throws Exception {
+    private GetProductDTO convertProductToDTO(Product product) throws Exception {
 
-		ModelMapper modelMapper = new ModelMapper();
+        ModelMapper modelMapper = new ModelMapper();
 
-		GetProductDTO getProductDTO = modelMapper.map(product, GetProductDTO.class);
+        GetProductDTO getProductDTO = modelMapper.map(product, GetProductDTO.class);
 
-		return getProductDTO;
-	}
+        return getProductDTO;
+    }
 
-	public Product findById(Long productId) throws Exception {
-		Optional<Product> product = productRepository.findById(productId);
-		if (product.isEmpty()) {
-			throw new Exception("Producto no encontrado para el id " + productId);
+    public Product findById(Long productId) throws Exception {
+        Optional<Product> product = productRepository.findById(productId);
+        if (product.isEmpty()) {
+            throw new Exception("Producto no encontrado para el id " + productId);
 
-		}
-		return product.get();
-	};
+        }
+        return product.get();
+    }
 
-	@Transactional
-	@Override
-	public GetProductDTO findProductById(Long productId) throws Exception {
+    ;
 
-		final Optional<Product> repoResponse = this.productRepository.findById(productId);
+    @Transactional
+    @Override
+    public GetProductDTO findProductById(Long productId) throws Exception {
 
-		if (repoResponse.isEmpty()) {
-			throw new Exception("Producto no encontrado para el id " + productId);
-		}
+        final Optional<Product> repoResponse = this.productRepository.findById(productId);
 
-		final Product productFound = repoResponse.get();
+        if (repoResponse.isEmpty()) {
+            throw new Exception("Producto no encontrado para el id " + productId);
+        }
 
-		Long first = (long) 1;
+        final Product productFound = repoResponse.get();
 
-		if (productFound.getSearches() != null) {
-			productFound.setSearches(productFound.getSearches() + 1);
-		} else {
-			productFound.setSearches(first);
-		}
+        Long first = (long) 1;
 
-		return convertProductToDTO(productFound);
-	}
+        if (productFound.getSearches() != null) {
+            productFound.setSearches(productFound.getSearches() + 1);
+        } else {
+            productFound.setSearches(first);
+        }
 
-	@Override
-	public void deleteProductById(Long productId) throws Exception {
+        return convertProductToDTO(productFound);
+    }
 
-		List<ExistingQuantity> existingQuantities = existingQuantityRepository.findByProductId(productId);
+    @Override
+    public void deleteProductById(Long productId) throws Exception {
 
-		if (!existingQuantities.isEmpty())
-			throw new Exception("Don't delete product with stock");
+        List<ExistingQuantity> existingQuantities = existingQuantityRepository.findByProductId(productId);
 
-		Product product = findById(productId);
+        if (!existingQuantities.isEmpty())
+            throw new Exception("Don't delete product with stock");
 
-		this.productRepository.delete(product);
+        Product product = findById(productId);
 
-	}
+        this.productRepository.delete(product);
 
-	@Override
-	public List<GetAdminProductDTO> getAllProducts() {
+    }
 
-		List<GetAdminProductDTO> productsDTO = new ArrayList<>();
-		this.productRepository.findAll().forEach(obj -> {
-			try {
-				GetAdminProductDTO product = modelMapper.map(obj, GetAdminProductDTO.class);
+    @Override
+    public List<GetAdminProductDTO> getAllProducts() {
 
-				productsDTO.add(product);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		});
+        List<GetAdminProductDTO> productsDTO = new ArrayList<>();
+        this.productRepository.findAll().forEach(obj -> {
+            try {
+                GetAdminProductDTO product = modelMapper.map(obj, GetAdminProductDTO.class);
 
-		return productsDTO;
-	}
+                productsDTO.add(product);
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        });
 
-	public List<GetAdminProductDTO> getProductByGender(String gender) {
+        return productsDTO;
+    }
 
-		List<GetAdminProductDTO> productsDTO = new ArrayList<>();
+    public List<GetAdminProductDTO> getProductByGender(String gender) {
 
-		this.productRepository.findAllByGender(gender).forEach(obj -> {
-			try {
+        List<GetAdminProductDTO> productsDTO = new ArrayList<>();
 
-				GetAdminProductDTO product = modelMapper.map(obj, GetAdminProductDTO.class);
-				productsDTO.add(product);
+        this.productRepository.findAllByGender(gender).forEach(obj -> {
+            try {
 
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		});
+                GetAdminProductDTO product = modelMapper.map(obj, GetAdminProductDTO.class);
+                productsDTO.add(product);
 
-		return productsDTO;
-	}
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        });
 
-	@Override
-	public List<GetProductDTO> RankingOfProducts() {
+        return productsDTO;
+    }
 
-		List<Product> AllProducts = (List<Product>) productRepository.findAll();
+    @Override
+    public List<GetProductDTO> RankingOfProducts() {
 
-		AllProducts.sort((p1, p2) -> p1.getSearches().compareTo(p2.getSearches()));
+        List<Product> AllProducts = (List<Product>) productRepository.findAll();
 
-		Collections.reverse(AllProducts);
+        AllProducts.sort((p1, p2) -> p1.getSearches().compareTo(p2.getSearches()));
 
-		List<GetProductDTO> productsRankingDTO = new ArrayList<>();
+        Collections.reverse(AllProducts);
 
-		AllProducts.forEach(obj -> {
-			try {
-				if (obj.getActive().equals(1)) {		
-					productsRankingDTO.add(convertProductToDTO(obj));
-				}
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		});
+        List<GetProductDTO> productsRankingDTO = new ArrayList<>();
 
-		return productsRankingDTO.subList(0, 8);
-	}
+        AllProducts.forEach(obj -> {
+            try {
+                if (obj.getActive().equals(1)) {
+                    productsRankingDTO.add(convertProductToDTO(obj));
+                }
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        });
 
-	@Override
-	public List<GetProductDTO> getActiveProductByGender(String gender) {
+        return productsRankingDTO.subList(0, 8);
+    }
 
-		List<GetProductDTO> productsDTO = new ArrayList<>();
+    @Override
+    public List<GetProductDTO> getActiveProductByGender(String gender) {
 
-		this.productRepository.findAllByGender(gender).forEach(obj -> {
-			try {
-				if (obj.getActive().equals(1)) {
+        List<GetProductDTO> productsDTO = new ArrayList<>();
 
-					productsDTO.add(convertProductToDTO(obj));
-				}
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		});
+        this.productRepository.findAllByGender(gender).forEach(obj -> {
+            try {
+                if (obj.getActive().equals(1)) {
 
-		return productsDTO;
-	}
+                    productsDTO.add(convertProductToDTO(obj));
+                }
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        });
 
-	@Override
-	public void saveNewProduct(NewProductDTO newProduct, MultipartFile newPicture) throws Exception {
+        return productsDTO;
+    }
 
-		if (findByName(newProduct.getName()).isPresent())
-			throw new Exception("Product already exists");
+    @Override
+    public void saveNewProduct(NewProductDTO newProduct, MultipartFile newPicture) throws Exception {
 
-		final Product product = new Product();
+        if (findByName(newProduct.getName()).isPresent())
+            throw new Exception("Product already exists");
 
-		if (newProduct.getName().equals(null) || newProduct.getName().equals(""))
-			throw new Exception("Name needed");
+        final Product product = new Product();
 
-		if (newProduct.getDescription().equals(null) || newProduct.getDescription().equals(""))
-			throw new Exception("Description needed");
+        if (newProduct.getName().equals(null) || newProduct.getName().equals(""))
+            throw new Exception("Name needed");
 
-		if (newProduct.getBrand().equals(null) || newProduct.getBrand().equals(""))
-			throw new Exception("Brand needed");
+        if (newProduct.getDescription().equals(null) || newProduct.getDescription().equals(""))
+            throw new Exception("Description needed");
 
-		if (newProduct.getColor().equals(null) || newProduct.getColor().equals(""))
-			throw new Exception("color needed");
+        if (newProduct.getBrand().equals(null) || newProduct.getBrand().equals(""))
+            throw new Exception("Brand needed");
 
-		if (newProduct.getPrice().equals(null) || newProduct.getPrice() <= 0)
-			throw new Exception("incorrect price");
+        if (newProduct.getColor().equals(null) || newProduct.getColor().equals(""))
+            throw new Exception("color needed");
 
-		product.setName(newProduct.getName());
+        if (newProduct.getPrice().equals(null) || newProduct.getPrice() <= 0)
+            throw new Exception("incorrect price");
 
-		product.setDescription(newProduct.getDescription());
+        product.setName(newProduct.getName());
 
-		product.setColor(newProduct.getColor());
+        product.setDescription(newProduct.getDescription());
 
-		product.setPrice(newProduct.getPrice());
+        product.setColor(newProduct.getColor());
 
-		product.setBrand(newProduct.getBrand());
+        product.setPrice(newProduct.getPrice());
 
-		product.setGender(genderServiceAPI.findByGender(newProduct.getGender()));
+        product.setBrand(newProduct.getBrand());
 
-		product.setSearches((long) 0);
+        product.setGender(genderServiceAPI.findByGender(newProduct.getGender()));
 
-		pictureServiceAPI.savePicture(product, newPicture);
+        product.setSearches((long) 0);
 
-		productRepository.save(product);
+        product.setActive(0);
 
-	}
+        pictureServiceAPI.savePicture(product, newPicture);
 
-	@Transactional
-	@Override
-	public void updateProduct(NewProductDTO updateProduct, MultipartFile updatePicture, Long idProduct)
-			throws Exception {
+        productRepository.save(product);
 
-		if (updateProduct.getName().equals(null) || updateProduct.getName().equals(""))
-			throw new Exception("Name needed");
+    }
 
-		if (updateProduct.getDescription().equals(null) || updateProduct.getDescription().equals(""))
-			throw new Exception("Description needed");
+    @Transactional
+    @Override
+    public void updateProduct(NewProductDTO updateProduct, MultipartFile updatePicture, Long idProduct)
+            throws Exception {
 
-		if (updateProduct.getBrand().equals(null) || updateProduct.getBrand().equals(""))
-			throw new Exception("Brand needed");
+        if (updateProduct.getName().equals(null) || updateProduct.getName().equals(""))
+            throw new Exception("Name needed");
 
-		if (updateProduct.getColor().equals(null) || updateProduct.getColor().equals(""))
-			throw new Exception("color needed");
+        if (updateProduct.getDescription().equals(null) || updateProduct.getDescription().equals(""))
+            throw new Exception("Description needed");
 
-		if (updateProduct.getPrice().equals(null) || updateProduct.getPrice() <= 0)
-			throw new Exception("incorrect price");
+        if (updateProduct.getBrand().equals(null) || updateProduct.getBrand().equals(""))
+            throw new Exception("Brand needed");
 
-		Product product = findById(idProduct);
+        if (updateProduct.getColor().equals(null) || updateProduct.getColor().equals(""))
+            throw new Exception("color needed");
 
-		product.setName(updateProduct.getName());
-		product.setDescription(updateProduct.getDescription());
-		product.setColor(updateProduct.getColor());
-		product.setBrand(updateProduct.getBrand());
-		product.setGender(genderServiceAPI.findByGender(updateProduct.getGender()));
-		product.setPrice(updateProduct.getPrice());
+        if (updateProduct.getPrice().equals(null) || updateProduct.getPrice() <= 0)
+            throw new Exception("incorrect price");
 
-		if (!updatePicture.isEmpty()) {
-			pictureServiceAPI.updatePicture(idProduct, updatePicture);
-		}
+        Product product = findById(idProduct);
 
-	}
+        product.setName(updateProduct.getName());
+        product.setDescription(updateProduct.getDescription());
+        product.setColor(updateProduct.getColor());
+        product.setBrand(updateProduct.getBrand());
+        product.setGender(genderServiceAPI.findByGender(updateProduct.getGender()));
+        product.setPrice(updateProduct.getPrice());
 
-	@Override
-	public Optional<Product> findByName(String name) throws Exception {
+        if (!updatePicture.isEmpty()) {
+            pictureServiceAPI.updatePicture(idProduct, updatePicture);
+        }
 
-		if (name.equals(null) || name.equals(""))
-			throw new Exception("Product name is invalid");
+    }
 
-		Optional<Product> response = productRepository.findByName(name);
+    @Override
+    public Optional<Product> findByName(String name) throws Exception {
 
-		return response;
-	}
+        if (name.equals(null) || name.equals(""))
+            throw new Exception("Product name is invalid");
 
-	@Override
-	public List<GetProductDTO> getActiveProducts() {
+        Optional<Product> response = productRepository.findByName(name);
 
-		List<GetProductDTO> productsDTO = new ArrayList<>();
-		this.productRepository.findAll().forEach(obj -> {
-			try {
-				if (obj.getActive().equals(1)) {
-					productsDTO.add(convertProductToDTO(obj));
-				}
+        return response;
+    }
 
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		});
+    @Override
+    public List<GetProductDTO> getActiveProducts() {
 
-		return productsDTO;
-	}
+        List<GetProductDTO> productsDTO = new ArrayList<>();
+        this.productRepository.findAll().forEach(obj -> {
+            try {
+                if (obj.getActive().equals(1)) {
+                    productsDTO.add(convertProductToDTO(obj));
+                }
+
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        });
+
+        return productsDTO;
+    }
+
+
 
 }

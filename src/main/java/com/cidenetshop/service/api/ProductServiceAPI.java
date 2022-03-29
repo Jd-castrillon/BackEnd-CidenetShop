@@ -3,6 +3,7 @@ package com.cidenetshop.service.api;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.cidenetshop.model.dto.GetAdminProductDTO;
@@ -33,5 +34,7 @@ public interface ProductServiceAPI {
 	void saveNewProduct(NewProductDTO newProduct, MultipartFile picture) throws Exception;
 
 	void updateProduct(NewProductDTO updateProduct, MultipartFile updatePicture, Long idProduct) throws Exception;
+
+
 
 }
