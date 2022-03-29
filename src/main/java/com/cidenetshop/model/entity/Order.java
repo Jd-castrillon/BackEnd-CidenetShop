@@ -45,6 +45,34 @@ public class Order {
 	@OneToMany(mappedBy = "order", cascade = { CascadeType.ALL })
 	private List<OrderDetail> orderDetails;
 
+	public Order(Long id, String orderAddress, LocalDate orderDate, Double totalCost, User user,
+				 List<OrderDetail> orderDetails) {
+		super();
+		this.id = id;
+		this.orderAddress = orderAddress;
+		this.orderDate = orderDate;
+		this.totalCost = 0.0;
+		this.user = user;
+		this.orderDetails = orderDetails;
+	}
+
+
+
+	public Order(String orderAddress, LocalDate orderDate, Double totalCost, User user,
+				 List<OrderDetail> orderDetails) {
+		super();
+		this.orderAddress = orderAddress;
+		this.orderDate = orderDate;
+		this.totalCost = 0.0;
+		this.user = user;
+		this.orderDetails = orderDetails;
+	}
+
+	public Order() {
+		super();
+		this.totalCost = 0.0;
+	}
+
 	public Long getId() {
 		return id;
 	}
@@ -94,31 +122,6 @@ public class Order {
 	}
 
 
-	public Order(Long id, String orderAddress, LocalDate orderDate, Double totalCost, User user,
-			List<OrderDetail> orderDetails) {
-		super();
-		this.id = id;
-		this.orderAddress = orderAddress;
-		this.orderDate = orderDate;
-		this.totalCost = totalCost;
-		this.user = user;
-		this.orderDetails = orderDetails;
-	}
 
-	
-
-	public Order(String orderAddress, LocalDate orderDate, Double totalCost, User user,
-			List<OrderDetail> orderDetails) {
-		super();
-		this.orderAddress = orderAddress;
-		this.orderDate = orderDate;
-		this.totalCost = totalCost;
-		this.user = user;
-		this.orderDetails = orderDetails;
-	}
-
-	public Order() {
-		super();
-	}
 
 }

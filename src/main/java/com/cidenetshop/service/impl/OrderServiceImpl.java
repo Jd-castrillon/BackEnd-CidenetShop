@@ -4,7 +4,7 @@ import java.time.Clock;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Optional;
+import java.util.List;
 
 import javax.transaction.Transactional;
 
@@ -12,7 +12,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.cidenetshop.model.dto.GetOrderDTO;
 import com.cidenetshop.model.dto.GetOrderDetailDTO;
 import com.cidenetshop.model.dto.NewOrderDTO;
 import com.cidenetshop.model.entity.ExistingQuantity;
@@ -32,123 +31,102 @@ import com.cidenetshop.service.api.SizeServiceAPI;
 @Service
 public class OrderServiceImpl implements OrderServiceAPI {
 
-	private final ExistingQuantityServiceAPI existingQuantityServiceAPI;
+    private final ExistingQuantityServiceAPI existingQuantityServiceAPI;
 
-	private final OrderRepository orderRepository;
+    private final OrderRepository orderRepository;
 
-	private final ProductServiceAPI productServiceAPI;
+    private final ProductServiceAPI productServiceAPI;
 
-	private final ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
 
-	private final EmailService emailService;
+    private final EmailService emailService;
 
-	private final UserRepository userRepository;
+    private final UserRepository userRepository;
 
-	private final SizeServiceAPI sizeServiceAPI;
+    private final SizeServiceAPI sizeServiceAPI;
 
-	@Autowired
-	public OrderServiceImpl(ExistingQuantityServiceAPI existingQuantityServiceAPI, OrderRepository orderRepository,
-			ProductServiceAPI productServiceAPI, ModelMapper modelMapper, EmailService emailService,
-			UserRepository userRepository, SizeServiceAPI sizeServiceAPI) {
-		super();
-		this.existingQuantityServiceAPI = existingQuantityServiceAPI;
-		this.orderRepository = orderRepository;
-		this.productServiceAPI = productServiceAPI;
-		this.modelMapper = modelMapper;
-		this.emailService = emailService;
-		this.userRepository = userRepository;
-		this.sizeServiceAPI = sizeServiceAPI;
-	}
+    @Autowired
+    public OrderServiceImpl(ExistingQuantityServiceAPI existingQuantityServiceAPI, OrderRepository orderRepository,
+                            ProductServiceAPI productServiceAPI, ModelMapper modelMapper, EmailService emailService,
+                            UserRepository userRepository, SizeServiceAPI sizeServiceAPI) {
+        super();
+        this.existingQuantityServiceAPI = existingQuantityServiceAPI;
+        this.orderRepository = orderRepository;
+        this.productServiceAPI = productServiceAPI;
+        this.modelMapper = modelMapper;
+        this.emailService = emailService;
+        this.userRepository = userRepository;
+        this.sizeServiceAPI = sizeServiceAPI;
+    }
 
-	@Transactional
-	@Override
-	public void saveOrder(Long idUser, NewOrderDTO newOrder) throws Exception {
 
-		final User user = new User();
-		user.setIdUser(idUser);
+    @Override
+    public void saveOrderAndSendEmail(Long idUser, NewOrderDTO newOrder) throws Exception {
 
-		final Order order = new Order();
-		
-		if(newOrder.getOrderAddress().equals(""))
-			throw new Exception("address needed");
-			
-		
-		order.setOrderAddress(newOrder.getOrderAddress());
-		order.setOrderDate(LocalDate.now(Clock.system(ZoneId.of("America/Bogota"))));
-		order.setUser(user);
-		order.setOrderDetails(new ArrayList<>());
+        Order order = createOrder(idUser, newOrder);
 
-		for (GetOrderDetailDTO orderDetailDTO : newOrder.getOrderDetails()) {
+        updateStockByBuy(order.getOrderDetails());
 
-			final Product product = productServiceAPI.findById(orderDetailDTO.getIdProduct());
-			final Size size = sizeServiceAPI.findByShortText(orderDetailDTO.getSize());
-			final ExistingQuantity stock = existingQuantityServiceAPI.findByProductIdAndShortText(product.getId(),
-					orderDetailDTO.getSize());
+        orderRepository.save(order);
+        emailService.SendEmailOrder(userRepository.findById(idUser).get().getEmail(), "Compra Cidenet", order);
+    }
 
-			if (stock.getExistingQuantity() <= 0)
-				throw new Exception("there aren't stock for product with id " + orderDetailDTO.getIdProduct()
-						+ " and size " + orderDetailDTO.getSize());
+    @Transactional
+    private void updateStockByBuy(List<OrderDetail> orderDetails) throws Exception {
 
-			if (orderDetailDTO.getQuantity() > stock.getExistingQuantity())
-				throw new Exception("the requested quantity is greater than the stock in the product with id "
-						+ orderDetailDTO.getIdProduct() + " and size " + orderDetailDTO.getSize());
+        for (OrderDetail orderDetail : orderDetails) {
 
-			final OrderDetail orderDetail = new OrderDetail();
-			orderDetail.setProduct(product);
-			orderDetail.setOrder(order);
-			orderDetail.setSize(size);
-			orderDetail.setQuantity(orderDetailDTO.getQuantity());
-			orderDetail.setSalePrice(product.getPrice());
+            final ExistingQuantity stock = existingQuantityServiceAPI.findByProductIdAndShortText(
+                    orderDetail.getProduct().getId(), orderDetail.getSize().getShortText());
 
-			if (order.getTotalCost() == null) {
-				order.setTotalCost(0.0);
-			}
-			order.setTotalCost(order.getTotalCost() + (orderDetail.getSalePrice() * orderDetail.getQuantity()));
+            if (stock.getExistingQuantity() - orderDetail.getQuantity() < 0)
+                throw new Exception("Don't can set negative value to setExistingQuantity");
 
-			order.getOrderDetails().add(orderDetail);
-		}
+            stock.setExistingQuantity(stock.getExistingQuantity() - orderDetail.getQuantity());
 
-		for (OrderDetail orderDetail : order.getOrderDetails()) {
+        }
 
-			final ExistingQuantity stock = existingQuantityServiceAPI.findByProductIdAndShortText(
-					orderDetail.getProduct().getId(), orderDetail.getSize().getShortText());
-			
-			if(stock.getExistingQuantity() - orderDetail.getQuantity() < 0)
-				throw new Exception("Don't can set negative value to setExistingQuantity");
-			
-			stock.setExistingQuantity(stock.getExistingQuantity() - orderDetail.getQuantity());
+    }
 
-		}
+    private Order createOrder(Long idUser, NewOrderDTO newOrder) throws Exception {
+        final User user = new User();
+        user.setIdUser(idUser);
 
-		// find the existing quantity through a repo/service
-		// set new quantity
+        final Order order = new Order();
+        order.setOrderAddress(newOrder.getOrderAddress());
+        order.setOrderDate(LocalDate.now(Clock.system(ZoneId.of("America/Bogota"))));
+        order.setUser(user);
+        order.setOrderDetails(new ArrayList<>());
 
-		orderRepository.save(order);
-		emailService.SendEmailOrder(userRepository.findById(idUser).get().getEmail(), "Compra Cidenet", order);
-	}
+        addOrderDetailsAndCostTotalToOrder(newOrder.getOrderDetails(), order);
 
-	public Order findById(Long id) {
-		Optional<Order> order = orderRepository.findById(id);
-		if (order.isEmpty()) {
-			return null;
-		}
-		return order.get();
-	}
+        return order;
+    }
 
-	@Override
-	public GetOrderDTO findOrderById(Long orderId) throws Exception {
+    private void addOrderDetailsAndCostTotalToOrder(List<GetOrderDetailDTO> orderDetailsDTO, Order order) throws Exception {
 
-		final Optional<Order> repoResponse = this.orderRepository.findById(orderId);
+        for (GetOrderDetailDTO orderDetailDTO : orderDetailsDTO) {
 
-		if (repoResponse.isEmpty()) {
-			new Exception("Order not found by id: " + orderId);
-		}
+            final Product product = productServiceAPI.findById(orderDetailDTO.getIdProduct());
+            final Size size = sizeServiceAPI.findByShortText(orderDetailDTO.getSize());
+            final ExistingQuantity stock = existingQuantityServiceAPI.findByProductIdAndShortText(product.getId(),
+                    orderDetailDTO.getSize());
 
-		final Order orderFound = repoResponse.get();
+            if (stock.getExistingQuantity() <= 0)
+                throw new Exception("there aren't stock for product with id " + orderDetailDTO.getIdProduct()
+                        + " and size " + orderDetailDTO.getSize());
 
-		GetOrderDTO getOrderDTO = modelMapper.map(orderFound, GetOrderDTO.class);
+            if (orderDetailDTO.getQuantity() > stock.getExistingQuantity())
+                throw new Exception("the requested quantity is greater than the stock in the product with id "
+                        + orderDetailDTO.getIdProduct() + " and size " + orderDetailDTO.getSize());
 
-		return getOrderDTO;
-	}
+            final OrderDetail orderDetail = new OrderDetail(product, order, size, orderDetailDTO.getQuantity(), product.getPrice());
+
+            order.setTotalCost(order.getTotalCost() + (orderDetail.getSalePrice() * orderDetail.getQuantity()));
+
+            order.getOrderDetails().add(orderDetail);
+        }
+    }
+
 
 }

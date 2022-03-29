@@ -29,17 +29,7 @@ public class OrderRestController {
 		this.orderServiceAPI = orderServiceAPI;
 	}
 
-	@GetMapping(value = "/{orderId}")
-	public ResponseEntity<?> getOrderById(@PathVariable("orderId") Long orderId) {
-		try {
-			return new ResponseEntity<GetOrderDTO>(this.orderServiceAPI.findOrderById(orderId), HttpStatus.OK);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new ResponseEntity<MessageDTO>(new MessageDTO(e.getMessage()), HttpStatus.OK);
 
-		}
-
-	}
 
 	@PostMapping
 	public ResponseEntity<MessageDTO> saveNewOrder(@RequestBody NewOrderDTO newOrder) {
@@ -48,7 +38,7 @@ public class OrderRestController {
 			final Long idUser = ((UserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
 					.getIdUser();
 
-			orderServiceAPI.saveOrder(idUser, newOrder);
+			orderServiceAPI.saveOrderAndSendEmail(idUser, newOrder);
 			return new ResponseEntity<MessageDTO>(new MessageDTO("Order was created"), HttpStatus.CREATED);
 		} catch (Exception e) {
 			return new ResponseEntity<MessageDTO>(new MessageDTO(e.getMessage()), HttpStatus.OK);
